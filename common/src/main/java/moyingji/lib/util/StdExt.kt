@@ -2,9 +2,9 @@ package moyingji.lib.util
 
 internal typealias APair<T> = Pair<T, T>
 
-fun <K, V> Map<K, V>.firstKeyOrNull(value: V): K?
+fun <K, V> Map<K, V>.firstKeyOfOrNull(value: V): K?
 = this.entries.firstOrNull { it.value == value }?.key
-fun <K, V> Map<K, V>.firstKey(value: V): K
+fun <K, V> Map<K, V>.firstKeyOf(value: V): K
 = this.entries.first { it.value == value }.key
 
 fun <T> MutableIterable<T>.forEachRemove(f: (T) -> Unit)

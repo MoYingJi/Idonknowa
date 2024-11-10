@@ -1,10 +1,10 @@
 package moyingji.lib.inspiration
 
 import moyingji.lib.api.Mutable
-import moyingji.lib.util.firstKeyOrNull
+import moyingji.lib.util.firstKeyOfOrNull
 
 open class MapdCollection<T, R>(
-    @Mutable val parent: MutableCollection<T>,
+    @Mutable open val parent: MutableCollection<T>,
     // pure function to convert element
     val from: (T) -> R, val to: (R) -> T
 ) : MutableCollection<R> {
@@ -27,23 +27,61 @@ open class MapdCollection<T, R>(
     override fun iterator(): MutableIterator<R> = MapdIterator(parent.iterator(), ::from)
 }
 
-class MapdIterator<T, R>(
+open class MapdIterator<T, R>(
     @Mutable val parent: MutableIterator<T>,
     val from: (T) -> R
 ) : MutableIterator<R> {
-    fun from(element: T): R = from.invoke(element)
+    open fun from(element: T): R = from.invoke(element)
     override fun hasNext(): Boolean = parent.hasNext()
     override fun next(): R = parent.next().let(::from)
     override fun remove() { parent.remove() }
 }
 
-class MapdCachedCollection<T, R>(
-    @Mutable parent: MutableCollection<T>,
+open class MapdMutableList<T, R>(
+    @Mutable override val parent: MutableList<T>,
     from: (T) -> R, to: (R) -> T
-) : MapdCollection<T, R>(parent, from, to) {
-    val objectCache: MutableMap<R, T> = mutableMapOf()
+) : MapdCollection<T, R>(parent, from, to), MutableList<R> {
+    override fun add(index: Int, element: R) { parent.add(index, to(element)) }
+    override fun addAll(index: Int, elements: Collection<R>): Boolean = parent.addAll(index, elements.map(::to))
+    override fun get(index: Int): R = from(parent[index])
+    override fun removeAt(index: Int): R = parent.removeAt(index).let(::from)
+    override fun set(index: Int, element: R): R = parent.set(index, to(element)).let(::from)
+    override fun lastIndexOf(element: R): Int = parent.lastIndexOf(to(element))
+    override fun indexOf(element: R): Int = parent.indexOf(to(element))
+    override fun subList(fromIndex: Int, toIndex: Int): MutableList<R> = MutableSubList(this, fromIndex, toIndex - fromIndex)
+    override fun listIterator(): MutableListIterator<R> = listIterator(0)
+    override fun listIterator(index: Int): MutableListIterator<R> = MutableListIteratorImpl(this, index)
+}
 
-    override fun from(element: T): R = objectCache.firstKeyOrNull(element)
-        ?: from.invoke(element).also { objectCache += it to element }
-    override fun to(element: R): T = objectCache.getOrPut(element) { to.invoke(element) }
+
+interface MapdCachable<T, R> { @Mutable val objectCache: MutableMap<T, R> }
+
+open class MapdCachedCollection<T, R>(
+    @Mutable parent: MutableCollection<T>,
+    from: (T) -> R, to: (R) -> T,
+    @Mutable override val objectCache: MutableMap<T, R> = mutableMapOf(),
+) : MapdCollection<T, R>(parent, from, to), MapdCachable<T, R> {
+    override fun from(element: T): R = objectCache.getOrPut(element) { from.invoke(element) }
+    override fun to(element: R): T = objectCache.firstKeyOfOrNull(element)
+        ?: to.invoke(element).also { objectCache += it to element }
+    override fun iterator(): MutableIterator<R> = MapdCachedIterator(parent.iterator(), objectCache, ::from)
+}
+
+class MapdCachedIterator<T, R>(
+    @Mutable parent: MutableIterator<T>,
+    @Mutable override val objectCache: MutableMap<T, R> = mutableMapOf(),
+    from: (T) -> R
+) : MapdIterator<T, R>(parent, from), MapdCachable<T, R> {
+    override fun from(element: T): R = objectCache.getOrPut(element) { from.invoke(element) }
+}
+
+class MapdCachedMutableList<T, R>(
+    @Mutable parent: MutableList<T>,
+    from: (T) -> R, to: (R) -> T,
+    @Mutable override val objectCache: MutableMap<T, R> = mutableMapOf(),
+) : MapdMutableList<T, R>(parent, from, to), MapdCachable<T, R> {
+    override fun from(element: T): R = objectCache.getOrPut(element) { from.invoke(element) }
+    override fun to(element: R): T = objectCache.firstKeyOfOrNull(element)
+        ?: to.invoke(element).also { objectCache += it to element }
+    override fun listIterator(index: Int): MutableListIterator<R> = MutableListIteratorImpl(this, index)
 }

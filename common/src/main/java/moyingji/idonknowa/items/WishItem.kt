@@ -272,7 +272,7 @@ class WishItem : Item(ItemSettings()
     open class GachaOnceUp5(parent: LootGacha? = null) : UpLootGacha(parent), IGachaOnceUp5
 
     object DefaultGacha {
-        fun LootGacha.getId(): Id = Regs.GACHA.firstKey(this)
+        fun LootGacha.getId(): Id = Regs.GACHA.firstKeyOf(this)
         infix fun Gacha<LootTable>.tranTo(value: String)
         { getId().toLanguageKey("gacha") tranTo value }
         fun lazyLootPool(f: (@LootUtil LootPoolBuilder).() -> Unit)

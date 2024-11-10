@@ -59,23 +59,26 @@ infix fun IntRange.extendTo(value: Int): IntRange
  */
 fun spiralSearch(
     @Mutable visited: MutableCollection<Vec2i> = mutableSetOf(),
+    visitUntested: Boolean = false,
     predicate: (Vec2i) -> Boolean = { it !in visited }
 ): Iterator<Vec2i> {
     var x = 0; var y = 0
     var direction: Direction2D = Direction2D.W
     var steps = 1; var stepCount = 0; var turnCount = 0
     return iterator { while (true) {
-        if (predicate(x to y)) {
-            visited += x to y
-            yield(x to y) }
+        val v = x to y
+        if (visitUntested) visited += v
+        if (predicate(v)) {
+            if (!visitUntested) visited += v
+            yield(v) }
         val (mx, my) = direction.next()
         x += mx; y += my
         // 判断方向更换
-        stepCount++
+        stepCount ++
         if (stepCount == steps) {
             turnCount ++; stepCount = 0
             direction = direction.last
-            if (turnCount % 2 == 0) steps++
+            if (turnCount % 2 == 0) steps ++
         }
     } }
 }

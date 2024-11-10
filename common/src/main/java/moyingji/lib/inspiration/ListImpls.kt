@@ -9,23 +9,15 @@ interface ListImpl<T> : List<T> {
     override val size: Int
     override fun get(index: Int): T
 
-    override fun indexOf(element: T): Int = (0 until size).firstOrNull { element == get(it) } ?: -1
-    override fun lastIndexOf(element: T): Int = (size - 1 downTo 0).firstOrNull { element == get(it) } ?: -1
+    override fun indexOf(element: T): Int = indexOfFirst { it == element }
+    override fun lastIndexOf(element: T): Int = indexOfLast { it == element }
     override fun isEmpty(): Boolean = size == 0
-    override fun contains(element: T): Boolean = indexOf(element) < 0
+    override fun contains(element: T): Boolean = any { it == element }
     override fun containsAll(elements: Collection<T>): Boolean = elements.all { contains(it) }
     override fun subList(fromIndex: Int, toIndex: Int): List<T> = SubList(this, fromIndex, toIndex - fromIndex)
     override fun iterator(): Iterator<T> = listIterator()
     override fun listIterator(): ListIterator<T> = listIterator(0)
-    override fun listIterator(index: Int): ListIterator<T> = object : ListIterator<T> {
-        var i = index
-        override fun hasNext(): Boolean = i < size
-        override fun hasPrevious(): Boolean = i >= 0
-        override fun next(): T = get(i++)
-        override fun nextIndex(): Int = i
-        override fun previous(): T = get(--i)
-        override fun previousIndex(): Int = i - 1
-    }
+    override fun listIterator(index: Int): ListIterator<T> = ListIteratorImpl(this, index)
 }
 /**
  * 最大限度的实现了 [MutableList]
@@ -64,19 +56,7 @@ interface MutableListImpl<T> : ListImpl<T>, MutableList<T> {
     override fun subList(fromIndex: Int, toIndex: Int): MutableList<T> = MutableSubList(this, fromIndex, toIndex - fromIndex)
     override fun iterator(): MutableIterator<T> = listIterator()
     override fun listIterator(): MutableListIterator<T> = listIterator(0)
-    override fun listIterator(index: Int): MutableListIterator<T> = object : MutableListIterator<T> {
-        var i = 0
-        var last = -1
-        override fun hasNext(): Boolean = i < size
-        override fun hasPrevious(): Boolean = i >= 0
-        override fun next(): T = get(i++).also { last = i }
-        override fun nextIndex(): Int = i
-        override fun previous(): T = get(--i).also { last = i }
-        override fun previousIndex(): Int = i - 1
-        override fun add(element: T) { add(nextIndex(), element); next() }
-        override fun set(element: T) { set(nextIndex(), element) }
-        override fun remove() { removeAt(last) }
-    }
+    override fun listIterator(index: Int): MutableListIterator<T> = MutableListIteratorImpl(this, index)
 }
 // endregion
 

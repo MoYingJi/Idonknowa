@@ -125,7 +125,7 @@ class JsonPathArgument(
     }
     class Info : ArgumentTypeInfo<JsonPathArgument, Template> {
         override fun serializeToNetwork(template: Template, buffer: FriendlyByteBuf) {
-            buffer.writeResourceLocation(fr.firstKey(template.f))
+            buffer.writeResourceLocation(fr.firstKeyOf(template.f))
             buffer.writeChar(template.separator.code)
             buffer.writeUtf(template.defaultFirst)
             buffer.writeCollection(template.autoPrefix, FriendlyByteBuf::writeUtf)
@@ -137,7 +137,7 @@ class JsonPathArgument(
             buffer.readList(FriendlyByteBuf::readUtf)
         )
         override fun serializeToJson(template: Template, json: JsonObject) {
-            json.addProperty("f", fr.firstKey(template.f).toString())
+            json.addProperty("f", fr.firstKeyOf(template.f).toString())
             json.addProperty("separator", template.separator)
             json.addProperty("default_first", template.defaultFirst)
             json.add("auto_prefix", JsonArray().also { template.autoPrefix.forEach(it::add) })
