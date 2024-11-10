@@ -3,15 +3,12 @@ package moyingji.idonknowa.poi
 import dev.architectury.registry.level.entity.trade.TradeRegistry
 import moyingji.idonknowa.core.RegS
 import moyingji.idonknowa.util.*
-import moyingji.lib.inspiration.ListImpl
 import moyingji.lib.util.toOptional
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.npc.VillagerProfession
-import net.minecraft.world.entity.npc.VillagerTrades
+import net.minecraft.world.entity.npc.*
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.trading.ItemCost
-import net.minecraft.world.item.trading.MerchantOffer
+import net.minecraft.world.item.trading.*
 import net.minecraft.world.level.ItemLike
 
 interface IModTrade : VillagerTrades.ItemListing {
@@ -128,7 +125,7 @@ class PriceRandomTrade(val parent: IModTrade? = null) : IModTrade {
 
     // region DSL Functions
     fun Int.exactlyRange(): IntRange = this..this
-    fun RegS<out ItemLike>.listOfValue(): List<ItemLike> = object : ListImpl<ItemLike> {
+    fun RegS<out ItemLike>.listOfValue(): List<ItemLike> = object : AbstractList<ItemLike>() {
         override val size: Int = 1
         override fun get(index: Int): ItemLike = if (index == 0)
             value() else throw IndexOutOfBoundsException()

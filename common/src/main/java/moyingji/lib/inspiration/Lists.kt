@@ -69,3 +69,10 @@ class MutableDefaultListsList<T>(
     operator fun set(x: Int, y: Int, value: T): T = get(x).set(y, value)
     operator fun set(pair: Pair<Int, Int>, value: T): T = set(pair.first, pair.second, value)
 }
+
+
+
+class TwoList<T>(val base: List<T>, val add: List<T>) : ListImpl<T> {
+    override val size: Int get() = base.size + add.size
+    override fun get(index: Int): T = if (index < base.size) base[index] else add[index - base.size]
+}

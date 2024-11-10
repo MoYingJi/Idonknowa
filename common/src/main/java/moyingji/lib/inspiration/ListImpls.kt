@@ -1,6 +1,6 @@
 package moyingji.lib.inspiration
 
-// region ListImpl
+// region ListImpl (interface version of AbstractList?)
 /**
  * 最大限度的实现了 [List]
  * 需要实现 [size] 和 [get]
@@ -71,8 +71,3 @@ open class MutableSubList<T>(override val base: MutableList<T>, offset: Int, siz
     override fun addAll(index: Int, elements: Collection<T>): Boolean = base.addAll(offset + index, elements)
 }
 // endregion
-
-class TwoList<T>(val base: List<T>, val add: List<T>) : ListImpl<T> {
-    override val size: Int get() = base.size + add.size
-    override fun get(index: Int): T = if (index < base.size) base[index] else add[index - base.size]
-}
