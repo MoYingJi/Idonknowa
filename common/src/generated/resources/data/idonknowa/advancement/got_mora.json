@@ -1,0 +1,33 @@
+{
+  "parent": "idonknowa:root",
+  "criteria": {
+    "got_mora": {
+      "conditions": {
+        "items": [
+          {
+            "items": "idonknowa:mora"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "adv.idonknowa.got_mora.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "idonknowa:mora"
+    },
+    "title": {
+      "translate": "adv.idonknowa.got_mora.title"
+    }
+  },
+  "requirements": [
+    [
+      "got_mora"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

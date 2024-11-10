@@ -1,0 +1,25 @@
+{
+    "required": true,
+    "package": "moyingji.idonknowa.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "minVersion": "0.8",
+    "client": [
+    ],
+    "mixins": [
+        "ItemStackMixin",
+        "LivingEntityMixin",
+        "MenuMixin",
+        "PlayerInventoryMixin",
+        "PlayerMixin",
+        "PoiTypesAccessor",
+        "RecipeManagerMixin",
+        "ResourceKeyArgumentAccessor",
+        "SlotMixin",
+        "command.ArgumentTypeInfosAccessor",
+        "command.CommandContextAccessor",
+        "command.CommandsMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "parent": "idonknowa:root",
+  "criteria": {
+    "got_primogem": {
+      "conditions": {
+        "items": [
+          {
+            "items": "idonknowa:primogem"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "adv.idonknowa.got_primogem.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "idonknowa:primogem"
+    },
+    "title": {
+      "translate": "adv.idonknowa.got_primogem.title"
+    }
+  },
+  "requirements": [
+    [
+      "got_primogem"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

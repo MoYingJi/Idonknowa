@@ -1,0 +1,12 @@
+{
+    "feature": "idonknowa:primogem_ore",
+    "placement": [
+        { "type": "biome" }, { "type": "in_square" },
+        { "type": "count", "count": 1 },
+        { "type": "height_range", "height": {
+            "type": "minecraft:trapezoid",
+            "min_inclusive": { "absolute": -70 },
+            "max_inclusive": { "absolute": 70 }
+        } }
+    ]
+}

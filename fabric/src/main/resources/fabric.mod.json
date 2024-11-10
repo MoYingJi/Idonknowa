@@ -1,0 +1,29 @@
+{
+    "schemaVersion": 1,
+    "id": "idonknowa",
+    "version": "${version}",
+    "name": "Idonknowa",
+    "description": "",
+    "authors": [ "MoYingJi" ],
+    "license": "Apache-2.0",
+    "icon": "assets/idonknowa/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [ "moyingji.idonknowa.fabric.IdonknowaFabric" ],
+        "client": [ "moyingji.idonknowa.fabric.IdonknowaFabric" ],
+        "fabric-datagen": [ "moyingji.idonknowa.fabric.IdonknowaFabric" ]
+    },
+    "mixins": [
+        "idonknowa.mixins.json",
+        "idonknowa.fabric.mixins.json"
+    ],
+    "depends": {
+        "minecraft": "*",
+        "java": "*",
+        "architectury": "*",
+        "fabric-language-kotlin": "*"
+    },
+    "suggests": {
+        "fabric-api": "*"
+    }
+}

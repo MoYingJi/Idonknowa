@@ -1,0 +1,21 @@
+{
+  "block.idonknowa.primogem_ore": "Deepslate Primogem Ore",
+  "category.idonknowa": "Idonknowa",
+  "item.idonknowa.mora": "Mora",
+  "item.idonknowa.prescience_matrix": "Matrix of Prescience",
+  "item.idonknowa.primogem": "Primogem",
+  "item.idonknowa.refine_template": "Refine Template",
+  "item.idonknowa.refine_template.additions_slot_description": "Add add-ons that can be added are generally the item itself",
+  "item.idonknowa.refine_template.applies_to": "Refinable Item",
+  "item.idonknowa.refine_template.base_slot_description": "Add items that need to be refined",
+  "item.idonknowa.refine_template.ingredients": "Required Item",
+  "item.idonknowa.refine_template.title": "Refine Level Upgrade Smithing Template",
+  "item.idonknowa.test_item": "Test Item",
+  "item.idonknowa.test_item.refine.description.line0": "It's just a test item, even R@{level}",
+  "item.idonknowa.test_item.refine.description.line1": "I've heard that authors often pile up some unreleased features here",
+  "item.idonknowa.test_item.refine.description.line2": "Holding it in the off-hand can show you some detailed data about some events",
+  "item.idonknowa.test_item.refine.name": "Come Test",
+  "text.idonknowa.display_details": "Display Details",
+  "text.idonknowa.press_to": "Press [@{key}] to @{do}",
+  "text.idonknowa.refine_level": "Refine @{level}"
+}

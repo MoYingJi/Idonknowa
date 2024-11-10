@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "idonknowa:primogem_ore"
+    },
+    "$": {
+      "item": "minecraft:waxed_oxidized_copper_bulb"
+    },
+    "&": {
+      "item": "minecraft:nautilus_shell"
+    },
+    "*": {
+      "item": "idonknowa:primogem"
+    },
+    "+": [
+      {
+        "item": "minecraft:glass"
+      },
+      {
+        "item": "minecraft:glass_pane"
+      }
+    ],
+    "-": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "/": {
+      "item": "minecraft:spyglass"
+    }
+  },
+  "pattern": [
+    "+*+",
+    "&#*",
+    "/-$"
+  ],
+  "result": {
+    "count": 1,
+    "id": "idonknowa:isekai_research_table"
+  }
+}

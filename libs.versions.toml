@@ -1,0 +1,19 @@
+[versions]
+# plugins version
+architectury-plugin = "3.4-SNAPSHOT"
+architectury-loom = "1.7-SNAPSHOT"
+shadow = "8.3.5"
+# kotlin language
+kotlin = "2.0.21"
+kotlin-ksp = "2.0.21-1.0.25"
+
+[libraries]
+kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" } # OLD com.github.johnrengelman.shadow

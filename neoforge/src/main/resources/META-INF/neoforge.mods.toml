@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+license = "Apache 2.0"
+
+[[mods]]
+modId = "idonknowa"
+version = "${version}"
+displayName = "Idonknowa"
+authors = "MoYingJi"
+description = '''
+
+'''
+logoFile = "assets/idonknowa/icon.png"
+
+[[dependencies.idonknowa]]
+modId = "architectury"
+type = "required"
+versionRange = "[1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[mixins]]
+config = "idonknowa.mixins.json"
+[[mixins]]
+config = "idonknowa.neoforge.mixins.json"

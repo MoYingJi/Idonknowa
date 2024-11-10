@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 7.0,
+  "ingredient": {
+    "item": "idonknowa:mora"
+  },
+  "result": {
+    "id": "minecraft:gold_ingot"
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "required": true,
+    "package": "moyingji.idonknowa.mixin.fabric",
+    "compatibilityLevel": "JAVA_21",
+    "minVersion": "0.8",
+    "client": [
+    ],
+    "mixins": [
+        "ItemStackMixin",
+        "ShapedRecipePatternDataMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

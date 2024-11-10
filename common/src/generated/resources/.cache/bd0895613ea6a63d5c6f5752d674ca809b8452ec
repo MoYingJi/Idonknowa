@@ -1,0 +1,9 @@
+// 1.21.1	2024-11-08T16:44:11.262752076	Idonknowa/Tags for minecraft:block
+5f4b10acf9ed0a1b4d9470916e1724a04cd4893a data/minecraft/tags/block/incorrect_for_stone_tool.json
+abd07d36e09d6419cbbf77491f8a83db78ea126f data/minecraft/tags/block/needs_netherite_tool.json
+5f4b10acf9ed0a1b4d9470916e1724a04cd4893a data/minecraft/tags/block/incorrect_for_iron_tool.json
+5f4b10acf9ed0a1b4d9470916e1724a04cd4893a data/minecraft/tags/block/incorrect_for_gold_tool.json
+5f4b10acf9ed0a1b4d9470916e1724a04cd4893a data/minecraft/tags/block/incorrect_for_wooden_tool.json
+5f4b10acf9ed0a1b4d9470916e1724a04cd4893a data/minecraft/tags/block/incorrect_for_diamond_tool.json
+4ac97c5df57485b1b7625c2b445c4c410f8926d0 data/minecraft/tags/block/mineable/pickaxe.json
+878bbb557b1bc4b3f1fed027da6f6d79abb9c621 data/minecraft/tags/block/needs_iron_tool.json
