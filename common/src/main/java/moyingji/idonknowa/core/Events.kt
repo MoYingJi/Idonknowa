@@ -30,7 +30,7 @@ object Events {
     }
 
     object Custom {
-        @OnlyCallOn(SERVER) val AFTER_WISH: Event<(WishResultArgs) -> Unit> = create()
+        @OnlyCallOn(SERVER) val AFTER_WISH: EventAccept<WishResultArgs> = create()
     }
 
     fun regEvents() {
