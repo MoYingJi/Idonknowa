@@ -4,5 +4,6 @@
 build
 out
 run
+.directory
 
 /.idea/*

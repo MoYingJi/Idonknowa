@@ -1,3 +1,4 @@
+@file:Suppress("UnusedReceiverParameter")
 package moyingji.idonknowa.command
 
 import com.mojang.brigadier.Command
@@ -15,6 +16,8 @@ import moyingji.idonknowa.mixin.ResourceKeyArgumentAccessor
 import moyingji.idonknowa.mixin.command.ArgumentTypeInfosAccessor
 import moyingji.lib.api.autoName
 import moyingji.lib.core.PropRead
+import moyingji.lib.math.*
+import moyingji.lib.math.s
 import net.minecraft.commands.*
 import net.minecraft.commands.arguments.*
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
@@ -129,8 +132,8 @@ interface SuggestWithArgType {
 fun byteInt(min: Byte = Byte.MIN_VALUE, max: Byte = Byte.MAX_VALUE): ArgumentType<Int> = IntegerArgumentType.integer(min.toInt(), max.toInt())
 fun byteInt(): ArgumentType<Int> = byteInt(min = Byte.MIN_VALUE, max = Byte.MAX_VALUE)
 fun byteInt(min: Int = Byte.MIN_VALUE.toInt(), max: Int = Byte.MAX_VALUE.toInt()): ArgumentType<Int> = IntegerArgumentType.integer(min, max).also { require(min >= Byte.MIN_VALUE && max <= Byte.MAX_VALUE) }
-fun byteInt(range: ClosedRange<Byte>): ArgumentType<Int> = byteInt(range.start, range.endInclusive)
-fun byteInt(range: IntRange): ArgumentType<Int> = byteInt(range.first, range.last)
+fun byteInt(range: ClosedRange<Byte>): ArgumentType<Int> = byteInt(range.s, range.e)
+fun byteInt(range: IntRange): ArgumentType<Int> = byteInt(range.s, range.e)
 fun ArgBuilder.argByte(name: String, min: Byte = Byte.MIN_VALUE, max: Byte = Byte.MAX_VALUE, block: RequiredSetter) { argument(name, byteInt(min, max), block) }
 fun ArgBuilder.argByte(name: String, min: Int = Byte.MIN_VALUE.toInt(), max: Int = Byte.MAX_VALUE.toInt(), block: RequiredSetter) { argument(name, byteInt(min, max), block) }
 fun ArgBuilder.argByte(name: String, range: ClosedRange<Byte>, block: RequiredSetter) { argument(name, byteInt(range), block) }
@@ -141,8 +144,8 @@ fun CmdContext.argByte(name: String): Byte = IntegerArgumentType.getInteger(this
 fun shortInt(min: Short = Short.MIN_VALUE, max: Short = Short.MAX_VALUE): ArgumentType<Int> = IntegerArgumentType.integer(min.toInt(), max.toInt())
 fun shortInt(): ArgumentType<Int> = shortInt(min = Short.MIN_VALUE, max = Short.MAX_VALUE)
 fun shortInt(min: Int = Short.MIN_VALUE.toInt(), max: Int = Short.MAX_VALUE.toInt()): ArgumentType<Int> = IntegerArgumentType.integer(min, max).also { require(min >= Short.MIN_VALUE && max <= Short.MAX_VALUE) }
-fun shortInt(range: ClosedRange<Short>): ArgumentType<Int> = shortInt(range.start, range.endInclusive)
-fun shortInt(range: IntRange): ArgumentType<Int> = IntegerArgumentType.integer(range.first, range.last).also { require(range.first >= Short.MIN_VALUE && range.last <= Short.MAX_VALUE) }
+fun shortInt(range: ClosedRange<Short>): ArgumentType<Int> = shortInt(range.s, range.e)
+fun shortInt(range: IntRange): ArgumentType<Int> = IntegerArgumentType.integer(range.s, range.e).also { require(range.s >= Short.MIN_VALUE && range.e <= Short.MAX_VALUE) }
 fun ArgBuilder.argShort(name: String, min: Short = Short.MIN_VALUE, max: Short = Short.MAX_VALUE, block: RequiredSetter) { argument(name, shortInt(min, max), block) }
 fun ArgBuilder.argShort(name: String, min: Int = Short.MIN_VALUE.toInt(), max: Int = Short.MAX_VALUE.toInt(), block: RequiredSetter) { argument(name, shortInt(min, max), block) }
 fun ArgBuilder.argShort(name: String, range: ClosedRange<Short>, block: RequiredSetter) { argument(name, shortInt(range), block) }
@@ -151,15 +154,15 @@ fun ArgBuilder.argShort(name: String, block: RequiredSetter) { argument(name, sh
 fun CmdContext.argShort(name: String): Short = IntegerArgumentType.getInteger(this, name).toShort()
 
 fun integer(min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE): ArgumentType<Int> = IntegerArgumentType.integer(min, max)
-fun integer(range: ClosedRange<Int>): ArgumentType<Int> = integer(range.start, range.endInclusive)
+fun integer(range: ClosedRange<Int>): ArgumentType<Int> = integer(range.s, range.e)
 fun ArgBuilder.argInt(name: String, min: Int = Int.MIN_VALUE, max: Int = Int.MAX_VALUE, block: RequiredSetter) { argument(name, integer(min, max), block) }
 fun ArgBuilder.argInt(name: String, range: ClosedRange<Int>, block: RequiredSetter) { argument(name, integer(range), block) }
 fun ArgBuilder.argInt(name: String, block: RequiredSetter) { argument(name, integer(), block) }
 fun CmdContext.argInt(name: String): Int = IntegerArgumentType.getInteger(this, name)
 
 fun long(min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE): ArgumentType<Long> = LongArgumentType.longArg(min, max)
-fun long(range: ClosedRange<Long>): ArgumentType<Long> = LongArgumentType.longArg(range.start, range.endInclusive)
-fun long(range: IntRange): ArgumentType<Long> = LongArgumentType.longArg(range.first.toLong(), range.last.toLong())
+fun long(range: ClosedRange<Long>): ArgumentType<Long> = LongArgumentType.longArg(range.s, range.e)
+fun long(range: IntRange): ArgumentType<Long> = LongArgumentType.longArg(range.s.toLong(), range.e.toLong())
 fun ArgBuilder.argLong(name: String, min: Long = Long.MIN_VALUE, max: Long = Long.MAX_VALUE, block: RequiredSetter) { argument(name, long(min, max), block) }
 fun ArgBuilder.argLong(name: String, range: ClosedRange<Long>, block: RequiredSetter) { argument(name, long(range), block) }
 fun ArgBuilder.argLong(name: String, range: IntRange, block: RequiredSetter) { argument(name, long(range), block) }
@@ -169,8 +172,8 @@ fun CmdContext.argLong(name: String): Long = LongArgumentType.getLong(this, name
 fun float(min: Float = Float.MIN_VALUE, max: Float = Float.MAX_VALUE): ArgumentType<Float> = FloatArgumentType.floatArg(min, max)
 fun float(): ArgumentType<Float> = float(min = Float.MIN_VALUE, max = Float.MAX_VALUE)
 fun float(min: Number = Float.MIN_VALUE, max: Number = Float.MAX_VALUE): ArgumentType<Float> = float(min.toFloat(), max.toFloat())
-fun float(range: ClosedRange<Float>): ArgumentType<Float> = FloatArgumentType.floatArg(range.start, range.endInclusive)
-fun float(range: ClosedFloatingPointRange<Double>): ArgumentType<Float> = FloatArgumentType.floatArg(range.start.toFloat(), range.endInclusive.toFloat())
+fun float(range: ClosedRange<Float>): ArgumentType<Float> = FloatArgumentType.floatArg(range.s, range.e)
+fun float(range: ClosedFloatingPointRange<Double>): ArgumentType<Float> = FloatArgumentType.floatArg(range.s.toFloat(), range.e.toFloat())
 fun ArgBuilder.argFloat(name: String, min: Float = Float.MIN_VALUE, max: Float = Float.MAX_VALUE, block: RequiredSetter) { argument(name, float(min, max), block) }
 fun ArgBuilder.argFloat(name: String, min: Number = Float.MIN_VALUE, max: Number = Float.MAX_VALUE, block: RequiredSetter) { argument(name, float(min, max), block) }
 fun ArgBuilder.argFloat(name: String, range: ClosedRange<Float>, block: RequiredSetter) { argument(name, float(range), block) }
@@ -181,7 +184,7 @@ fun CmdContext.argFloat(name: String): Float = FloatArgumentType.getFloat(this, 
 fun double(min: Double = Double.MIN_VALUE, max: Double = Double.MAX_VALUE): ArgumentType<Double> = DoubleArgumentType.doubleArg(min, max)
 fun double(): ArgumentType<Double> = double(min = Double.MIN_VALUE, max = Double.MAX_VALUE)
 fun double(min: Number = Double.MIN_VALUE, max: Number = Double.MAX_VALUE): ArgumentType<Double> = double(min.toDouble(), max.toDouble())
-fun double(range: ClosedRange<Double>): ArgumentType<Double> = DoubleArgumentType.doubleArg(range.start, range.endInclusive)
+fun double(range: ClosedRange<Double>): ArgumentType<Double> = DoubleArgumentType.doubleArg(range.s, range.e)
 fun ArgBuilder.argDouble(name: String, min: Double = Double.MIN_VALUE, max: Double = Double.MAX_VALUE, block: RequiredSetter) { argument(name, double(min, max), block) }
 fun ArgBuilder.argDouble(name: String, min: Number = Double.MIN_VALUE, max: Number = Double.MAX_VALUE, block: RequiredSetter) { argument(name, double(min, max), block) }
 fun ArgBuilder.argDouble(name: String, range: ClosedRange<Double>, block: RequiredSetter) { argument(name, double(range), block) }

@@ -1,5 +1,7 @@
 package moyingji.lib.util
 
+internal typealias APair<T> = Pair<T, T>
+
 fun <K, V> Map<K, V>.firstKeyOrNull(value: V): K?
 = this.entries.firstOrNull { it.value == value }?.key
 fun <K, V> Map<K, V>.firstKey(value: V): K

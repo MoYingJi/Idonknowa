@@ -3,36 +3,53 @@ package moyingji.lib.math
 
 import moyingji.lib.api.Mutable
 import moyingji.lib.core.Direction2D
-import moyingji.lib.util.typed
+import moyingji.lib.util.*
 
-typealias Vec2i = Pair<Int, Int>
-typealias Vec2ui = Pair<UInt, UInt>
-typealias Vec2s = Pair<Short, Short>
-typealias Vec2us = Pair<UShort, UShort>
+// region Vec2 = Pair Number
+typealias Vec2i = APair<Int>
+typealias Vec2ui = APair<UInt>
+typealias Vec2s = APair<Short>
+typealias Vec2us = APair<UShort>
 
-operator fun Vec2i.plus(other: Vec2i): Vec2i
-= first + other.first to second + other.second
+/** 对 [Pair]<[Comparable]> 取最大值 相等时取 [Pair.first] */
+fun <T: Comparable<T>> APair<T>.max(): T = max(first, second)
+/** 对 [Pair]<[Comparable]> 取最小值 相等时取 [Pair.first] */
+fun <T: Comparable<T>> APair<T>.min(): T = min(first, second)
 
-operator fun Vec2i.times(scalar: Int): Vec2i
-= first * scalar to second * scalar
+operator fun Vec2i.plus(other: Vec2i): Vec2i =
+    first + other.first to second + other.second
+operator fun Vec2i.times(scalar: Int): Vec2i =
+    first * scalar to second * scalar
+infix fun Vec2i.transform(scalar: Vec2i): Vec2i = Vec2i(
+    scalar.first * second - scalar.second * first,
+    scalar.second * first + scalar.first * second)
+// endregion
 
+/** 对 [Comparable] 取最大值 相等时取 [a] */
+fun <T: Comparable<T>> max(a: T, b: T): T = if (a >= b) a else b
+/** 对 [Comparable] 取最小值 相等时取 [a] */
+fun <T: Comparable<T>> min(a: T, b: T): T = if (a <= b) a else b
 
 operator fun Int.plus(other: UShort): Int = this + other.toInt()
 
 
+// region Range
+val <T: Comparable<T>> ClosedRange<T>.s: T inline get() = start
+val <T: Comparable<T>> ClosedRange<T>.e: T inline get() = endInclusive
+
 inline fun <T: Comparable<T>> ClosedRange<T>.asClosedRange(): ClosedRange<T> = typed()
-inline fun ClosedRange<Int>.toIntRange(): IntRange = start..endInclusive
-
-
-infix fun <T: Comparable<T>> ClosedRange<T>.extendTo(value: T): ClosedRange<T>
-= when {
+inline fun ClosedRange<Int>.toIntRange(): IntRange =
+    if (this is IntRange) this else s..e
+infix fun <T: Comparable<T>> ClosedRange<T>.extendTo(value: T)
+: ClosedRange<T> = when {
     this.isEmpty() -> value..value
-    value < start -> value..endInclusive
-    value > endInclusive -> start..value
+    value < s -> value..e
+    value > e -> s..value
     else -> this
 }
 infix fun IntRange.extendTo(value: Int): IntRange
 = this.asClosedRange().extendTo(value).toIntRange()
+// endregion
 
 
 /**
@@ -46,7 +63,7 @@ fun spiralSearch(
 ): Iterator<Vec2i> {
     var x = 0; var y = 0
     var direction: Direction2D = Direction2D.W
-    var cd = 1; var ncd = 1
+    var steps = 1; var stepCount = 0; var turnCount = 0
     return iterator { while (true) {
         if (predicate(x to y)) {
             visited += x to y
@@ -54,10 +71,12 @@ fun spiralSearch(
         val (mx, my) = direction.next()
         x += mx; y += my
         // 判断方向更换
-        if (ncd == cd) {
-            if (direction.isHorizontal) cd ++
-            ncd = 0; direction = direction.last
-        }; ncd ++
+        stepCount++
+        if (stepCount == steps) {
+            turnCount ++; stepCount = 0
+            direction = direction.last
+            if (turnCount % 2 == 0) steps++
+        }
     } }
 }
 

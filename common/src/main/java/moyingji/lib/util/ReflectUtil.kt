@@ -11,6 +11,14 @@ fun <T: Any> KClass<T>.tryCreateInstance(vararg args: Any?): T?
     .map { runCatching { it.call(*args) }.getOrNull() }
     .firstOrNull { it != null }
 
+fun <T: KCallable<*>> T.tryAccessible(
+    finally: ((get: Result<Boolean>, set: Result<Unit>?) -> Unit)? = null,
+): T = apply {
+    val getAccessible: Result<Boolean> = runCatching { isAccessible }
+    val setAccessible: Result<Unit>? = if (getAccessible.isFalse())
+        runCatching { isAccessible = true } else null
+    finally?.invoke(getAccessible, setAccessible)
+}
 
 // region KProperty TypeAliases
 // 泛型 V 代表属性类型 (返回值)
@@ -22,15 +30,6 @@ typealias KPropWithoutReceiver<T> = KProp0<T>
 typealias KPropWithReceiver<R, V> = KProp1<R, V>
 typealias KPropWithMemberReceiver<T, R, V> = KProp2<T, R, V>
 // endregion
-
-fun <T: KCallable<*>> T.tryAccessible(
-    finally: ((get: Result<Boolean>, set: Result<Unit>?) -> Unit)? = null,
-): T = apply {
-    val getAccessible: Result<Boolean> = runCatching { isAccessible }
-    val setAccessible: Result<Unit>? = if (getAccessible.isFalse())
-        runCatching { isAccessible = true } else null
-    finally?.invoke(getAccessible, setAccessible)
-}
 
 // region getDelegate
 inline fun <P: KProp<*>, reified D> P.typeDelegateNullableGetter(f: (P) -> Any?): D? {
