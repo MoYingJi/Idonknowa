@@ -94,6 +94,7 @@ val KAnnotatedElement.keepCase get()
  * 具体看 [reason] (如果说明)
  */
 @Retention(SOURCE) @MustBeDocumented
+@Target(PROPERTY, FUNCTION, VALUE_PARAMETER, TYPE)
 annotation class Immutable(val reason: String = "")
 
 /**
@@ -104,6 +105,7 @@ annotation class Immutable(val reason: String = "")
  * 具体看 [reason] (如果说明)
  */
 @Retention(SOURCE) @MustBeDocumented
+@Target(PROPERTY, FUNCTION, VALUE_PARAMETER, TYPE)
 annotation class Mutable(val reason: String = "")
 
 /** 一般情况下不能读取的值 可能仅用于某些特定用途 具体看 [reason] (如果说明) */
@@ -123,10 +125,6 @@ annotation class Unreadable(val reason: String = "")
 @Retention(SOURCE) @MustBeDocumented
 annotation class Final(val reason: String = "")
 
-@Target(TYPE)
-@Retention(SOURCE) @MustBeDocumented
-annotation class OnceCall(val reason: String = "")
-
 /**
  * 指定该接口仅能被某类实现
  * 一般情况下指定 KClass
@@ -138,6 +136,7 @@ annotation class OnceCall(val reason: String = "")
  * 若 [clazz] 和 [target] 同时填写则需要同时满足
  */
 @Retention(SOURCE) @MustBeDocumented
+@Target(PROPERTY, FUNCTION, CLASS)
 annotation class OnlyCanBeImplementedBy(
     vararg val clazz: KClass<*> = [Any::class],
     @Language("kotlin", prefix = "class A : ") val target: String = "Any",
@@ -161,10 +160,11 @@ annotation class ConflictWith(val clazz: KClass<*>, val reason: String = "")
 @Retention(SOURCE) annotation class Range(
     @Language("kotlin", prefix = "val condition: (Nothing) -> Boolean = { ", suffix = " }" )
     val condition: String = "true",
-    @Language("kotlin", prefix = "val from: Any? get() = ")
+    @Language("kotlin", prefix = "val from: () -> Any? = { ", suffix = " }")
     val from: String = "null",
-    @Language("kotlin", prefix = "val to: Any? get() = ")
-    val to: String = "null" )
+    @Language("kotlin", prefix = "val to: () -> Any? = { ", suffix = " }")
+    val to: String = "null"
+)
 
 // endregion Source Annotations
 

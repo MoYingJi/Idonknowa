@@ -21,9 +21,10 @@ import net.minecraft.world.level.saveddata.SavedData.Factory
 
 @OnlyCallOn(Env.SERVER)
 object VirtualManager {
-    const val REGION_UNIT: Int = RegionUnit.CHUNK
+    const val REGION_UNIT: Int = RegionUnit.MEDIUM
     object RegionUnit {
         const val CHUNK = 4 // 16
+        const val MEDIUM = 5 // 32
         const val REGION = 9 // 512
     }
 
@@ -94,8 +95,8 @@ object VirtualManager {
 
         // 下面 方块坐标 和上面的单位换算为 2^REGION_UNIT
         @Transient val bx: Int = x shl REGION_UNIT; @Transient val bz: Int = z shl REGION_UNIT // 区域初始方块坐标 (包含)
-        @Transient val ebx: Int = (ex + 1) shl REGION_UNIT - 1 // 区域结束方块坐标 (包含)
-        @Transient val ebz: Int = (ez + 1) shl REGION_UNIT - 1 // 取下一个单位方块坐标减 1
+        @Transient val ebx: Int = ((ex + 1) shl REGION_UNIT) - 1 // 区域结束方块坐标 (包含)
+        @Transient val ebz: Int = ((ez + 1) shl REGION_UNIT) - 1 // 取下一个单位方块坐标减 1
 
         val spx: BlockPos get() = BlockPos(bx, rangeHeight.first, bz)
         val epx: BlockPos get() = BlockPos(ebx, rangeHeight.last, ebz)

@@ -1,7 +1,7 @@
-package moyingji.lib.inspiration
+package moyingji.lib.collections
 
 import moyingji.lib.api.Mutable
-import moyingji.lib.util.firstKeyOfOrNull
+import moyingji.lib.util.*
 
 open class MapdCollection<T, R>(
     @Mutable open val parent: MutableCollection<T>,
@@ -60,10 +60,13 @@ open class MapdCachedCollection<T, R>(
     @Mutable parent: MutableCollection<T>,
     from: (T) -> R, to: (R) -> T,
     @Mutable override val objectCache: MutableMap<T, R> = mutableMapOf(),
+    /** 函数 [to] 较为复杂时可以反向搜索缓存 */
+    val toCached: Boolean = false
 ) : MapdCollection<T, R>(parent, from, to), MapdCachable<T, R> {
     override fun from(element: T): R = objectCache.getOrPut(element) { from.invoke(element) }
-    override fun to(element: R): T = objectCache.firstKeyOfOrNull(element)
-        ?: to.invoke(element).also { objectCache += it to element }
+    override fun to(element: R): T = ifOrNull (toCached) {
+        objectCache.firstKeyOfOrNull(element) } ?: toNoCache(element)
+    fun toNoCache(element: R): T = to.invoke(element).also { objectCache += it to element }
     override fun iterator(): MutableIterator<R> = MapdCachedIterator(parent.iterator(), objectCache, ::from)
 }
 
@@ -79,9 +82,12 @@ class MapdCachedMutableList<T, R>(
     @Mutable parent: MutableList<T>,
     from: (T) -> R, to: (R) -> T,
     @Mutable override val objectCache: MutableMap<T, R> = mutableMapOf(),
+    /** 函数 [to] 较为复杂时可以反向搜索缓存 */
+    val toCached: Boolean = false
 ) : MapdMutableList<T, R>(parent, from, to), MapdCachable<T, R> {
     override fun from(element: T): R = objectCache.getOrPut(element) { from.invoke(element) }
-    override fun to(element: R): T = objectCache.firstKeyOfOrNull(element)
-        ?: to.invoke(element).also { objectCache += it to element }
+    override fun to(element: R): T = ifOrNull (toCached) {
+        objectCache.firstKeyOfOrNull(element) } ?: toNoCache(element)
+    fun toNoCache(element: R): T = to.invoke(element).also { objectCache += it to element }
     override fun listIterator(index: Int): MutableListIterator<R> = MutableListIteratorImpl(this, index)
 }

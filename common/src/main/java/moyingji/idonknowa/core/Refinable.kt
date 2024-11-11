@@ -8,7 +8,7 @@ import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
 import moyingji.lib.api.Final
-import moyingji.lib.inspiration.MutableMapsMap
+import moyingji.lib.collections.MutableMapsMap
 import moyingji.lib.util.*
 import net.minecraft.ChatFormatting.*
 import net.minecraft.world.item.*

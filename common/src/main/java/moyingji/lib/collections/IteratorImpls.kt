@@ -1,4 +1,4 @@
-package moyingji.lib.inspiration
+package moyingji.lib.collections
 
 interface IListIteratorImpl<T> : ListIterator<T> {
     val list: List<T>; var index: Int

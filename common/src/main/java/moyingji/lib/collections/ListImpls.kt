@@ -1,4 +1,4 @@
-package moyingji.lib.inspiration
+package moyingji.lib.collections
 
 // region ListImpl (interface version of AbstractList?)
 /**
@@ -64,7 +64,8 @@ interface MutableListImpl<T> : ListImpl<T>, MutableList<T> {
 open class SubList<T>(open val base: List<T>, val offset: Int, override val size: Int) : ListImpl<T> {
     override fun get(index: Int): T = base[offset + index]
 }
-open class MutableSubList<T>(override val base: MutableList<T>, offset: Int, size: Int) : SubList<T>(base, offset, size), MutableListImpl<T> {
+open class MutableSubList<T>(override val base: MutableList<T>, offset: Int, size: Int) : SubList<T>(base, offset, size),
+                                                                                          MutableListImpl<T> {
     override fun set(index: Int, element: T): T = get(index).also { base[offset + index] = element }
     override fun add(index: Int, element: T) { base.add(offset + index, element) }
     override fun removeAt(index: Int): T = base.removeAt(offset + index)

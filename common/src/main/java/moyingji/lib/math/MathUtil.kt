@@ -2,7 +2,7 @@
 package moyingji.lib.math
 
 import moyingji.lib.api.Mutable
-import moyingji.lib.core.Direction2D
+import moyingji.lib.core.*
 import moyingji.lib.util.*
 
 // region Vec2 = Pair Number
@@ -54,16 +54,26 @@ infix fun IntRange.extendTo(value: Int): IntRange
 
 /**
  * 一个螺旋搜索迭代器 坐标可正可负 不限制搜索范围
- * @param visited 已访问过的点
- * @param predicate 搜索条件
+ * @param visited 已访问过的点 (会修改!)
+ * @param visitUntested 即使不通过检查也记录到 [visited] 但不返回
+ * @param firstDirection 首次移动方向
+ * @param order 坐标系顺序
+ * @param startPos 起始坐标
+ * @param nextDirection 下一个方向 (默认为顺时针旋转)
+ * @param predicate 搜索条件 (默认为不在 [visited] 中)
  */
 fun spiralSearch(
     @Mutable visited: MutableCollection<Vec2i> = mutableSetOf(),
     visitUntested: Boolean = false,
+    firstDirection: Direction2D = Direction2D.W,
+    order: MapOrder = MapOrder.XZ, // 按坐标系顺序
+    startPos: Vec2i = 0 to 0,
+    nextDirection: (Direction2D) -> Direction2D
+        = { it.next }, // 默认顺时针 (it.last 为逆时针)
     predicate: (Vec2i) -> Boolean = { it !in visited }
 ): Iterator<Vec2i> {
-    var x = 0; var y = 0
-    var direction: Direction2D = Direction2D.W
+    var (x, y) = startPos
+    var direction: Direction2D = firstDirection
     var steps = 1; var stepCount = 0; var turnCount = 0
     return iterator { while (true) {
         val v = x to y
@@ -71,13 +81,13 @@ fun spiralSearch(
         if (predicate(v)) {
             if (!visitUntested) visited += v
             yield(v) }
-        val (mx, my) = direction.next()
+        val (mx, my) = direction.next(order = order)
         x += mx; y += my
         // 判断方向更换
         stepCount ++
         if (stepCount == steps) {
             turnCount ++; stepCount = 0
-            direction = direction.last
+            direction = nextDirection(direction)
             if (turnCount % 2 == 0) steps ++
         }
     } }

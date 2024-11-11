@@ -91,13 +91,13 @@ class PathfinderGame(
 
         // 此处不判断胜负
         fun accept(direction: Direction2D): Boolean {
-            val (sx, sy) = direction.next(x to y, order = game.mapOrder)
-            val slot = game.mapOrder.accessNullable(game.map, sx, sy)
+            val order = game.mapOrder
+            val pair = direction.next(x to y, order)
+            val slot = order.accessNullable(game.map, pair)
+            val (sx, sy) = pair
             val pass = slot?.canPass(
                 SlotArgs(sx, sy, x, y, direction, game)) ?: game.canPassNull
-            return if (pass) {
-                x = sx; y = sy; true
-            } else false
+            return if (pass) { x = sx; y = sy; true } else false
         }
     }
 }

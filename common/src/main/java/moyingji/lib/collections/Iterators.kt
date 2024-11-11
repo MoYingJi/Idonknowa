@@ -1,4 +1,4 @@
-package moyingji.lib.inspiration
+package moyingji.lib.collections
 
 open class CounteredIterator<T>(
     val parent: Iterator<T>, val count: Int

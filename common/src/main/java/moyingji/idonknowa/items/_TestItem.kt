@@ -7,7 +7,7 @@ import moyingji.idonknowa.all.ItemSettings
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.withOnlyParent
 import moyingji.idonknowa.lang.*
-import moyingji.lib.inspiration.MutableMapsMap
+import moyingji.lib.collections.MutableMapsMap
 import net.minecraft.ChatFormatting.*
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.entity.EquipmentSlotGroup

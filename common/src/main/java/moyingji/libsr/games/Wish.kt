@@ -1,7 +1,7 @@
 package moyingji.libsr.games
 
 import moyingji.lib.api.*
-import moyingji.lib.inspiration.TwoList
+import moyingji.lib.collections.TwoList
 import moyingji.libsr.games.Wish.WishItem
 import org.jetbrains.annotations.Contract
 import kotlin.random.*

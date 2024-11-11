@@ -10,7 +10,7 @@ import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.tag.tag
 import moyingji.idonknowa.util.*
 import moyingji.lib.core.PropIn
-import moyingji.lib.inspiration.MutableMapsMap
+import moyingji.lib.collections.MutableMapsMap
 import net.minecraft.ChatFormatting.*
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.*

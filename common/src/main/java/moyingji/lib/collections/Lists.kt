@@ -1,4 +1,4 @@
-package moyingji.lib.inspiration
+package moyingji.lib.collections
 
 import moyingji.lib.api.Final
 

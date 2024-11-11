@@ -4,7 +4,7 @@ import moyingji.lib.api.Immutable
 import moyingji.lib.math.*
 
 enum class Direction2D(
-    val mapStep: Vec2i
+    private val mapStep: Vec2i
 ) {
     W(0  to -1),
     A(-1 to  0),
@@ -18,8 +18,8 @@ enum class Direction2D(
     val isHorizontal: Boolean get() = this in setOf(A, D)
     val isVertical: Boolean get() = this in setOf(W, S)
 
-    fun mapStep(order: MapOrder): Vec2i {
-        val ds = order.elementOrder.applyDiff()
+    fun mapStep(order: MapOrder = MapOrder.XA): Vec2i {
+        val ds = order.elementOrder.apply()
         return order.indexOrder.apply(mapStep * ds)
     }
 

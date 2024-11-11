@@ -1,5 +1,6 @@
-package moyingji.lib.inspiration
+package moyingji.lib.collections
 
+// region Default Map
 interface HasDefaultValue<K, V> {
     fun defaultValue(key: K): V
 }
@@ -28,7 +29,9 @@ class MutableDefaultMapImpl<K, V>(
     override fun defaultValue(key: K): V = default(key)
     override fun get(key: K): V = map[key] ?: defaultValue(key)
 }
+// endregion
 
+// region Maps Map
 class MutableMapsMap<K1, K2, V>(
     val map: MutableMap<K1, MutableMap<K2, V>> = mutableMapOf(),
     val default: () -> MutableMap<K2, V> = ::mutableMapOf
@@ -41,7 +44,6 @@ class MutableMapsMap<K1, K2, V>(
     fun set(x: K1, y: K2, value: V): V? = get(x).put(y, value)
     operator fun set(pair: Pair<K1, K2>, value: V): V? = set(pair.first, pair.second, value)
 }
-
 class MutableDefaultMapsMap<K1, K2, V>(
     val map: MutableMap<K1, MutableDefaultMap<K2, V>> = mutableMapOf(),
     val defaultMap: (default: (y: K2) -> V) -> MutableDefaultMap<K2, V> = { MutableDefaultMapImpl(default = it) },
@@ -57,3 +59,4 @@ class MutableDefaultMapsMap<K1, K2, V>(
     fun set(x: K1, y: K2, value: V): V? = get(x).put(y, value)
     operator fun set(pair: Pair<K1, K2>, value: V): V? = set(pair.first, pair.second, value)
 }
+// endregion
