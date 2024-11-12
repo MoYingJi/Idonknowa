@@ -57,6 +57,7 @@ object VirtualManager {
                 }; if (a) return r }
             throw IllegalStateException()
         }
+        fun free(rid: UInt) { regions[rid]?.let(::free) }
         fun free(region: Region) { synchronized(lock) {
             if (regions[region.index] !== region)
                 throw IllegalStateException()
@@ -79,14 +80,21 @@ object VirtualManager {
     data class Region (
         @EncodeDefault @Required val index: UInt,
         // 使用 Long 存储 Vec2i | UInt 存储 Vec2us
-        val start: Long, val size: UInt, var usedHeight: Long
+        val start: Long, val size: UInt,
+        var usedHeight: Long, var usedWidth: UInt
     ) {
         constructor(
             //    start x, z         size x, z
             index: UInt, x: Int, z: Int,
             sx: UShort = 1u, sz: UShort = 1u,
-            sh: Int = 0, eh: Int = 0
-        ) : this(index, (x to z).toLong(), (sx to sz).toUInt(), (sh to eh).toLong())
+            sh: Int = 0, eh: Int = 0,
+            ux: UShort = 0u, uz: UShort = 0u
+        ) : this(index,
+            (x to z).toLong(),
+            (sx to sz).toUInt(),
+            (sh to eh).toLong(),
+            (ux to uz).toUInt()
+        )
 
         // 下面 坐标/距离 单位为 REGION_UNIT
         @Transient val x: Int = start.pairFirst(); @Transient val z: Int = start.pairSecond() // 区域初始单位坐标 (包含)
@@ -97,12 +105,31 @@ object VirtualManager {
         @Transient val bx: Int = x shl REGION_UNIT; @Transient val bz: Int = z shl REGION_UNIT // 区域初始方块坐标 (包含)
         @Transient val ebx: Int = ((ex + 1) shl REGION_UNIT) - 1 // 区域结束方块坐标 (包含)
         @Transient val ebz: Int = ((ez + 1) shl REGION_UNIT) - 1 // 取下一个单位方块坐标减 1
+        fun BlockPos.posRegionLocal(): BlockPos = BlockPos(
+            this.x - bx, this.y - rangeHeight.s, this.z - bz)
 
         val spx: BlockPos get() = BlockPos(bx, rangeHeight.first, bz)
         val epx: BlockPos get() = BlockPos(ebx, rangeHeight.last, ebz)
+        val upx: BlockPos get() = BlockPos(
+            bx+usedSize.first, rangeHeight.last, bz+usedSize.second)
         var rangeHeight: IntRange
             get() = usedHeight.pairFirst()..usedHeight.pairSecond()
-            set(value) { usedHeight = (value.first to value.last).toLong() }
+            set(value) { usedHeight = (value.s to value.e).toLong() }
+        var usedSize: Vec2us
+            get() = usedWidth.toVec2us()
+            set(value) {
+                require(value.max() < min(sx, sz))
+                usedWidth = value.toUInt() }
+        fun including(pos: BlockPos) {
+            rangeHeight.extendTo(pos.y)
+            val l = pos.posRegionLocal()
+            var (sx, sz) = usedSize
+            val lx = l.x.toUShort()
+            val lz = l.z.toUShort()
+            if (sx < lx) sx = lx
+            if (sz < lz) sz = lz
+            usedSize = sx to sz
+        }
 
         fun iterableUnit(): Sequence<Vec2i> = (x..ex).asSequence()
             .flatMap { x -> (z..ez).asSequence().map { x to it } }
@@ -110,9 +137,9 @@ object VirtualManager {
         fun clear() { // world CommonLevelAccessor
             val world = world
             val default = Blocks.AIR.defaultBlockState()
-            Idonknowa.info("Start Clear Region $index ($spx -> $epx)")
+            Idonknowa.info("Start Clear Region $index ($spx -> $upx)")
             val timer = Stopwatch.createStarted()
-            for (p in BlockPos.betweenClosed(spx, epx))
+            for (p in BlockPos.betweenClosed(spx, upx))
                 world.setBlockAndUpdate(p, default)
             val t = timer.stop().elapsed()
             Idonknowa.info("Finished Clear Region $index Use ${t.toMillis()} ms (${t.toSeconds()})")
