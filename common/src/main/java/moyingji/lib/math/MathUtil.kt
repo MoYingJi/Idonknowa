@@ -1,7 +1,7 @@
 @file:Suppress("NOTHING_TO_INLINE")
 package moyingji.lib.math
 
-import moyingji.lib.api.Mutable
+import moyingji.lib.api.*
 import moyingji.lib.core.*
 import moyingji.lib.util.*
 
@@ -40,14 +40,14 @@ val <T: Comparable<T>> ClosedRange<T>.e: T inline get() = endInclusive
 inline fun <T: Comparable<T>> ClosedRange<T>.asClosedRange(): ClosedRange<T> = typed()
 inline fun ClosedRange<Int>.toIntRange(): IntRange =
     if (this is IntRange) this else s..e
-infix fun <T: Comparable<T>> ClosedRange<T>.extendTo(value: T)
+infix fun <T: Comparable<T>> @Immutable ClosedRange<T>.extendTo(value: T)
 : ClosedRange<T> = when {
     this.isEmpty() -> value..value
     value < s -> value..e
     value > e -> s..value
     else -> this
 }
-infix fun IntRange.extendTo(value: Int): IntRange
+infix fun @Immutable IntRange.extendTo(value: Int): IntRange
 = this.asClosedRange().extendTo(value).toIntRange()
 // endregion
 

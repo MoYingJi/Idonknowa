@@ -9,8 +9,8 @@ import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.serialization.KSerJsonData
 import moyingji.idonknowa.util.OnlyCallOn
 import moyingji.lib.math.*
+import moyingji.lib.util.*
 import moyingji.lib.util.ReflectUtil.removeInvoker
-import moyingji.lib.util.map
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -37,14 +37,15 @@ object VirtualManager {
         val regions: MutableMap<UInt, Region> = mutableMapOf(),
     ) {
         @Transient val occupiedPairs: MutableCollection<Vec2i> = occupied.map(Long::toVec2i, Vec2i::toLong)
-        @Transient val spiralIterator: Iterator<Vec2i> = spiralSearch(occupiedPairs)
 
         @Transient val lock: Any = this
 
+        fun nextIndex(): UInt = freeIndexes.removeFirstOrNull() ?: nextIndex ++
+
         fun distribution(sx: UShort = 1u, sz: UShort = 1u): Region {
             require(sx > 0u && sz > 0u)
-            val id = synchronized(lock) { nextIndex ++ }
-            for ((x, y) in spiralIterator) {
+            val id = synchronized(lock) { nextIndex() }
+            for ((x, y) in spiralSearch(occupiedPairs)) {
                 assert(x to y !in occupiedPairs)
                 val r = Region(id, x, y, sx, sz)
                 val fs: MutableList<() -> Unit> = mutableListOf()
@@ -78,11 +79,17 @@ object VirtualManager {
     @Serializable
     @OptIn(ExperimentalSerializationApi::class)
     data class Region (
+        // index, start, size 不可变 需要重新申请
         @EncodeDefault @Required val index: UInt,
         // 使用 Long 存储 Vec2i | UInt 存储 Vec2us
         val start: Long, val size: UInt,
-        var usedHeight: Long, var usedWidth: UInt
+        private var usedHeight: Long, private var usedWidth: UInt
+        // usedHeight, usedWidth 仅用于存储数据 请用 rangeHeight, usedSize
     ) {
+        init {
+            require(validHeight(rangeHeight, world)) // usedHeight
+            require(validSize(usedSize)) // usedWidth
+        }
         constructor(
             //    start x, z         size x, z
             index: UInt, x: Int, z: Int,
@@ -103,6 +110,8 @@ object VirtualManager {
 
         // 下面 方块坐标 和上面的单位换算为 2^REGION_UNIT
         @Transient val bx: Int = x shl REGION_UNIT; @Transient val bz: Int = z shl REGION_UNIT // 区域初始方块坐标 (包含)
+        @Transient val bsx: UInt = ((sx + 1u) shl REGION_UNIT) - 1u
+        @Transient val bsz: UInt = ((sz + 1u) shl REGION_UNIT) - 1u
         @Transient val ebx: Int = ((ex + 1) shl REGION_UNIT) - 1 // 区域结束方块坐标 (包含)
         @Transient val ebz: Int = ((ez + 1) shl REGION_UNIT) - 1 // 取下一个单位方块坐标减 1
         fun BlockPos.posRegionLocal(): BlockPos = BlockPos(
@@ -118,17 +127,28 @@ object VirtualManager {
         var usedSize: Vec2us
             get() = usedWidth.toVec2us()
             set(value) {
-                require(value.max() < min(sx, sz))
+                require(validSize(value))
                 usedWidth = value.toUInt() }
-        fun including(pos: BlockPos) {
-            rangeHeight.extendTo(pos.y)
-            val l = pos.posRegionLocal()
+        fun validHeight(range: IntRange, world: LevelHeightAccessor): Boolean {
+            val worldRange = world.minBuildHeight until world.maxBuildHeight
+            return range.s in worldRange && range.e in worldRange
+        }
+        fun validSize(pairLocal: Vec2us): Boolean {
+            val (x, z) = pairLocal
+            return x <= bsx && z <= bsz
+        }
+
+        fun including(pairLocal: Vec2i) {
             var (sx, sz) = usedSize
-            val lx = l.x.toUShort()
-            val lz = l.z.toUShort()
+            val (lx, lz) = pairLocal.map(Int::toUShort)
             if (sx < lx) sx = lx
             if (sz < lz) sz = lz
             usedSize = sx to sz
+        }
+        fun including(posGlobal: BlockPos) {
+            rangeHeight = rangeHeight.extendTo(posGlobal.y)
+            val posLocal = posGlobal.posRegionLocal()
+            including(posLocal.x to posLocal.z)
         }
 
         fun iterableUnit(): Sequence<Vec2i> = (x..ex).asSequence()

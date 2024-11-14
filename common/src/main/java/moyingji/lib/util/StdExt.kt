@@ -23,6 +23,8 @@ fun <T> APair<T>.swap(order: MapOrder.IndexOrder = MapOrder.IndexOrder.YX)
 }
 fun <A, B> Pair<A, B>.swap(): Pair<B, A> = second to first
 
+fun <T, R> APair<T>.map(f: (T) -> R): APair<R> = f(first) to f(second)
+
 fun Result<Boolean?>.isTrue(): Boolean = getOrNull() == true
 fun Result<Boolean?>.isFalse(): Boolean = getOrNull() == false
 

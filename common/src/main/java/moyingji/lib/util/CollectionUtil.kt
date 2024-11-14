@@ -7,6 +7,24 @@ fun <T> Iterator<T>.iterable(): Iterable<T> = Iterable { this }
 
 fun <T> Iterator<T>.take(count: Int): Iterator<T> = CounteredIterator(this, count)
 
+// region MutableIterable.removeFirst[OrNull] (predicate?)
+fun <T> MutableIterable<T>.removeFirstOrNull(predicate: (T) -> Boolean): T? {
+    val i = this.iterator()
+    for (t in this.iterator()) if (predicate(t)) {
+        i.remove(); return t }
+    return null
+}
+fun <T> MutableIterable<T>.removeFirst(predicate: (T) -> Boolean): T
+= removeFirstOrNull(predicate) ?: throw NoSuchElementException()
+
+fun <T> MutableIterable<T>.removeFirstOrNull(): T? {
+    val i = this.iterator()
+    if (!i.hasNext()) return null
+    return i.next().also { _ -> i.remove() }
+}
+fun <T> MutableIterable<T>.removeFirst(): T
+= removeFirstOrNull() ?: throw NoSuchElementException()
+// endregion
 
 // region xmap (Mutable)
 @Mutable fun <T, R> MutableCollection<T>.map(
