@@ -89,16 +89,15 @@ object ReflectUtil {
     // endregion
 
     // region removeInvoker
-    fun <F: Any> MutableCollection<F>.removeInvoker(
-        r: Any? = Unit, allowName: Set<String> = emptySet()
+    inline fun <reified F: Any> MutableCollection<F>.removeInvoker(
+        r: Any? = null, allowName: Set<String> = emptySet()
     ): F = processFunction<Any?, F>(allowName) {
         this.forEachRemove { f -> it(f) }; r }
-    fun <T, F: Any> MutableCollection<F>.removeInvoker(
-        allowName: Set<String> = emptySet(), pr: (List<T>) -> T?
+    inline fun <T, reified F: Any> MutableCollection<F>.removeInvoker(
+        allowName: Set<String> = emptySet(), crossinline pr: (List<T>) -> T?
     ): F = processFunction<T?, F>(allowName) {
         val l: MutableList<T> = mutableListOf()
-        this.forEachRemove { f ->
-            it(f)?.also { l += it } }
+        this.forEachRemove { f -> it(f)?.also { l += it } }
         pr.invoke(l) }
     // endregion
 }

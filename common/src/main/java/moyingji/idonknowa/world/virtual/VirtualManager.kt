@@ -3,6 +3,7 @@ package moyingji.idonknowa.world.virtual
 import com.google.common.base.Stopwatch
 import dev.architectury.utils.Env
 import kotlinx.serialization.*
+import kotlinx.serialization.EncodeDefault.Mode.NEVER
 import moyingji.idonknowa.Idonknowa
 import moyingji.idonknowa.Idonknowa.currentServer
 import moyingji.idonknowa.Idonknowa.id
@@ -10,7 +11,6 @@ import moyingji.idonknowa.serialization.KSerJsonData
 import moyingji.idonknowa.util.OnlyCallOn
 import moyingji.lib.math.*
 import moyingji.lib.util.*
-import moyingji.lib.util.ReflectUtil.removeInvoker
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
@@ -30,12 +30,12 @@ object VirtualManager {
 
     @Serializable
     @OptIn(ExperimentalSerializationApi::class)
-    data class Data(
+    data class Data (
         @EncodeDefault var nextIndex: UInt = 0u,
         val freeIndexes: MutableSet<UInt> = mutableSetOf(),
         val occupied: MutableSet<Long> = mutableSetOf(),
         val regions: MutableMap<UInt, Region> = mutableMapOf(),
-    ) {
+    ) : KSerJsonData.State {
         @Transient val occupiedPairs: MutableCollection<Vec2i> = occupied.map(Long::toVec2i, Vec2i::toLong)
 
         @Transient val lock: Any = this
@@ -46,7 +46,6 @@ object VirtualManager {
             require(sx > 0u && sz > 0u)
             val id = synchronized(lock) { nextIndex() }
             for ((x, y) in spiralSearch(occupiedPairs)) {
-                assert(x to y !in occupiedPairs)
                 val r = Region(id, x, y, sx, sz)
                 val fs: MutableList<() -> Unit> = mutableListOf()
                 var a = false
@@ -54,14 +53,15 @@ object VirtualManager {
                     a = r.iterableUnit().all {
                         fs += { occupiedPairs += it }
                         it !in occupiedPairs }
-                    if (a) fs.removeInvoker().invoke()
+                    if (a) fs.forEachRemove { it() }
                 }; if (a) return r }
             throw IllegalStateException()
         }
         fun free(rid: UInt) { regions[rid]?.let(::free) }
         fun free(region: Region) { synchronized(lock) {
-            if (regions[region.index] !== region)
+            if (region.removed || regions[region.index] !== region)
                 throw IllegalStateException()
+            region.removed = true
             regions -= region.index
             region.iterableUnit().forEach { occupiedPairs -= it }
             freeIndexes += region.index
@@ -83,10 +83,12 @@ object VirtualManager {
         @EncodeDefault @Required val index: UInt,
         // 使用 Long 存储 Vec2i | UInt 存储 Vec2us
         val start: Long, val size: UInt,
-        private var usedHeight: Long, private var usedWidth: UInt
+        private var usedHeight: Long, private var usedWidth: UInt,
         // usedHeight, usedWidth 仅用于存储数据 请用 rangeHeight, usedSize
+        @EncodeDefault(NEVER) var removed: Boolean = false,
     ) {
         init {
+            require(!removed)
             require(validHeight(rangeHeight, world)) // usedHeight
             require(validSize(usedSize)) // usedWidth
         }
@@ -106,21 +108,19 @@ object VirtualManager {
         // 下面 坐标/距离 单位为 REGION_UNIT
         @Transient val x: Int = start.pairFirst(); @Transient val z: Int = start.pairSecond() // 区域初始单位坐标 (包含)
         @Transient val sx: UShort = size.pairFirst(); @Transient val sz: UShort = size.pairSecond() // 区域大小
-        @Transient val ex: Int = x + sx - 1; @Transient val ez: Int = z + sz - 1 // 区域结束单位坐标 (包含)
 
         // 下面 方块坐标 和上面的单位换算为 2^REGION_UNIT
         @Transient val bx: Int = x shl REGION_UNIT; @Transient val bz: Int = z shl REGION_UNIT // 区域初始方块坐标 (包含)
         @Transient val bsx: UInt = ((sx + 1u) shl REGION_UNIT) - 1u
         @Transient val bsz: UInt = ((sz + 1u) shl REGION_UNIT) - 1u
-        @Transient val ebx: Int = ((ex + 1) shl REGION_UNIT) - 1 // 区域结束方块坐标 (包含)
-        @Transient val ebz: Int = ((ez + 1) shl REGION_UNIT) - 1 // 取下一个单位方块坐标减 1
         fun BlockPos.posRegionLocal(): BlockPos = BlockPos(
             this.x - bx, this.y - rangeHeight.s, this.z - bz)
+        fun BlockPos.posGlobal(): BlockPos = BlockPos(
+            this.x + bx, this.y + rangeHeight.s, this.z + bz)
 
         val spx: BlockPos get() = BlockPos(bx, rangeHeight.first, bz)
-        val epx: BlockPos get() = BlockPos(ebx, rangeHeight.last, ebz)
         val upx: BlockPos get() = BlockPos(
-            bx+usedSize.first, rangeHeight.last, bz+usedSize.second)
+            bx + usedSize.first, rangeHeight.last, bz + usedSize.second)
         var rangeHeight: IntRange
             get() = usedHeight.pairFirst()..usedHeight.pairSecond()
             set(value) { usedHeight = (value.s to value.e).toLong() }
@@ -129,6 +129,7 @@ object VirtualManager {
             set(value) {
                 require(validSize(value))
                 usedWidth = value.toUInt() }
+
         fun validHeight(range: IntRange, world: LevelHeightAccessor): Boolean {
             val worldRange = world.minBuildHeight until world.maxBuildHeight
             return range.s in worldRange && range.e in worldRange
@@ -151,10 +152,10 @@ object VirtualManager {
             including(posLocal.x to posLocal.z)
         }
 
-        fun iterableUnit(): Sequence<Vec2i> = (x..ex).asSequence()
-            .flatMap { x -> (z..ez).asSequence().map { x to it } }
+        fun iterableUnit(): Sequence<Vec2i> = iterableUnit(x, z, sx, sz)
 
         fun clear() { // world CommonLevelAccessor
+            !removed || throw IllegalStateException()
             val world = world
             val default = Blocks.AIR.defaultBlockState()
             Idonknowa.info("Start Clear Region $index ($spx -> $upx)")
@@ -164,5 +165,11 @@ object VirtualManager {
             val t = timer.stop().elapsed()
             Idonknowa.info("Finished Clear Region $index Use ${t.toMillis()} ms (${t.toSeconds()})")
         }
+    }
+
+    fun iterableUnit(x: Int, z: Int, sx: UShort, sz: UShort): Sequence<Vec2i> {
+        val ex = x + sx - 1; val ez = z + sz - 1
+        return (x..ex).asSequence()
+            .flatMap { ix -> (z..ez).asSequence().map { ix to it } }
     }
 }

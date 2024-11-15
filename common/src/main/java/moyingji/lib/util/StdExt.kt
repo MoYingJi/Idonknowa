@@ -14,6 +14,9 @@ fun <T> MutableIterable<T>.forEachRemove(f: (T) -> Unit)
 
 inline fun <T> T.alsoIf(c: Boolean, f: (T) -> Unit): T = also { if (c) f(it) }
 
+inline fun <T, reified R> Array<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
+inline fun <T, reified R> List<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
+
 operator fun String.times(i: Int) = this.repeat(i)
 
 fun <T> APair<T>.swap(order: MapOrder.IndexOrder = MapOrder.IndexOrder.YX)

@@ -3,7 +3,7 @@ package moyingji.lib.core
 import moyingji.lib.core.MapOrder.ElementOrder.*
 import moyingji.lib.core.MapOrder.IndexOrder.*
 import moyingji.lib.math.Vec2i
-import moyingji.lib.util.swap
+import moyingji.lib.util.*
 
 enum class MapOrder(
     val indexOrder: IndexOrder,
@@ -49,7 +49,7 @@ enum class MapOrder(
     enum class IndexOrder {
         XY, YX;
 
-        fun apply(pair: Pair<Int, Int>): Pair<Int, Int>
+        fun <T> apply(pair: APair<T>): APair<T>
         = when (this) { XY -> pair; YX -> pair.swap() }
 
         fun <T> access(
