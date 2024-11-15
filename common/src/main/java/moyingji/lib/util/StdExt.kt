@@ -13,6 +13,10 @@ fun <T> MutableIterable<T>.forEachRemove(f: (T) -> Unit)
 { removeAll { f(it); true } }
 
 inline fun <T> T.alsoIf(c: Boolean, f: (T) -> Unit): T = also { if (c) f(it) }
+inline fun Boolean.alsoIf(f: () -> Unit): Boolean = also { if (this) f() }
+
+inline fun <T, reified R> Array<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
+inline fun <T, reified R> List<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
 
 inline fun <T, reified R> Array<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
 inline fun <T, reified R> List<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }

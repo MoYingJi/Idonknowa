@@ -45,16 +45,14 @@ object VirtualManager {
         fun distribution(sx: UShort = 1u, sz: UShort = 1u): Region {
             require(sx > 0u && sz > 0u)
             val id = synchronized(lock) { nextIndex() }
-            for ((x, y) in spiralSearch(occupiedPairs)) {
-                val r = Region(id, x, y, sx, sz)
+            for ((x, z) in spiralSearch(occupiedPairs)) {
                 val fs: MutableList<() -> Unit> = mutableListOf()
-                var a = false
                 synchronized(lock) {
-                    a = r.iterableUnit().all {
+                    iterableUnit(x, z, sx, sz).all {
                         fs += { occupiedPairs += it }
-                        it !in occupiedPairs }
-                    if (a) fs.forEachRemove { it() }
-                }; if (a) return r }
+                        it !in occupiedPairs
+                    }.alsoIf { fs.forEachRemove { it() } }
+                }.alsoIf { return Region(id, x, z, sx, sz) } }
             throw IllegalStateException()
         }
         fun free(rid: UInt) { regions[rid]?.let(::free) }
