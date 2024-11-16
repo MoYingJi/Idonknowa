@@ -10,9 +10,11 @@ object ModCommand {
 
     val idonknowa by regLiteral {
         then(DataCommand.data)
+        then(VirtualWorldCommand.vir)
     }
 
     init {
         DataCommand // init
+        VirtualWorldCommand // init
     }
 }

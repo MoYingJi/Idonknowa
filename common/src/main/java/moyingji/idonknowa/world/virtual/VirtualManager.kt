@@ -33,11 +33,9 @@ object VirtualManager {
     data class Data (
         @EncodeDefault var nextIndex: UInt = 0u,
         val freeIndexes: MutableSet<UInt> = mutableSetOf(),
-        val occupied: MutableSet<Long> = mutableSetOf(),
+        val occupied: MutableMap<Long, UInt> = mutableMapOf(),
         val regions: MutableMap<UInt, Region> = mutableMapOf(),
     ) : KSerJsonData.State {
-        @Transient val occupiedPairs: MutableCollection<Vec2i> = occupied.map(Long::toVec2i, Vec2i::toLong)
-
         @Transient val lock: Any = this
 
         fun nextIndex(): UInt = freeIndexes.removeFirstOrNull() ?: nextIndex ++
@@ -45,12 +43,13 @@ object VirtualManager {
         fun distribution(sx: UShort = 1u, sz: UShort = 1u): Region {
             require(sx > 0u && sz > 0u)
             val id = synchronized(lock) { nextIndex() }
-            for ((x, z) in spiralSearch(occupiedPairs)) {
+            val o = occupied.keys.map(Long::toVec2i)
+            for ((x, z) in spiralSearch(o)) {
                 val fs: MutableList<() -> Unit> = mutableListOf()
                 synchronized(lock) {
                     iterableUnit(x, z, sx, sz).all {
-                        fs += { occupiedPairs += it }
-                        it !in occupiedPairs
+                        fs += { occupied += it.toLong() to id }
+                        it !in o
                     }.alsoIf { fs.forEachRemove { it() } }
                 }.alsoIf { return Region(id, x, z, sx, sz) } }
             throw IllegalStateException()
@@ -61,7 +60,7 @@ object VirtualManager {
                 throw IllegalStateException()
             region.removed = true
             regions -= region.index
-            region.iterableUnit().forEach { occupiedPairs -= it }
+            region.iterableUnit().forEach { occupied -= it.toLong() }
             freeIndexes += region.index
         } }
     }
@@ -81,7 +80,7 @@ object VirtualManager {
         @EncodeDefault @Required val index: UInt,
         // 使用 Long 存储 Vec2i | UInt 存储 Vec2us
         val start: Long, val size: UInt,
-        private var usedHeight: Long, private var usedWidth: UInt,
+        var usedHeight: Long, var usedWidth: UInt,
         // usedHeight, usedWidth 仅用于存储数据 请用 rangeHeight, usedSize
         @EncodeDefault(NEVER) var removed: Boolean = false,
     ) {
@@ -138,11 +137,12 @@ object VirtualManager {
         }
 
         fun including(pairLocal: Vec2i) {
-            var (sx, sz) = usedSize
+            require(pairLocal.all { it in 0..UShort.MAX_VALUE.toInt() })
             val (lx, lz) = pairLocal.map(Int::toUShort)
+            var (sx, sz) = usedSize
             if (sx < lx) sx = lx
             if (sz < lz) sz = lz
-            usedSize = sx to sz
+            usedSize = sx to sz // throw if invalid
         }
         fun including(posGlobal: BlockPos) {
             rangeHeight = rangeHeight.extendTo(posGlobal.y)

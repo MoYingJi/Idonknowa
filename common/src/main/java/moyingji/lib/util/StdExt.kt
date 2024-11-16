@@ -3,6 +3,7 @@ package moyingji.lib.util
 import moyingji.lib.core.MapOrder
 
 internal typealias APair<T> = Pair<T, T>
+internal typealias ATriple<T> = Triple<T, T, T>
 
 fun <K, V> Map<K, V>.firstKeyOfOrNull(value: V): K?
 = this.entries.firstOrNull { it.value == value }?.key
@@ -18,9 +19,6 @@ inline fun Boolean.alsoIf(f: () -> Unit): Boolean = also { if (this) f() }
 inline fun <T, reified R> Array<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
 inline fun <T, reified R> List<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
 
-inline fun <T, reified R> Array<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
-inline fun <T, reified R> List<T>.mapArray(f: (T) -> R): Array<R> = Array(size) { f(this[it]) }
-
 operator fun String.times(i: Int) = this.repeat(i)
 
 fun <T> APair<T>.swap(order: MapOrder.IndexOrder = MapOrder.IndexOrder.YX)
@@ -31,6 +29,7 @@ fun <T> APair<T>.swap(order: MapOrder.IndexOrder = MapOrder.IndexOrder.YX)
 fun <A, B> Pair<A, B>.swap(): Pair<B, A> = second to first
 
 fun <T, R> APair<T>.map(f: (T) -> R): APair<R> = f(first) to f(second)
+fun <T> APair<T>.all(f: (T) -> Boolean): Boolean = f(first) && f(second)
 
 fun Result<Boolean?>.isTrue(): Boolean = getOrNull() == true
 fun Result<Boolean?>.isFalse(): Boolean = getOrNull() == false

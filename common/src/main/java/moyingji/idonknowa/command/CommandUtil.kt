@@ -11,22 +11,25 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import dev.architectury.registry.registries.Registrar
 import moyingji.idonknowa.*
 import moyingji.idonknowa.command.CommandUtil.contextReturn
+import moyingji.idonknowa.command.argument.*
 import moyingji.idonknowa.core.*
+import moyingji.idonknowa.lang.text
 import moyingji.idonknowa.mixin.ResourceKeyArgumentAccessor
 import moyingji.idonknowa.mixin.command.ArgumentTypeInfosAccessor
 import moyingji.lib.api.autoName
 import moyingji.lib.core.PropRead
 import moyingji.lib.math.*
-import moyingji.lib.math.s
+import moyingji.lib.util.supplyAsync
 import net.minecraft.commands.*
 import net.minecraft.commands.arguments.*
+import net.minecraft.commands.arguments.coordinates.*
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.core.*
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
+import org.joml.Vector3d
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletableFuture.supplyAsync
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.reflect.*
 
@@ -80,20 +83,24 @@ infix fun CmdContext.code(i: Int) { contextReturn[this] = i }
 
 fun CmdContext.succeed() { code(Command.SINGLE_SUCCESS) }
 fun CmdContext.fail(code: Int = -1) { if (code != Command.SINGLE_SUCCESS) code(code) else throw IllegalArgumentException() }
-fun CmdContext.fail(exception: CommandSyntaxException): Nothing = throw exception
+fun CmdContext.fail(f: BuiltInExceptionProvider.() -> CommandSyntaxException): Nothing = throw f(CommandSyntaxException.BUILT_IN_EXCEPTIONS)
 fun CmdContext.success(text: Text, log: Boolean = true) { source.sendSuccess({text}, log); succeed() }
+fun CmdContext.success(text: String, log: Boolean = true) { success(text.text(), log) }
 fun CmdContext.failure(text: Text) { source.sendFailure(text); fail() }
+fun CmdContext.failure(text: String) { failure(text.text()) }
 fun CmdContext.message(text: Text) { source.sendSystemMessage(text) }
+fun CmdContext.message(text: String) { message(text.text()) }
 
 val CmdContext.player: ServerPlayer get() = source.playerOrException
 
 fun suggestion(f: (@CmdDsl SuggestionsBuilder).(CmdContext) -> Unit): SuggestionProvider<ServerSource>
-= SuggestionProvider { c, b -> supplyAsync { f(b, c); b.build() } }
+= SuggestionProvider { c, b -> Unit.supplyAsync { f(b, c); b.build() } }
 fun RequiredBuilder.suggestion(f: (@CmdDsl SuggestionsBuilder).(CmdContext) -> Unit)
 { suggests { c, b -> supplyAsync { f(b, c); b.build() } } }
 
 fun ArgBuilder.literal(name: String, block: LiteralSetter) { then(Commands.literal(name).apply(block)) }
 fun ArgBuilder.argument(name: String, type: ArgumentType<*>, block: RequiredSetter) { then(Commands.argument(name, type).apply(block)) }
+fun ArgBuilder.argument(arg: CmdArgument, block: RequiredSetter) { argument(arg.name, arg.type) { suggests(arg.suggestion); block() } }
 
 fun ArgBuilder.arguments(vararg args: CmdArgument, block: RequiredSetter) {
     var builder: ArgBuilder = this
@@ -109,6 +116,15 @@ fun ArgBuilder.arguments(vararg args: CmdArgument, block: RequiredSetter) {
 }
 infix fun String.arg(type: ArgumentType<*>): CmdArgument = CmdArgument(this, type)
 infix fun CmdArgument.suggest(suggestion: SuggestionProvider<ServerSource>): CmdArgument = this.also { it.suggestion = suggestion }
+infix fun CmdArgument.suggest(suggestion: SuggestionsBuilder.(CommandContext<ServerSource>) -> Unit): CmdArgument
+= this.also { it.suggestion = SuggestionProvider { c, b ->
+    suggestion(b, c); b.buildFuture() } }
+infix fun CmdArgument.suggestAsync(
+    suggestion: suspend SuggestionsBuilder.(CommandContext<ServerSource>) -> Unit
+): CmdArgument
+= this.also { it.suggestion = SuggestionProvider { c, b ->
+    supplyAsync { suggestion(b, c); b.build() } } }
+
 data class CmdArgument(
     var name: String,
     var type: ArgumentType<*>,
@@ -221,6 +237,21 @@ fun <T> CmdContext.argKey(
     name: String, reg: ResourceKey<out Registry<T>>,
     exception: DynamicCommandExceptionType = NbtPathArgument.ERROR_NOTHING_FOUND
 ): Holder.Reference<T> = ResourceKeyArgumentAccessor.resolveKey(this, name, reg, exception)
+// endregion
+// region BlockPosArgument
+fun blockPos(): ArgumentType<Coordinates> = BlockPosArgument.blockPos()
+fun ArgBuilder.argBlockPos(name: String, block: RequiredSetter) { argument(name, blockPos(), block) }
+fun CmdContext.argBlockPos(name: String): BlockPos = BlockPosArgument.getBlockPos(this, name)
+// endregion
+// region Vec3dAbsoluteArgument
+fun vec3dAbsolute(): ArgumentType<Vector3d> = Vec3dAbsoluteArgument
+fun ArgBuilder.argVec3dAbsolute(name: String, block: RequiredSetter) { argument(name, vec3dAbsolute(), block) }
+fun CmdContext.argVec3dAbsolute(name: String): Vector3d = Vec3dAbsoluteArgument.getResult(this, name)
+// endregion
+// region Vec3iAbsoluteArgument
+fun vec3iAbsolute(): ArgumentType<Vec3i> = Vec3iAbsoluteArgument
+fun ArgBuilder.argVec3iAbsolute(name: String, block: RequiredSetter) { argument(name, vec3iAbsolute(), block) }
+fun CmdContext.argVec3iAbsolute(name: String): Vec3i = Vec3iAbsoluteArgument.getResult(this, name)
 // endregion
 
 val argTypeReg: Registrar<ArgumentTypeInfo<*, *>> = RegHelper.manager.get(Registries.COMMAND_ARGUMENT_TYPE)
