@@ -107,25 +107,25 @@ fun spiralSearch(
 // region Vec2i <-> Long
 fun Vec2i.toLong(): Long = (first.toLong() shl 32) or (second.toLong())
 fun Long.toVec2i(): Vec2i = pairFirst() to pairSecond()
-fun Long.pairFirst(): Int = this.toInt() // 取高 32 位
-fun Long.pairSecond(): Int = (this shr 32).toInt() // 取低 32 位
+fun Long.pairFirst(): Int = (this shr 32).toInt() // 取低 32 位
+fun Long.pairSecond(): Int = this.toInt() // 取高 32 位
 // endregion
 // region Vec2ui <-> ULong
 fun Vec2ui.toULong(): ULong = (first.toULong() shl 32) or (second.toULong())
 fun ULong.toVec2ui(): Vec2ui = pairFirst() to pairSecond()
-fun ULong.pairFirst(): UInt = this.toInt().toUInt()
-fun ULong.pairSecond(): UInt = (this shr 32).toUInt()
+fun ULong.pairFirst(): UInt = (this shr 32).toUInt()
+fun ULong.pairSecond(): UInt = this.toInt().toUInt()
 // endregion
 // region Vec2s <-> Int
 fun Vec2s.toInt(): Int = (first.toInt() shl 16) or (second.toInt())
 fun Int.toVec2s(): Vec2s = pairFirst() to pairSecond()
-fun Int.pairFirst(): Short = this.toShort()
-fun Int.pairSecond(): Short = (this shr 16).toShort()
+fun Int.pairFirst(): Short = (this shr 16).toShort()
+fun Int.pairSecond(): Short = this.toShort()
 // endregion
 // region Vec2us <-> UInt
 fun Vec2us.toUInt(): UInt = (first.toUInt() shl 16) or (second.toUInt())
 fun UInt.toVec2us(): Vec2us = pairFirst() to pairSecond()
-fun UInt.pairFirst(): UShort = this.toUShort()
-fun UInt.pairSecond(): UShort = (this shr 16).toUShort()
+fun UInt.pairFirst(): UShort = (this shr 16).toUShort()
+fun UInt.pairSecond(): UShort = this.toUShort()
 // endregion
 // endregion

@@ -43,7 +43,7 @@ object VirtualManager {
 
         fun distribution(sx: UShort = 1u, sz: UShort = 1u): Region {
             require(sx > 0u && sz > 0u)
-            info("Start Distribution Region, Size: $sx, $sz")
+            info("Distribution Region, Size: $sx, $sz")
             Json.encodeToString(this).also(::info)
             val id = synchronized(lock) { nextIndex() }
             val ov = occupied.keys.map(Long::toVec2i)
@@ -122,12 +122,14 @@ object VirtualManager {
         fun BlockPos.posGlobal(): BlockPos = BlockPos(
             this.x + bx, this.y + rangeHeight.s, this.z + bz)
 
-        val spx: BlockPos get() = BlockPos(bx, rangeHeight.first, bz)
+        val spx: BlockPos get() = BlockPos(bx, rangeHeight.s, bz)
         val upx: BlockPos get() = BlockPos(
-            bx + usedSize.first, rangeHeight.last, bz + usedSize.second)
+            bx + usedSize.first, rangeHeight.e, bz + usedSize.second)
         var rangeHeight: IntRange
             get() = usedHeight.pairFirst()..usedHeight.pairSecond()
-            set(value) { usedHeight = (value.s to value.e).toLong() }
+            set(value) {
+                require(validHeight(value, world))
+                usedHeight = (value.s to value.e).toLong() }
         var usedSize: Vec2us
             get() = usedWidth.toVec2us()
             set(value) {
