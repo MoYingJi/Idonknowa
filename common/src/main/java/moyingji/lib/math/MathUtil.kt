@@ -107,8 +107,8 @@ fun spiralSearch(
 // region Vec2i <-> Long
 fun Vec2i.toLong(): Long = (first.toLong() shl 32) or (second.toLong())
 fun Long.toVec2i(): Vec2i = pairFirst() to pairSecond()
-fun Long.pairFirst(): Int = (this shr 32).toInt() // 取低 32 位
-fun Long.pairSecond(): Int = this.toInt() // 取高 32 位
+fun Long.pairFirst(): Int = (this shr 32).toInt() // 取高 32 位
+fun Long.pairSecond(): Int = this.toInt() // 取低 32 位
 // endregion
 // region Vec2ui <-> ULong
 fun Vec2ui.toULong(): ULong = (first.toULong() shl 32) or (second.toULong())
