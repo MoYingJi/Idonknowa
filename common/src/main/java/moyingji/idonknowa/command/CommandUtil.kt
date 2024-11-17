@@ -103,16 +103,17 @@ fun ArgBuilder.argument(name: String, type: ArgumentType<*>, block: RequiredSett
 fun ArgBuilder.argument(arg: CmdArgument, block: RequiredSetter) { argument(arg.name, arg.type) { suggests(arg.suggestion); block() } }
 
 fun ArgBuilder.arguments(vararg args: CmdArgument, block: RequiredSetter) {
+    require(args.isNotEmpty())
     var builder: ArgBuilder = this
-    val fs: MutableList<() -> Unit> = mutableListOf()
+    val m: MutableList<Pair<ArgBuilder, RequiredBuilder>> = mutableListOf()
     for ((name, type, suggestion) in args) {
         val b: RequiredBuilder = Commands.argument(name, type)
-        fs.addFirst { builder.then(b) }
-        if (suggestion != null) b.suggests(suggestion)
+        suggestion?.let { b.suggests(it) }
+        m += builder to b
         builder = b
     }
     if (builder is RequiredBuilder) block.invoke(builder)
-    fs.forEach { it() }
+    m.reversed().forEach { (b, r) -> b.then(r) }
 }
 infix fun String.arg(type: ArgumentType<*>): CmdArgument = CmdArgument(this, type)
 infix fun CmdArgument.suggest(suggestion: SuggestionProvider<ServerSource>): CmdArgument = this.also { it.suggestion = suggestion }

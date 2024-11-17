@@ -20,7 +20,7 @@ object DataCommand {
         ::getDataInHand.also { JsonPathArgument.fr += "player_hand_stack".id to it },
         defaultFirst = "components",
         autoPrefix = listOf("minecraft:", "idonknowa:")
-    ).also { JsonPathArgument.type }
+    )
     val getHand: LiteralNode by literal {
         run { success(getData(getDataInHand(this), null)) }
         argument("path", playerHandJsonArg) {

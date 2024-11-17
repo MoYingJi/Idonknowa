@@ -4,13 +4,14 @@ import com.google.gson.*
 import com.mojang.serialization.JsonOps
 import kotlinx.serialization.*
 import moyingji.lib.api.*
-import moyingji.lib.util.*
+import moyingji.lib.util.typed
 import net.minecraft.core.HolderLookup.Provider
 import net.minecraft.nbt.*
 import net.minecraft.util.datafix.DataFixTypes
 import net.minecraft.world.level.saveddata.SavedData
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.*
+import kotlin.reflect.full.createInstance
 
 @OptIn(InternalSerializationApi::class)
 class KSerJsonData<T: Any>(
@@ -52,7 +53,7 @@ class KSerJsonData<T: Any>(
         fun <T: Any> type(
             clazz: KClass<T>,
             dataFix: DataFixTypes? = null,
-            creator: () -> T = { clazz.tryCreateInstance()!! }
+            creator: () -> T = { clazz.createInstance() }
         ): Factory<KSerJsonData<T>> {
             val serializer = clazz.serializer()
             val factory: (CompoundTag, Any) -> KSerJsonData<T> = {

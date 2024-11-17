@@ -8,8 +8,10 @@ import kotlin.reflect.jvm.isAccessible
 
 fun <T: Any> KClass<T>.tryCreateInstance(vararg args: Any?): T?
 = constructors.asSequence()
+    .filter { it.visibility == KVisibility.PUBLIC }
+    .filter { it.parameters.size == args.size }
     .map { runCatching { it.call(*args) }.getOrNull() }
-    .firstOrNull { it != null }
+    .firstOrNull { println(it); it != null }
 
 fun <T: KCallable<*>> T.tryAccessible(
     finally: ((get: Result<Boolean>, set: Result<Unit>?) -> Unit)? = null,

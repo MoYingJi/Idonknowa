@@ -10,8 +10,10 @@ import net.minecraft.core.Vec3i
 import org.joml.Vector3d
 
 object Vec3dAbsoluteArgument : ArgumentType<Vector3d> {
+    fun StringReader.r(): Double = readDouble().also { skipWhitespace() }
+
     override fun parse(reader: StringReader): Vector3d
-    = Vector3d(reader.readDouble(), reader.readDouble(), reader.readDouble())
+    = Vector3d(reader.r(), reader.r(), reader.r())
 
     val type = regArgType(
         "absolute_vec3d".id, Vec3dAbsoluteArgument::class
@@ -22,8 +24,10 @@ object Vec3dAbsoluteArgument : ArgumentType<Vector3d> {
 }
 
 object Vec3iAbsoluteArgument : ArgumentType<Vec3i> {
+    fun StringReader.r(): Int = readInt().also { skipWhitespace() }
+
     override fun parse(reader: StringReader): Vec3i
-    = Vec3i(reader.readInt(), reader.readInt(), reader.readInt())
+    = Vec3i(reader.r(), reader.r(), reader.r())
 
     val type = regArgType(
         "vec3i_absolute".id, Vec3iAbsoluteArgument::class

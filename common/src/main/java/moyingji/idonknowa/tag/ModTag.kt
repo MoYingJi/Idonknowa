@@ -57,6 +57,6 @@ class ModTagger<T>(
 ) : ((String) -> TagKey<T>) by f,
     PropertyDelegateProvider<Any?, PropRead<TagKey<T>>> {
     override fun provideDelegate(thisRef: Any?, property: KProperty<*>): PropRead<TagKey<T>>
-    = PropProvider(f(property.autoName(String::lowercase)))
+    = f(property.autoName(String::lowercase)).propProvider()
 }
 // endregion

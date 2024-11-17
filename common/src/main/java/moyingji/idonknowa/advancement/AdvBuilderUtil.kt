@@ -101,7 +101,7 @@ class AdvBuilder(
         return holder
     }
     override fun provideDelegate(thisRef: Any?, property: KProperty<*>): PropRead<AdvHolder>
-    = PropProvider(regBuild(property.autoName(String::lowercase).id(namespace)))
+    = regBuild(property.autoName(String::lowercase).id(namespace)).propProvider()
 
     init { f(this) }
 }

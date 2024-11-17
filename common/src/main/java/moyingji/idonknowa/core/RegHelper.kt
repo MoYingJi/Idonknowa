@@ -28,8 +28,8 @@ open class RegHelper<T>(
         .also { regs.listen { ModModelProvider.whenReg(it) } }
 
     override fun provideDelegate(thisRef: Any?, property: KProperty<*>)
-    : PropRead<RegS<T>> = PropProvider(reg(provideId(property))
-        .also { listen { afterReg(it, property) } })
+    : PropRead<RegS<T>> = reg(provideId(property)).propProvider()
+        .also { listen { afterReg(it, property) } }
     open fun provideId(prop: KProperty<*>): Id
     = prop.autoName("_", String::lowercase).id
 

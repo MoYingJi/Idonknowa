@@ -12,15 +12,17 @@ enum class Direction2D(
     D(1  to  0);
 
     val reverse: Direction2D get() = when (this) { W -> S; A -> D; S -> W; D -> A }
-    val next: Direction2D get() = when (this) { W -> A; A -> S; S -> D; D -> A }
+    val next: Direction2D get() = when (this) { W -> A; A -> S; S -> D; D -> W }
     val last: Direction2D get() = when (this) { W -> D; D -> S; S -> A; A -> W }
 
     val isHorizontal: Boolean get() = this in setOf(A, D)
     val isVertical: Boolean get() = this in setOf(W, S)
 
     fun mapStep(order: MapOrder = MapOrder.XA): Vec2i {
+        val step = order.indexOrder.apply(mapStep)
         val ds = order.elementOrder.apply()
-        return order.indexOrder.apply(mapStep * ds)
+        val dc = order.childOrder.apply()
+        return step.first * ds to step.second * dc
     }
 
     fun next(

@@ -4,9 +4,10 @@ import com.google.common.base.Stopwatch
 import dev.architectury.utils.Env
 import kotlinx.serialization.*
 import kotlinx.serialization.EncodeDefault.Mode.NEVER
-import moyingji.idonknowa.Idonknowa
+import kotlinx.serialization.json.Json
 import moyingji.idonknowa.Idonknowa.currentServer
 import moyingji.idonknowa.Idonknowa.id
+import moyingji.idonknowa.Idonknowa.info
 import moyingji.idonknowa.serialization.KSerJsonData
 import moyingji.idonknowa.util.OnlyCallOn
 import moyingji.lib.math.*
@@ -42,16 +43,19 @@ object VirtualManager {
 
         fun distribution(sx: UShort = 1u, sz: UShort = 1u): Region {
             require(sx > 0u && sz > 0u)
+            info("Start Distribution Region, Size: $sx, $sz")
+            Json.encodeToString(this).also(::info)
             val id = synchronized(lock) { nextIndex() }
-            val o = occupied.keys.map(Long::toVec2i)
-            for ((x, z) in spiralSearch(o)) {
+            val ov = occupied.keys.map(Long::toVec2i)
+            for ((x, z) in spiralSearch(ov, mutateVisited = false)) {
                 val fs: MutableList<() -> Unit> = mutableListOf()
                 synchronized(lock) {
                     iterableUnit(x, z, sx, sz).all {
                         fs += { occupied += it.toLong() to id }
-                        it !in o
+                        it !in ov
                     }.alsoIf { fs.forEachRemove { it() } }
-                }.alsoIf { return Region(id, x, z, sx, sz) } }
+                }.alsoIf { return Region(id, x, z, sx, sz)
+                    .also { regions += id to it } } }
             throw IllegalStateException()
         }
         fun free(rid: UInt) { regions[rid]?.let(::free) }
@@ -70,7 +74,10 @@ object VirtualManager {
 
     val world: ServerLevel get() = currentServer?.getLevel(worldType)!!
 
-    val dataState: KSerJsonData<Data> get() = world.dataStorage.computeIfAbsent(dataType, "idonknowa_virtual_world")
+//    val dataState: KSerJsonData<Data> get() = currentServer!!.getLevel(Level.OVERWORLD)!!
+//        .dataStorage.computeIfAbsent(dataType, "idonknowa_virtual_world")
+    val dataState: KSerJsonData<Data> get() = world.dataStorage
+        .computeIfAbsent(dataType, "idonknowa_virtual_world")
     val data: Data by dataState.also { it.setDirty() }
 
     @Serializable
@@ -156,12 +163,12 @@ object VirtualManager {
             !removed || throw IllegalStateException()
             val world = world
             val default = Blocks.AIR.defaultBlockState()
-            Idonknowa.info("Start Clear Region $index ($spx -> $upx)")
+            info("Start Clear Region $index ($spx -> $upx)")
             val timer = Stopwatch.createStarted()
             for (p in BlockPos.betweenClosed(spx, upx))
                 world.setBlockAndUpdate(p, default)
             val t = timer.stop().elapsed()
-            Idonknowa.info("Finished Clear Region $index Use ${t.toMillis()} ms (${t.toSeconds()})")
+            info("Finished Clear Region $index Use ${t.toMillis()} ms (${t.toSeconds()})")
         }
     }
 

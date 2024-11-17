@@ -72,7 +72,7 @@ fun spiralSearch(
     order: MapOrder = MapOrder.XZ, // 按坐标系顺序
     startPos: Vec2i = 0 to 0,
     nextDirection: (Direction2D) -> Direction2D
-        = { it.next }, // 默认顺时针 (it.last 为逆时针)
+        = { it.last }, // 默认顺时针 (it.next 为逆时针)
     predicate: (Vec2i) -> Boolean = { it !in visited }
 ): Iterator<Vec2i> {
     require(!mutateVisited || visited is MutableCollection<*>)
@@ -93,8 +93,8 @@ fun spiralSearch(
         // 判断方向更换
         stepCount ++
         if (stepCount == steps) {
-            turnCount ++; stepCount = 0
             direction = nextDirection(direction)
+            turnCount ++; stepCount = 0
             if (turnCount % 2 == 0) steps ++
         }
     } }

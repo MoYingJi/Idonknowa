@@ -26,6 +26,9 @@ class PropLazyProvider<T>(
     override val value: T by lazy(initializer)
 }
 
+fun <T> T.propIn(): PropIn<T> = PropValue(this)
+fun <T> T.propProvider(): PropRead<T> = PropProvider(this)
+
 open class PropMap<A, T, R>(
     open val parent: ReadOnlyProperty<A, T>,
     val from: A.(T) -> R

@@ -7,21 +7,22 @@ import moyingji.lib.util.*
 
 enum class MapOrder(
     val indexOrder: IndexOrder,
-    val elementOrder: ElementOrder
+    val elementOrder: ElementOrder,
+    val childOrder: ElementOrder,
 ) {
-    XA(XY, AZ),
-    YA(YX, AZ),
-    XZ(XY, ZA),
-    YZ(YX, ZA);
+    XA(XY, AZ, AZ),
+    YA(YX, AZ, AZ),
+    XZ(XY, AZ, ZA),
+    YZ(YX, ZA, AZ);
 
     fun <T> access(list: List<List<T>>, pair: Vec2i): T
-    = indexOrder.access(list, pair, elementOrder)
+    = indexOrder.access(list, pair, elementOrder, childOrder)
 
     fun <T> accessNullable(list: List<List<T>>, pair: Vec2i): T?
-    = indexOrder.accessNullable(list, pair, elementOrder)
+    = indexOrder.accessNullable(list, pair, elementOrder, childOrder)
 
     fun <T> mutate(list: MutableList<MutableList<T>>, pair: Vec2i, value: T): T
-    = indexOrder.mutate(list, pair, value, elementOrder)
+    = indexOrder.mutate(list, pair, value, elementOrder, childOrder)
 
     enum class ElementOrder {
         AZ, ZA;
@@ -55,22 +56,25 @@ enum class MapOrder(
         fun <T> access(
             list: List<List<T>>,
             pair: Vec2i,
-            order: ElementOrder = AZ
-        ): T = if (this == YX) XY.access(list, pair.swap(), order)
-        else order.access(order.access(list, pair.first), pair.second)
+            order: ElementOrder = AZ,
+            cOrder: ElementOrder = order
+        ): T = if (this == YX) XY.access(list, pair.swap(), cOrder, order)
+        else cOrder.access(order.access(list, pair.first), pair.second)
 
         fun <T> accessNullable(
             list: List<List<T>>,
             pair: Vec2i,
-            order: ElementOrder = AZ
-        ): T? = if (this == YX) XY.accessNullable(list, pair.swap(), order)
-        else order.accessNullable(list, pair.first)?.let { order.accessNullable(it, pair.second) }
+            order: ElementOrder = AZ,
+            cOrder: ElementOrder = order
+        ): T? = if (this == YX) XY.accessNullable(list, pair.swap(), cOrder, order)
+        else order.accessNullable(list, pair.first)?.let { cOrder.accessNullable(it, pair.second) }
 
         fun <T> mutate(
             list: List<MutableList<T>>,
             pair: Vec2i, value: T,
-            order: ElementOrder = AZ
-        ): T = if (this == YX) XY.mutate(list, pair.swap(), value, order)
-        else order.mutate(order.access(list, pair.first), pair.second, value)
+            order: ElementOrder = AZ,
+            cOrder: ElementOrder = order
+        ): T = if (this == YX) XY.mutate(list, pair.swap(), value, cOrder, order)
+        else cOrder.mutate(order.access(list, pair.first), pair.second, value)
     }
 }
