@@ -49,6 +49,9 @@ class PropReadMutableMap<A, T, R>(
 ) : PropMap<A, T, R>(parent, to), ExpectFrom<A.(R) -> T, PropMutableMap<A, T, R>> {
     override fun from(from: A.(R) -> T): PropMutableMap<A, T, R>
     = PropMutableMap(parent, to, from)
+    @Suppress("UNUSED_PARAMETER")
+    fun from(from: (R) -> T, unit: Unit = Unit): PropMutableMap<A, T, R>
+    = PropMutableMap(parent, to) { from(it) }
 }
 
 @Suppress("UNUSED_PARAMETER")
@@ -63,4 +66,6 @@ object PropertyMap {
     : PropMutableMap<A, T, R> = PropMutableMap(this, { to(it) }, { from(it) })
     infix fun <A, T, R> ReadWriteProperty<A, T>.map(to: A.(T) -> R)
     : PropReadMutableMap<A, T, R> = PropReadMutableMap(this, to)
+    fun <A, T, R> ReadWriteProperty<A, T>.map(to: (T) -> R, unit: Unit = Unit)
+    : PropReadMutableMap<A, T, R> = PropReadMutableMap(this) { to(it) }
 }

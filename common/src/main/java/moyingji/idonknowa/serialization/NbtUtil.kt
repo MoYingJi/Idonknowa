@@ -6,7 +6,7 @@ import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.core.*
 import moyingji.lib.api.autoName
 import moyingji.lib.core.PropertyMap.map
-import moyingji.lib.util.*
+import moyingji.lib.util.typed
 import net.minecraft.core.component.*
 import net.minecraft.core.component.DataComponentType.Builder
 import net.minecraft.core.registries.Registries
@@ -16,7 +16,6 @@ import net.minecraft.world.item.component.CustomModelData
 import java.util.function.UnaryOperator
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.*
 
 typealias NbtType<T> = DataComponentType<T>
 typealias NbtTypeRegS<T> = RegS<NbtType<T>>
@@ -43,7 +42,7 @@ fun <T> nbtType(pair: Pair<Codec<T>, SCodec<T>?>): NbtTypeRegHelper<T>
 // region NbtProviders
 interface NbtPropIn<T> { val type: NbtType<T> }
 
-class NbtProp<T>(val _type: () -> NbtType<T>) : ReadWriteProperty<ItemStack, T?>, NbtPropIn<T> {
+class NbtProp<T>(private val _type: () -> NbtType<T>) : ReadWriteProperty<ItemStack, T?>, NbtPropIn<T> {
     override val type: NbtType<T> by lazy(_type)
     override fun getValue(thisRef: ItemStack, property: KProperty<*>): T? = thisRef.get(type)
     override fun setValue(thisRef: ItemStack, property: KProperty<*>, value: T?) { thisRef.set(type, value) }
@@ -59,14 +58,6 @@ fun <T> NbtType<T>.property(): NbtProp<T> = NbtProp { this }
 fun <T> NbtTypeRegS<T>.property(): NbtProp<T> = NbtProp { this.value() }
 fun <T> NbtType<T>.property(default: T & Any): NbtPropDefault<T> = NbtPropDefault({ this }, default)
 fun <T> NbtTypeRegS<T>.property(default: T & Any): NbtPropDefault<T> = NbtPropDefault({ this.value() }, default)
-
-@Throws(TypeCastException::class, IllegalPropertyDelegateAccessException::class)
-fun <T> ItemStack?.getNbtPropType(prop: KProperty<T>): NbtType<T> = prop
-    .typed<KPropWithReceiver<ItemStack, T>>().tryAccessible()
-    .let {
-        if (this == null) it.getExtensionDelegate()
-        else it.getDelegate(this)
-    }.typed<NbtPropIn<T>>().type
 // endregion
 
 var ItemStack.customModelData by DataComponents.CUSTOM_MODEL_DATA
