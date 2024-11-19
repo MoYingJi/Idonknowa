@@ -11,10 +11,10 @@ import moyingji.idonknowa.gui.*
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultItems
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultStar
 import moyingji.idonknowa.lang.*
+import moyingji.idonknowa.loot.*
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
-import moyingji.idonknowa.loot.*
-import moyingji.lib.util.*
+import moyingji.lib.util.firstKeyOf
 import moyingji.libsr.games.Wish
 import moyingji.libsr.games.Wish.*
 import net.minecraft.ChatFormatting.*
@@ -28,13 +28,12 @@ import net.minecraft.world.entity.player.*
 import net.minecraft.world.inventory.*
 import net.minecraft.world.inventory.ClickAction.SECONDARY
 import net.minecraft.world.item.*
-import net.minecraft.world.item.component.CustomModelData
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.loot.*
 import java.lang.Math.round
-import java.util.Optional
+import java.util.*
 
 typealias LootGacha = Gacha<LootTable>
 typealias UpLootGacha = UpGacha<LootTable>
@@ -243,7 +242,7 @@ class WishItem : Item(ItemSettings()
         val result = ModItem.WISH_RESULT.value().default
         result.resultItems = ra.result
         result.resultStar = ra.star
-        result.customModelData = CustomModelData(ra.star.toInt())
+        result.customModelData = ra.star.toInt()
         result.rarityComponent = Result.getRarity(result)
         return result
     }

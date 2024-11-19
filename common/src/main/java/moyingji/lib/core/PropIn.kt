@@ -1,5 +1,6 @@
 package moyingji.lib.core
 
+import moyingji.lib.util.ExpectFrom
 import org.intellij.lang.annotations.Flow
 import kotlin.properties.*
 import kotlin.reflect.KProperty
@@ -31,27 +32,35 @@ fun <T> T.propProvider(): PropRead<T> = PropProvider(this)
 
 open class PropMap<A, T, R>(
     open val parent: ReadOnlyProperty<A, T>,
-    val from: A.(T) -> R
+    val to: A.(T) -> R
 ) : ReadOnlyProperty<A, R> {
     override fun getValue(thisRef: A, property: KProperty<*>): R
-    = from(thisRef, parent.getValue(thisRef, property))
+    = to(thisRef, parent.getValue(thisRef, property))
 }
 class PropMutableMap<A, T, R>(
     override val parent: ReadWriteProperty<A, T>,
-    from: A.(T) -> R,
-    val to: A.(R) -> T
-) : PropMap<A, T, R>(parent, from), ReadWriteProperty<A, R> {
+    to: A.(T) -> R, val from: A.(R) -> T
+) : PropMap<A, T, R>(parent, to), ReadWriteProperty<A, R> {
     override fun setValue(thisRef: A, property: KProperty<*>, value: R)
-    { parent.setValue(thisRef, property, to(thisRef, value)) }
+    { parent.setValue(thisRef, property, from(thisRef, value)) }
 }
+class PropReadMutableMap<A, T, R>(
+    override val parent: ReadWriteProperty<A, T>, to: A.(T) -> R
+) : PropMap<A, T, R>(parent, to), ExpectFrom<A.(R) -> T, PropMutableMap<A, T, R>> {
+    override fun from(from: A.(R) -> T): PropMutableMap<A, T, R>
+    = PropMutableMap(parent, to, from)
+}
+
 @Suppress("UNUSED_PARAMETER")
 object PropertyMap {
-    fun <A, T, R> ReadOnlyProperty<A, T>.map(from: A.(T) -> R)
-    : PropMap<A, T, R> = PropMap(this, from)
-    fun <A, T, R> ReadOnlyProperty<A, T>.map(from: (T) -> R, unit: Unit = Unit)
-    : PropMap<A, T, R> = PropMap(this) { from(it) }
-    fun <A, T, R> ReadWriteProperty<A, T>.map(from: A.(T) -> R, to: A.(R) -> T)
-    : PropMutableMap<A, T, R> = PropMutableMap(this, from, to)
-    fun <A, T, R> ReadWriteProperty<A, T>.map(from: (T) -> R, to: (R) -> T, unit: Unit = Unit)
-    : PropMutableMap<A, T, R> = PropMutableMap(this, { from(it) }, { to(it) })
+    infix fun <A, T, R> ReadOnlyProperty<A, T>.map(to: A.(T) -> R)
+    : PropMap<A, T, R> = PropMap(this, to)
+    fun <A, T, R> ReadOnlyProperty<A, T>.map(to: (T) -> R, unit: Unit = Unit)
+    : PropMap<A, T, R> = PropMap(this) { to(it) }
+    fun <A, T, R> ReadWriteProperty<A, T>.map(to: A.(T) -> R, from: A.(R) -> T)
+    : PropMutableMap<A, T, R> = PropMutableMap(this, to, from)
+    fun <A, T, R> ReadWriteProperty<A, T>.map(to: (T) -> R, from: (R) -> T, unit: Unit = Unit)
+    : PropMutableMap<A, T, R> = PropMutableMap(this, { to(it) }, { from(it) })
+    infix fun <A, T, R> ReadWriteProperty<A, T>.map(to: A.(T) -> R)
+    : PropReadMutableMap<A, T, R> = PropReadMutableMap(this, to)
 }

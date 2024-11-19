@@ -89,13 +89,8 @@ object VirtualManager {
         val start: Long, val size: UInt,
         var usedHeight: Long, var usedWidth: UInt,
         // usedHeight, usedWidth 仅用于存储数据 请用 rangeHeight, usedSize
-        @EncodeDefault(NEVER) var removed: Boolean = false,
     ) {
-        init {
-            require(!removed)
-            require(validHeight(rangeHeight, world)) // usedHeight
-            require(validSize(usedSize)) // usedWidth
-        }
+        init { require(valid()) }
         constructor(
             //    start x, z         size x, z
             index: UInt, x: Int, z: Int,
@@ -135,6 +130,11 @@ object VirtualManager {
             set(value) {
                 require(validSize(value))
                 usedWidth = value.toUInt() }
+        @EncodeDefault(NEVER) var removed: Boolean = false
+            set(value) {
+                value || !field || throw IllegalStateException(
+                    "The Region has been marked REMOVED")
+                field = value }
 
         fun validHeight(range: IntRange, world: LevelHeightAccessor): Boolean {
             val worldRange = world.minBuildHeight until world.maxBuildHeight
@@ -144,6 +144,9 @@ object VirtualManager {
             val (x, z) = pairLocal
             return x <= bsx && z <= bsz
         }
+        fun valid(): Boolean = !removed
+            && validHeight(rangeHeight, world) // usedHeight
+            && validSize(usedSize) // usedWidth
 
         fun including(pairLocal: Vec2i) {
             require(pairLocal.all { it in 0..UShort.MAX_VALUE.toInt() })
@@ -160,14 +163,15 @@ object VirtualManager {
         }
 
         fun iterableUnit(): Sequence<Vec2i> = iterableUnit(x, z, sx, sz)
+        fun iterableBlock(): Iterable<BlockPos> = BlockPos.betweenClosed(spx, upx)
 
         fun clear() { // world CommonLevelAccessor
-            !removed || throw IllegalStateException()
+            valid() || throw IllegalStateException()
             val world = world
             val default = Blocks.AIR.defaultBlockState()
             info("Start Clear Region $index ($spx -> $upx)")
             val timer = Stopwatch.createStarted()
-            for (p in BlockPos.betweenClosed(spx, upx))
+            for (p in iterableBlock())
                 world.setBlockAndUpdate(p, default)
             val t = timer.stop().elapsed()
             info("Finished Clear Region $index Use ${t.toMillis()} ms (${t.toSeconds()})")

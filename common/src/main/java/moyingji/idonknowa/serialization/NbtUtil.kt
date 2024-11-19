@@ -5,12 +5,14 @@ import moyingji.idonknowa.Id
 import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.core.*
 import moyingji.lib.api.autoName
+import moyingji.lib.core.PropertyMap.map
 import moyingji.lib.util.*
 import net.minecraft.core.component.*
 import net.minecraft.core.component.DataComponentType.Builder
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomModelData
 import java.util.function.UnaryOperator
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -25,10 +27,7 @@ typealias NbtComp = CompoundTag
 class NbtTypeRegHelper<T>(initializer: () -> NbtType<T>) : RegHelper<NbtType<T>>(Registries.DATA_COMPONENT_TYPE.typed(), initializer) {
     override fun provideId(prop: KProperty<*>): Id
     = prop.autoName("_") {
-        val s = it.lowercase()
-        if (s.endsWith("_nbt"))
-            s.substringBefore("_nbt")
-        else s }.id
+        it.lowercase().removeSuffix("_nbt") }.id
 }
 
 fun <T> nbtType(unaryOperator: UnaryOperator<Builder<T>>)
@@ -70,5 +69,6 @@ fun <T> ItemStack?.getNbtPropType(prop: KProperty<T>): NbtType<T> = prop
     }.typed<NbtPropIn<T>>().type
 // endregion
 
-var ItemStack.customModelData by DataComponents.CUSTOM_MODEL_DATA.property()
+var ItemStack.customModelData by DataComponents.CUSTOM_MODEL_DATA
+    .property() map { it?.value } from { it?.let(::CustomModelData) }
 var ItemStack.customData by DataComponents.CUSTOM_DATA.property()
