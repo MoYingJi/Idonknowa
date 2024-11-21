@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.*
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.saveddata.SavedData.Factory
+import org.joml.Vector3d
 
 @OnlyCallOn(Env.SERVER)
 object VirtualManager {
@@ -116,6 +117,10 @@ object VirtualManager {
             this.x - bx, this.y - rangeHeight.s, this.z - bz)
         fun BlockPos.posGlobal(): BlockPos = BlockPos(
             this.x + bx, this.y + rangeHeight.s, this.z + bz)
+        fun Vector3d.posRegionLocal(): Vector3d
+        = sub(bx.toDouble(), rangeHeight.s.toDouble(), bz.toDouble())
+        fun Vector3d.posGlobal(): Vector3d
+        = add(bx.toDouble(), rangeHeight.s.toDouble(), bz.toDouble())
 
         val spx: BlockPos get() = BlockPos(bx, rangeHeight.s, bz)
         val upx: BlockPos get() = BlockPos(

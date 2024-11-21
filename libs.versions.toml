@@ -14,6 +14,6 @@ kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
-architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
-architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" } # https://maven.architectury.dev/architectury-plugin/architectury-plugin.gradle.plugin/
+architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" } # https://maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" } # OLD com.github.johnrengelman.shadow

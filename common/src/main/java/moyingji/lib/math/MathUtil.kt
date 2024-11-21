@@ -37,6 +37,8 @@ operator fun Int.plus(other: UShort): Int = this + other.toInt()
 val <T: Comparable<T>> ClosedRange<T>.s: T inline get() = start
 val <T: Comparable<T>> ClosedRange<T>.e: T inline get() = endInclusive
 
+val ClosedRange<Int>.size: Int inline get() = e - s
+
 inline fun <T: Comparable<T>> ClosedRange<T>.asClosedRange(): ClosedRange<T> = typed()
 inline fun ClosedRange<Int>.toIntRange(): IntRange =
     if (this is IntRange) this else s..e

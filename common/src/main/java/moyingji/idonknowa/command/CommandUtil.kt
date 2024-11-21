@@ -46,6 +46,7 @@ typealias RequiredBuilder = RequiredArgumentBuilder<ServerSource, *>
 
 typealias LiteralSetter = (@CmdDsl LiteralBuilder).() -> Unit
 typealias RequiredSetter = (@CmdDsl RequiredBuilder).() -> Unit
+typealias CmdExceptionProv = BuiltInExceptionProvider.() -> CommandSyntaxException
 
 class RegCmdNode(
     val builder: LiteralBuilder,
@@ -83,13 +84,18 @@ infix fun CmdContext.code(i: Int) { contextReturn[this] = i }
 
 fun CmdContext.succeed() { code(Command.SINGLE_SUCCESS) }
 fun CmdContext.fail(code: Int = -1) { if (code != Command.SINGLE_SUCCESS) code(code) else throw IllegalArgumentException() }
-fun CmdContext.fail(f: BuiltInExceptionProvider.() -> CommandSyntaxException): Nothing = throw f(CommandSyntaxException.BUILT_IN_EXCEPTIONS)
+inline fun CmdContext.fail(f: CmdExceptionProv): Nothing = throw f(CommandSyntaxException.BUILT_IN_EXCEPTIONS)
 fun CmdContext.success(text: Text, log: Boolean = true) { source.sendSuccess({text}, log); succeed() }
 fun CmdContext.success(text: String, log: Boolean = true) { success(text.text(), log) }
 fun CmdContext.failure(text: Text) { source.sendFailure(text); fail() }
 fun CmdContext.failure(text: String) { failure(text.text()) }
 fun CmdContext.message(text: Text) { source.sendSystemMessage(text) }
 fun CmdContext.message(text: String) { message(text.text()) }
+
+inline fun <T> CmdContext.runCatchingFail(
+    exception: CmdExceptionProv = { dispatcherUnknownCommand().create() },
+    block: CmdContext.() -> T
+): Result<T> = runCatching(block).onFailure { fail(exception) }
 
 val CmdContext.player: ServerPlayer get() = source.playerOrException
 

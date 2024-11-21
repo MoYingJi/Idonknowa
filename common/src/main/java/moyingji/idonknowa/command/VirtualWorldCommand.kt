@@ -9,6 +9,7 @@ import moyingji.idonknowa.world.virtual.VirtualManager.world
 import moyingji.lib.math.*
 import moyingji.lib.util.*
 import net.minecraft.ChatFormatting.RED
+import net.minecraft.core.BlockPos
 
 object VirtualWorldCommand {
     val vir by literal {
@@ -92,8 +93,7 @@ object VirtualWorldCommand {
         "posRegionLocal"
     ) { requiresOp(); run {
         val r = region()
-        val v = argVec3dAbsolute("posRegionLocal")
-            .add(r.bx.toDouble(), r.rangeHeight.s.toDouble(), r.bz.toDouble())
+        val v = with(r) { argVec3dAbsolute("posRegionLocal").posGlobal() }
         val p = player
         p.teleportTo(world, v.x, v.y, v.z, setOf(), p.yRot, p.xRot)
         success(tpSuccessKey.text(p.displayName, v.x, v.y, v.z)
@@ -101,10 +101,12 @@ object VirtualWorldCommand {
     } } }
     // endregion
 
+    // TO.DO 需要向执行者提供命令执行详细信息
+
     // region include
-    // TODO 需要提供详细信息
     val include by literal {
         requiresOp()
+        run { includeRegion(player.blockPosition()) }
         then(includeLocal)
         then(includeGlobal)
     }
@@ -113,29 +115,32 @@ object VirtualWorldCommand {
             val r = region()
             val p = argVec3iAbsolute("posRegionLocal")
             // 如果坐标不在 size 范围内 则自动在 including 报错 捕获并提供信息
-            runCatching { r.including(p.x to p.z) }
-                .onFailure { fail { dispatcherUnknownCommand().create() } }
-            r.rangeHeight.extendTo(p.y)
+            runCatchingFail {
+                r.including(p.x to p.z)
+                r.rangeHeight.extendTo(p.y)
+            }
             success("[Idonknowa] Success")
         } }
     }
     val includeGlobal by literal("global") {
         argBlockPos("pos") { run {
-            // 如果坐标不在 size 范围内 则自动在 including 报错 捕获并提供信息
-            runCatching { region().including(argBlockPos("pos")) }
-                .onFailure { fail { dispatcherUnknownCommand().create() } }
-            success("[Idonknowa] Success")
+            includeRegion(argBlockPos("pos"))
         } }
+    }
+    fun CmdContext.includeRegion(pos: BlockPos) {
+        // 如果坐标不在 size 范围内 则自动在 including 报错 捕获并提供信息
+        runCatchingFail { region().including(pos) }
+        success("[Idonknowa] Success")
     }
     // endregion
 
     val clear by literal { requiresOp(); run {
-        region().clear()
-        success("[Idonknowa] Success")
-    } }
+        region().clear(); success("[Idonknowa] Success")
+    }; literal("async") { run { runAsync {
+        region().clear(); message("[Idonknowa] Async Clear Finished")
+    } } } }
 
     val free by literal { requiresOp(); run {
-        data.free(region())
-        success("[Idonknowa] Success")
+        data.free(region()); success("[Idonknowa] Success")
     } }
 }
