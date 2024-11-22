@@ -25,7 +25,7 @@ abstract class CurioItem(properties: Properties) : Item(properties
         /** `null` -> no value; `0u` -> break; else -> value */
         var ItemStack.curioValue: UShort? by CURIO_VALUE.property()
         val ItemStack.curioHasValue: Boolean get() = has(CURIO_VALUE.value()) || curioValue != null
-        val ItemStack.curioIsBreak: Boolean get() = curioValue?.let { it <= 0u } ?: false
+        val ItemStack.curioIsBreak: Boolean get() = curioValue?.let { it <= 0u } == true
 
         val curioList: MutableList<CurioItem> = mutableListOf()
     }

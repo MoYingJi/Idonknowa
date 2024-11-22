@@ -7,7 +7,7 @@ import java.io.File
 object CodeGen {
     fun genCodeIn(
         @Language("kotlin", prefix = "class ") fn: String,
-        @Language("kotlin", prefix = "package ") pkg: String,
+        @Language("kotlin") pkg: String,
         codes: File,
         f: StringBuilder.() -> Unit
     ) {

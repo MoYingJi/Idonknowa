@@ -7,13 +7,14 @@ import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.all.*
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.withFlatModel
-import moyingji.idonknowa.gui.*
+import moyingji.idonknowa.gui.getChestMenuType
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultItems
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultStar
 import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.loot.*
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
+import moyingji.lib.math.clamp
 import moyingji.lib.util.firstKeyOf
 import moyingji.libsr.games.Wish
 import moyingji.libsr.games.Wish.*
@@ -21,7 +22,6 @@ import net.minecraft.ChatFormatting.*
 import net.minecraft.core.BlockPos
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.server.level.*
-import net.minecraft.util.Mth.clamp
 import net.minecraft.world.*
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.player.*
@@ -32,8 +32,8 @@ import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.storage.loot.*
-import java.lang.Math.round
 import java.util.*
+import kotlin.math.roundToInt
 
 typealias LootGacha = Gacha<LootTable>
 typealias UpLootGacha = UpGacha<LootTable>
@@ -135,9 +135,10 @@ class WishItem : Item(ItemSettings()
     }
 
     override fun getBarWidth(stack: ItemStack): Int
-    = clamp(round(stack.wishRemain.toFloat()*13/stack.wishLastConsumable.toFloat()), 0, 13)
+    = (stack.wishRemain.toFloat() * 13 / stack.wishLastConsumable.toFloat())
+        .roundToInt().clamp(0..13)
     override fun isBarVisible(stack: ItemStack): Boolean = true
-    override fun getBarColor(itemStack: ItemStack): Int = Formatting.YELLOW.color!!
+    override fun getBarColor(itemStack: ItemStack): Int = YELLOW.color!!
 
     class Result : Item(ItemSettings()
         .stacksTo(1)
@@ -181,7 +182,7 @@ class WishItem : Item(ItemSettings()
                 container.removeAllItems().forEach {
                     if (!it.isEmpty) player.addItem(it) }
             }
-            override fun getContainer(): SimpleContainer = super.getContainer() as SimpleContainer
+            override fun getContainer(): SimpleContainer = super.container as SimpleContainer
             override fun quickMoveStack(player: Player, i: Int): ItemStack {
                 val c = rows * 9
                 if (i < c) return super.quickMoveStack(player, i)

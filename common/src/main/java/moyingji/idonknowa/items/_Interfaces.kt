@@ -157,7 +157,7 @@ interface BindingCurseItem : SlotMayStackPlace, RestoreAfterDied, ModifyStackDro
                 return@register
             it += "enchantment.minecraft.binding_curse".tranText()
                 .withStyle(Formatting.DARK_PURPLE)
-                .append(" [I]".textStyle(Formatting.GRAY))
+                .append(" [I]".textStyle(GRAY))
         }
         Events.Player.STACK_INV_TICK.register {
             if (!isServerThread()) return@register

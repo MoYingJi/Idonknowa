@@ -1,7 +1,7 @@
 # Idonknowa
 一个发癫模组 | A Fucking Mod <br>
 [![State-of-the-art Shitcode](https://img.shields.io/static/v1?label=State-of-the-art&message=Shitcode&color=7B5804)](https://github.com/trekhleb/state-of-the-art-shitcode)
-[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](./LICENSE.txt)
+[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](./LICENSE)
 
 [![Available on Fabric](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg)](https://fabricmc.net/)
 [<img alt="Available on NeoForge" height="60" src="https://ghp.ci/raw.githubusercontent.com/neoforged/NeoForge/refs/heads/1.21.x/docs/assets/neoforged_logo.png"/>](https://neoforged.net/)

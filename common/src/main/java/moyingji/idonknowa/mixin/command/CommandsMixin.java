@@ -2,7 +2,6 @@ package moyingji.idonknowa.mixin.command;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import moyingji.idonknowa.Idonknowa;
 import moyingji.idonknowa.command.SuggestWithArgType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

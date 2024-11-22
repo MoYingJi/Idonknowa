@@ -44,7 +44,7 @@ fun <D> KProp0<*>.typeDelegate(): D = this.getDelegate().typed()
 fun <R, D> KProp1<R, *>.typeDelegate(receiver: R): D = this.getDelegate(receiver).typed()
 
 fun <T> KProp0<T>.delegateLazy(): Lazy<T>? = typeDelegateNullable()
-fun <T> KProp0<T>.isLazyInited(): Boolean = this.delegateLazy()?.isInitialized() ?: true
+fun <T> KProp0<T>.isLazyInitialized(): Boolean = this.delegateLazy()?.isInitialized() != false
 // endregion
 
 

@@ -1,26 +1,22 @@
 package moyingji.idonknowa.command.argument
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import com.google.gson.*
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.suggestion.*
-import moyingji.idonknowa.*
+import moyingji.idonknowa.Id
 import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.command.*
 import moyingji.idonknowa.command.argument.JsonPathArgument.JsonPathResult
 import moyingji.idonknowa.core.RegS
-import moyingji.idonknowa.util.*
 import moyingji.lib.util.*
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.arguments.NbtPathArgument.ERROR_INVALID_NODE
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
 import net.minecraft.network.FriendlyByteBuf
 import java.util.concurrent.CompletableFuture
-import kotlin.collections.listOf
 
 class JsonPathArgument(
     val template: Template

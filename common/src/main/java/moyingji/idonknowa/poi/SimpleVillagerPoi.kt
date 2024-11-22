@@ -1,17 +1,19 @@
 package moyingji.idonknowa.poi
 
 import com.google.common.collect.ImmutableSet
+import dev.architectury.registry.registries.Registrar
 import moyingji.idonknowa.*
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.mixin.PoiTypesAccessor
 import moyingji.idonknowa.tag.tag
 import moyingji.idonknowa.util.getPossibleStates
-import moyingji.lib.util.isLazyInited
+import moyingji.lib.util.isLazyInitialized
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.tags.PoiTypeTags
+import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.ai.village.poi.PoiType
 import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.level.block.Block
@@ -44,14 +46,14 @@ class SimpleVillagerPoi(
     fun listen(action: VillagerProfession.() -> Unit) = also { regs.listen(action) }
 
     companion object {
-        val reg = RegHelper.manager.get(Registries.VILLAGER_PROFESSION)
-        val regPoi = RegHelper.manager.get(Registries.POINT_OF_INTEREST_TYPE)
+        val reg: Registrar<VillagerProfession> = RegHelper.manager.get(Registries.VILLAGER_PROFESSION)
+        val regPoi: Registrar<PoiType> = RegHelper.manager.get(Registries.POINT_OF_INTEREST_TYPE)
         val typeByState: MutableMap<BlockState, Holder<PoiType>> = PoiTypesAccessor.getTypeByState()
-        val acquirable = PoiTypeTags.ACQUIRABLE_JOB_SITE
+        val acquirable: TagKey<PoiType> = PoiTypeTags.ACQUIRABLE_JOB_SITE
         fun reg(poi: SimpleVillagerPoi): Pair<RegS<PoiType>, RegS<VillagerProfession>> {
-            if (poi::profession.isLazyInited() ||
-                poi::poiType.isLazyInited() ||
-                poi::blocks.isLazyInited())
+            if (poi::profession.isLazyInitialized() ||
+                poi::poiType.isLazyInitialized() ||
+                poi::blocks.isLazyInitialized())
                 throw IllegalStateException()
             val r = reg.register(poi.id) { poi.profession }
             poi.regs = r

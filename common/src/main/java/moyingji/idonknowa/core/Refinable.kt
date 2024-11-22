@@ -1,6 +1,5 @@
 package moyingji.idonknowa.core
 
-import moyingji.idonknowa.Formatting
 import moyingji.idonknowa.core.Refinable.DataBuilder.*
 import moyingji.idonknowa.datagen.withFlatModel
 import moyingji.idonknowa.items.*
@@ -68,11 +67,11 @@ interface Refinable : ItemLike, TooltipUtil, StackInitListener, StackCustomRarit
     }
     fun appendRefineTitle(tooltip: TooltipArgs) {
         " 「${refineName.value}」".text()
-            .withStyle(Formatting.AQUA)
+            .withStyle(AQUA)
             .also { tooltip += it } }
     fun appendRefineLevel(tooltip: TooltipArgs) {
         val stack = tooltip.stack
-        val color = Formatting.LIGHT_PURPLE
+        val color = LIGHT_PURPLE
         Translations.REFINE_LEVEL.templated.replace(
             "level", stack.refineLevel.str
                 .prefix(YELLOW.toString())

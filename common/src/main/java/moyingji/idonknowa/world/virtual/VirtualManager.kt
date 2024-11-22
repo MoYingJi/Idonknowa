@@ -75,8 +75,6 @@ object VirtualManager {
 
     val world: ServerLevel get() = currentServer?.getLevel(worldType)!!
 
-//    val dataState: KSerJsonData<Data> get() = currentServer!!.getLevel(Level.OVERWORLD)!!
-//        .dataStorage.computeIfAbsent(dataType, "idonknowa_virtual_world")
     val dataState: KSerJsonData<Data> get() = world.dataStorage
         .computeIfAbsent(dataType, "idonknowa_virtual_world")
     val data: Data by dataState.also { it.setDirty() }

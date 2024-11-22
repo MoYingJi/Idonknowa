@@ -40,8 +40,7 @@ val <T: Comparable<T>> ClosedRange<T>.e: T inline get() = endInclusive
 val ClosedRange<Int>.size: Int inline get() = e - s
 
 inline fun <T: Comparable<T>> ClosedRange<T>.asClosedRange(): ClosedRange<T> = typed()
-inline fun ClosedRange<Int>.toIntRange(): IntRange =
-    if (this is IntRange) this else s..e
+inline fun ClosedRange<Int>.toIntRange(): IntRange = this as? IntRange ?: s..e
 infix fun <T: Comparable<T>> @Immutable ClosedRange<T>.extendTo(value: T)
 : ClosedRange<T> = when {
     this.isEmpty() -> value..value
@@ -51,6 +50,20 @@ infix fun <T: Comparable<T>> @Immutable ClosedRange<T>.extendTo(value: T)
 }
 infix fun @Immutable IntRange.extendTo(value: Int): IntRange
 = this.asClosedRange().extendTo(value).toIntRange()
+// endregion
+
+// range Clamp
+fun <T: Comparable<T>> T.clamp(min: T?, max: T?): T {
+    var value = this
+    if (min != null) value = max(value, min)
+    if (max != null) value = min(value, max)
+    return value
+}
+fun <T: Comparable<T>> T.clamp(range: ClosedRange<T>): T = when {
+    this < range.s -> range.s
+    this > range.e -> range.e
+    else -> this
+}
 // endregion
 
 
