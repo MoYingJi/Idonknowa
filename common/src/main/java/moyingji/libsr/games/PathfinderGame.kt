@@ -27,7 +27,7 @@ class PathfinderGame(
         for (y in map.indices) {
             for (x in map[y].indices)
                 sb.append(map[y][x].serialize())
-            sb.append('\n') }
+            sb.appendLine() }
         return sb.toString()
     }
 

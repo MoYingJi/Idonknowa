@@ -4,6 +4,7 @@ import moyingji.lib.api.*
 import moyingji.lib.collections.TwoList
 import moyingji.libsr.games.Wish.WishItem
 import org.jetbrains.annotations.Contract
+import org.jetbrains.annotations.MustBeInvokedByOverriders
 import kotlin.random.*
 
 class Wish<T>(
@@ -33,13 +34,14 @@ class Wish<T>(
         open val pool4: List<T> = listOf(); get() = if (parent == null) field else TwoList(parent.pool4, field)
         open val pool5: List<T> = listOf(); get() = if (parent == null) field else TwoList(parent.pool5, field)
 
+        @Contract(pure = false)
         open fun next(@Mutable data: WishData): WishItem<T> {
             val star = nextStar(data)
             val item = getPool(star).random()
-            if (star != 5u.toUByte()) data.last5 ++ else data.last5 = 0u
-            if (star != 4u.toUByte()) data.last4 ++ else data.last4 = 0u
+            @MustBeInvokedByOverriders dataModifyByStar(data, star)
             return WishItem(item, star)
         }
+        @Contract(pure = true)
         open fun getAdditions(item: WishItem<T>): List<T> = listOf()
 
         @Contract(pure = false)
@@ -59,6 +61,12 @@ class Wish<T>(
             4u -> pool4
             5u -> pool5
             else -> throw IllegalArgumentException("Invalid star: $star")
+        }
+
+        @Contract(pure = true)
+        fun dataModifyByStar(@Mutable data: WishData, star: UByte) {
+            if (star != 5u.toUByte()) data.last5 ++ else data.last5 = 0u
+            if (star != 4u.toUByte()) data.last4 ++ else data.last4 = 0u
         }
 
         // region 概率表
@@ -94,8 +102,7 @@ class Wish<T>(
                         pool5.also { if (poolUp5.isNotEmpty()) data.lastUp5 ++ }
                 else -> getPool(star)
             }.random()
-            if (star != 5u.toUByte()) data.last5 ++ else data.last5 = 0u
-            if (star != 4u.toUByte()) data.last4 ++ else data.last4 = 0u
+            dataModifyByStar(data, star)
             return WishItem(item, star, isUp)
         }
     }

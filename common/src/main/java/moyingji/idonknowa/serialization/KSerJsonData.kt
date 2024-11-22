@@ -18,6 +18,8 @@ class KSerJsonData<T: Any>(
     val data: T,
     val serializer: KSerializer<T> = data::class.serializer().typed()
 ) : SavedData(), ReadOnlyProperty<Any?, T> {
+    constructor(data: T, clazz: KClass<T>) : this(data, clazz.serializer())
+
     override fun save(tag: NbtComp, registries: Provider): NbtComp {
         if (data is State) data.beforeSave(tag, registries)
         val kjs = KJson.encodeToString(serializer, data)

@@ -43,6 +43,13 @@ open class MutableDefaultListImpl<T>(
     }
 }
 
+class ListsDefaultList<T>(
+    list: MutableList<List<T>> = mutableListOf(),
+    default: () -> List<T> = ::listOf
+) : MutableDefaultListImpl<List<T>>(list, { default() }) {
+    override fun get(index: Int): List<T> = list.getOrElse(index, ::defaultValueAndSet)
+}
+
 class MutableListsList<T>(
     list: MutableList<MutableList<T>> = mutableListOf(),
     default: () -> MutableList<T> = ::mutableListOf

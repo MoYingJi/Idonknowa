@@ -1,6 +1,6 @@
 package moyingji.lib.core
 
-import moyingji.lib.util.ExpectFrom
+import moyingji.lib.api.ExpectFrom
 import org.intellij.lang.annotations.Flow
 import kotlin.properties.*
 import kotlin.reflect.KProperty

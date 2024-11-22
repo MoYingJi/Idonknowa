@@ -1,5 +1,7 @@
 package moyingji.lib.util
 
+import moyingji.lib.api.ExpectFrom
+import moyingji.lib.api.ExpectXmap
 import moyingji.lib.api.Mutable
 import moyingji.lib.collections.*
 
@@ -39,6 +41,11 @@ fun <T> MutableIterable<T>.removeFirst(): T
     if (!cache) return MapdMutableList(this, to, from)
     return MapdCachedMutableList(this, to, from, toCached = toCache)
 }
+@Mutable fun <T, R> MutableList<T>.map(
+    cache: Boolean = false, toCache: Boolean = false
+): ExpectXmap<(T) -> R, (R) -> T, MutableList<R>>
+= ExpectXmap { to, from -> map(to, from, cache, toCache) }
+
 @Mutable fun <T, R> MutableCollection<T>.mapTo(
     cache: Boolean = false, toCache: Boolean = false, to: (T) -> R
 ): ExpectFrom<(R) -> T, MutableCollection<R>> {

@@ -48,7 +48,8 @@ object VirtualManager {
             Json.encodeToString(this).also(::info)
             val id = synchronized(lock) { nextIndex() }
             val ov = occupied.keys.map(Long::toVec2i)
-            for ((x, z) in spiralSearch(ov, mutateVisited = false)) {
+            val sp = spiralSearch().filter { it !in ov }
+            for ((x, z) in sp) {
                 val fs: MutableList<() -> Unit> = mutableListOf()
                 synchronized(lock) {
                     iterableUnit(x, z, sx, sz).all {
@@ -151,19 +152,25 @@ object VirtualManager {
             && validHeight(rangeHeight, world) // usedHeight
             && validSize(usedSize) // usedWidth
 
-        fun including(pairLocal: Vec2i) {
-            require(pairLocal.all { it in 0..UShort.MAX_VALUE.toInt() })
-            val (lx, lz) = pairLocal.map(Int::toUShort)
+        fun including(pairLocal: Vec2us) {
+            val (lx, lz) = pairLocal
             var (sx, sz) = usedSize
             if (sx < lx) sx = lx
             if (sz < lz) sz = lz
             usedSize = sx to sz // throw if invalid
+        }
+        @Suppress("KotlinConstantConditions")
+        fun including(pairLocal: Vec2i) {
+            //                     0..65535[UShort(-1)] 误识别为 0..-1
+            require(pairLocal.all { it in 0..UShort.MAX_VALUE.toInt() })
+            including(pairLocal.map(Int::toUShort))
         }
         fun including(posGlobal: BlockPos) {
             rangeHeight = rangeHeight.extendTo(posGlobal.y)
             val posLocal = posGlobal.posRegionLocal()
             including(posLocal.x to posLocal.z)
         }
+
 
         fun iterableUnit(): Sequence<Vec2i> = iterableUnit(x, z, sx, sz)
         fun iterableBlock(): Iterable<BlockPos> = BlockPos.betweenClosed(spx, upx)

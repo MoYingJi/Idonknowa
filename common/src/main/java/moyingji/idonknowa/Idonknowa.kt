@@ -13,6 +13,7 @@ import moyingji.idonknowa.poi.ModVillager
 import moyingji.idonknowa.recipe.ModRecipe
 import moyingji.idonknowa.tag.ModTag
 import moyingji.idonknowa.util.TooltipUtil
+import moyingji.idonknowa.world.virtual.VirtualManager
 import moyingji.lib.util.titlecase
 import net.fabricmc.api.EnvType.*
 import net.fabricmc.api.Environment
@@ -47,6 +48,8 @@ object Idonknowa {
         Refinable // init
         TooltipUtil // init
         StagableMob // init
+
+        VirtualManager.dataState // serialize load
     }
 
     @Environment(CLIENT)

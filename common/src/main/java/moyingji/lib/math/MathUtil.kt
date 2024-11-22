@@ -69,46 +69,26 @@ fun <T: Comparable<T>> T.clamp(range: ClosedRange<T>): T = when {
 
 /**
  * 一个螺旋搜索迭代器 坐标可正可负 不限制搜索范围
- * @param visited 已访问过的点 (若 [mutateVisited] 会修改!)
- * @param visitUntested 即使不通过检查也记录到 [visited] 但不返回
- * @param mutateVisited 是否修改 [visited]
- * @param firstDirection 首次移动方向
+ * @param first 首次移动方向
  * @param order 坐标系顺序
- * @param startPos 起始坐标
- * @param nextDirection 下一个方向 (默认为顺时针旋转)
- * @param predicate 搜索条件 (默认为不在 [visited] 中)
+ * @param next 下一个方向 (默认为顺时针旋转)
  */
 fun spiralSearch(
-    @Mutable("mutateVisited")
-    visited: Collection<Vec2i> = mutableSetOf(),
-    mutateVisited: Boolean = true,
-    visitUntested: Boolean = false,
-    firstDirection: Direction2D = Direction2D.W,
+    first: Direction2D = Direction2D.W,
     order: MapOrder = MapOrder.XZ, // 按坐标系顺序
-    startPos: Vec2i = 0 to 0,
-    nextDirection: (Direction2D) -> Direction2D
+    next: (Direction2D) -> Direction2D
         = { it.last }, // 默认顺时针 (it.next 为逆时针)
-    predicate: (Vec2i) -> Boolean = { it !in visited }
-): Iterator<Vec2i> {
-    require(!mutateVisited || visited is MutableCollection<*>)
-    require(mutateVisited || !visitUntested)
-    var (x, y) = startPos
-    var direction: Direction2D = firstDirection
+): Sequence<Vec2i> {
+    var pos = 0 to 0
+    var direction: Direction2D = first
     var steps = 1; var stepCount = 0; var turnCount = 0
-    return iterator { while (true) {
-        val v = x to y
-        lateinit var mutable: MutableCollection<Vec2i>
-        if (mutateVisited) mutable = visited as MutableCollection<Vec2i>
-        if (mutateVisited && visitUntested) mutable += v
-        if (predicate(v)) {
-            if (mutateVisited && !visitUntested) mutable += v
-            yield(v) }
-        val (mx, my) = direction.next(order = order)
-        x += mx; y += my
+    return sequence { while (true) {
+        yield(pos)
+        pos = direction.next(pos, order)
         // 判断方向更换
         stepCount ++
         if (stepCount == steps) {
-            direction = nextDirection(direction)
+            direction = next(direction)
             turnCount ++; stepCount = 0
             if (turnCount % 2 == 0) steps ++
         }
