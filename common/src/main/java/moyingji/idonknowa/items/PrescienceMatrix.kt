@@ -7,7 +7,7 @@ import moyingji.idonknowa.core.Refinable.Companion.key
 import moyingji.idonknowa.datagen.withFlatModel
 import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.serialization.*
-import moyingji.idonknowa.tag.tag
+import moyingji.idonknowa.rs.tag.tag
 import moyingji.idonknowa.util.*
 import moyingji.lib.core.PropIn
 import moyingji.lib.collections.MutableMapsMap

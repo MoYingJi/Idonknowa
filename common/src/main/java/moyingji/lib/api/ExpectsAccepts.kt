@@ -13,20 +13,23 @@ fun interface ExpectFrom<T, R> { infix fun from(from: T): R }
 
 
 // region List: Accepted / Accepter
-interface AcceptedListOf<T, S: AcceptedListOf<T, S>> { fun listOf(vararg elements: T): S }
-interface AcceptedListsList<T> : AcceptedListOf<T, AcceptedListsList<T>>, MutableList<List<T>>
-interface AcceptedListInstance<T> : AcceptedListOf<T, AcceptedListInstance<T>>, MutableList<T>
+interface AcceptedListOf<T> {
+    fun listOf(vararg elements: T) { accept(elements.toList()) }
+    infix fun accept(elements: T) { listOf(elements) }
+    infix fun accept(elements: List<T>)
+}
+interface AcceptedListsList<T> : AcceptedListOf<T>, MutableList<List<T>>
+interface AcceptedListInstance<T> : AcceptedListOf<T>, MutableList<T>
 
 class AccepterListOf<T>(
     val list: MutableList<List<T>> = ListsDefaultList()
 ) : AcceptedListsList<T>, MutableList<List<T>> by list {
-    override fun listOf(vararg elements: T): AccepterListOf<T>
-    = this.also { list += kotlin.collections.listOf(*elements) }
+    override infix fun accept(elements: List<T>) { list += elements }
 }
 class AccepterListInstance<T>(
     val list: MutableList<T> = mutableListOf()
 ) : AcceptedListInstance<T>, MutableList<T> by list {
-    override fun listOf(vararg elements: T): AccepterListInstance<T>
-    = this.also { list += kotlin.collections.listOf(*elements) }
+    override infix fun accept(elements: T) { list += elements }
+    override infix fun accept(elements: List<T>) { list += elements }
 }
 // endregion

@@ -3,8 +3,10 @@ package moyingji.idonknowa.blocks
 import moyingji.idonknowa.all.*
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.*
-import moyingji.idonknowa.loot.*
-import moyingji.idonknowa.tag.*
+import moyingji.idonknowa.rs.loot.dropSelf
+import moyingji.idonknowa.rs.loot.dropSilkAndOther
+import moyingji.idonknowa.rs.tag.ModTag
+import moyingji.idonknowa.rs.tag.tag
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.player.Player

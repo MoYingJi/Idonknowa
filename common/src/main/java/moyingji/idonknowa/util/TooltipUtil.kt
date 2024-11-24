@@ -4,7 +4,7 @@ import moyingji.idonknowa.*
 import moyingji.idonknowa.core.Events
 import moyingji.idonknowa.core.Events.ItemTooltip
 import moyingji.idonknowa.lang.*
-import moyingji.idonknowa.mixink.CIR
+import moyingji.idonknowa.mia.CIR
 import moyingji.lib.util.*
 import net.minecraft.ChatFormatting.*
 import net.minecraft.world.entity.Entity
@@ -62,7 +62,7 @@ interface TooltipUtil {
     /** 调用于 [Events.ItemTooltip.AFTER_ITEM] */
     fun appendTooltipAfterDefault(tooltip: TooltipArgs) {}
 
-    /** 调用于 [moyingji.idonknowa.mixin.ItemStackMixin.appendAdvancedDurability] */
+    /** 调用于 [moyingji.idonknowa.mia.mixin.ItemStackMixin.appendAdvancedDurability] */
     fun appendAdvancedDurability(stack: ItemStack): Boolean? = null
 
     // region Static

@@ -4,7 +4,7 @@
 package moyingji.idonknowa.datagen
 
 import moyingji.idonknowa.DataPack
-import moyingji.idonknowa.tag.ModTag
+import moyingji.idonknowa.rs.tag.ModTag
 import moyingji.lib.util.typed
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.minecraft.core.HolderLookup.Provider

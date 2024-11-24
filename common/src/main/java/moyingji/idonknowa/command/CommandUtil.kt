@@ -14,8 +14,8 @@ import moyingji.idonknowa.command.CommandUtil.contextReturn
 import moyingji.idonknowa.command.argument.*
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.lang.text
-import moyingji.idonknowa.mixin.ResourceKeyArgumentAccessor
-import moyingji.idonknowa.mixin.command.ArgumentTypeInfosAccessor
+import moyingji.idonknowa.mia.mixin.ResourceKeyArgumentAccessor
+import moyingji.idonknowa.mia.mixin.command.ArgumentTypeInfosAccessor
 import moyingji.lib.api.autoName
 import moyingji.lib.core.PropRead
 import moyingji.lib.math.*

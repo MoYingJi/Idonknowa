@@ -6,8 +6,8 @@ import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.*
 import moyingji.idonknowa.gui.*
 import moyingji.idonknowa.lang.text
-import moyingji.idonknowa.loot.dropSelf
-import moyingji.idonknowa.tag.tag
+import moyingji.idonknowa.rs.loot.dropSelf
+import moyingji.idonknowa.rs.tag.tag
 import moyingji.idonknowa.util.ItResult
 import net.fabricmc.api.EnvType.CLIENT
 import net.fabricmc.api.Environment

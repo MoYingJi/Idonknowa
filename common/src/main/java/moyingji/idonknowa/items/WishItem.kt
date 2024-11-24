@@ -11,7 +11,12 @@ import moyingji.idonknowa.gui.getChestMenuType
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultItems
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultStar
 import moyingji.idonknowa.lang.*
-import moyingji.idonknowa.loot.*
+import moyingji.idonknowa.rs.loot.LootPoolBuilder
+import moyingji.idonknowa.rs.loot.LootUtil
+import moyingji.idonknowa.rs.loot.between
+import moyingji.idonknowa.rs.loot.item
+import moyingji.idonknowa.rs.loot.loot
+import moyingji.idonknowa.rs.loot.pool
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
 import moyingji.lib.math.clamp
@@ -276,7 +281,7 @@ class WishItem : Item(ItemSettings()
         infix fun Gacha<LootTable>.tranTo(value: String)
         { getId().toLanguageKey("gacha") tranTo value }
         fun lazyLootPool(f: (@LootUtil LootPoolBuilder).() -> Unit)
-        : Lazy<List<LootTable>> = lazy { listOf( loot { pool(f) } ) }
+        : Lazy<List<LootTable>> = lazy { listOf(loot { pool(f) }) }
 
         val DEFAULT = object : GachaOnce5() {
             override val pool3: List<LootTable> by lazyLootPool {

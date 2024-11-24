@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "moyingji.idonknowa.mixin.fabric",
+    "package": "moyingji.idonknowa.mia.mixin.fabric",
     "compatibilityLevel": "JAVA_21",
     "minVersion": "0.8",
     "client": [

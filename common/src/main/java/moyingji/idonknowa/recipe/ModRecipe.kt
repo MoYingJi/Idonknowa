@@ -2,7 +2,7 @@ package moyingji.idonknowa.recipe
 
 import moyingji.idonknowa.*
 import moyingji.idonknowa.all.*
-import moyingji.idonknowa.mixink.RecipeManagerMixinImpl
+import moyingji.idonknowa.mia.RecipeManagerMixinImpl
 import moyingji.idonknowa.recipe.builder.*
 import moyingji.idonknowa.recipe.recipes.RefineRecipe
 import moyingji.lib.api.static

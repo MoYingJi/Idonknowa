@@ -4,8 +4,8 @@ import moyingji.idonknowa.*
 import moyingji.idonknowa.core.Events
 import moyingji.idonknowa.items.StackHasOwner.Companion.owner
 import moyingji.idonknowa.lang.*
-import moyingji.idonknowa.mixin.*
-import moyingji.idonknowa.mixink.*
+import moyingji.idonknowa.mia.*
+import moyingji.idonknowa.mia.mixin.*
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
 import moyingji.lib.api.*

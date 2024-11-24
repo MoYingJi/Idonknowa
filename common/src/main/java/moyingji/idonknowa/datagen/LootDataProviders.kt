@@ -3,7 +3,9 @@ package moyingji.idonknowa.datagen
 import com.google.common.collect.Multimap
 import com.google.common.collect.MultimapBuilder
 import moyingji.idonknowa.*
-import moyingji.idonknowa.loot.*
+import moyingji.idonknowa.rs.loot.LCParams
+import moyingji.idonknowa.rs.loot.LootBuilder
+import moyingji.idonknowa.rs.loot.ModLoot
 import moyingji.lib.util.*
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider

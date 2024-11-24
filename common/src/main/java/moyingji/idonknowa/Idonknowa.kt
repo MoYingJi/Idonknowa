@@ -9,9 +9,9 @@ import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.*
 import moyingji.idonknowa.entity.StagableMob
 import moyingji.idonknowa.items.*
-import moyingji.idonknowa.poi.ModVillager
+import moyingji.idonknowa.rs.poi.ModVillager
 import moyingji.idonknowa.recipe.ModRecipe
-import moyingji.idonknowa.tag.ModTag
+import moyingji.idonknowa.rs.tag.ModTag
 import moyingji.idonknowa.util.TooltipUtil
 import moyingji.idonknowa.world.virtual.VirtualManager
 import moyingji.lib.util.titlecase

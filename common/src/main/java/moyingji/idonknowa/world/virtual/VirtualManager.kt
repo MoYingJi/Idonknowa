@@ -160,6 +160,7 @@ object VirtualManager {
             usedSize = sx to sz // throw if invalid
         }
         @Suppress("KotlinConstantConditions")
+        @JvmName("includingVec2i")
         fun including(pairLocal: Vec2i) {
             //                     0..65535[UShort(-1)] 误识别为 0..-1
             require(pairLocal.all { it in 0..UShort.MAX_VALUE.toInt() })

@@ -15,7 +15,7 @@ typealias TranslationBuilder = FabricLanguageProvider.TranslationBuilder
 
 object LangProviders {
     val providers: MutableList<LangProvider> = mutableListOf()
-    init { runCatching { findAll("moyingji.idonknowa.langs") } }
+    init { runCatching { findAll("moyingji.idonknowa.lang.langs") } }
     fun findAll(packageName: String) {
         val path = packageName.replace('.', '/')
         var jar: JarFile? = null
