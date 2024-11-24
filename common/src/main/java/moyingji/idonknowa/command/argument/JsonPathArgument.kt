@@ -4,7 +4,6 @@ import com.google.gson.*
 import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.exceptions.CommandSyntaxException
 import com.mojang.brigadier.suggestion.*
 import moyingji.idonknowa.Id
 import moyingji.idonknowa.Idonknowa.id
@@ -28,7 +27,6 @@ class JsonPathArgument(
         autoPrefix: List<String> = listOf()
     ) : this(Template(f, separator, defaultFirst, autoPrefix))
 
-    @Throws(CommandSyntaxException::class)
     override fun parse(reader: StringReader): JsonPathResult {
         val path = if (reader.remaining.contains(' '))
             reader.readStringUntil(' ')
@@ -75,7 +73,6 @@ class JsonPathArgument(
     }
 
     companion object {
-        @Throws(CommandSyntaxException::class)
         tailrec fun findElement(
             path: List<String>,
             element: JsonElement,

@@ -1,6 +1,5 @@
 package moyingji.idonknowa.command
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException
 import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.world.virtual.VirtualManager
 import moyingji.idonknowa.world.virtual.VirtualManager.REGION_UNIT
@@ -61,8 +60,6 @@ object VirtualWorldCommand {
     } } }
     // endregion
 
-
-    @Throws(CommandSyntaxException::class)
     fun CmdContext.region(): VirtualManager.Region {
         val data = data
         val rs = data.regions
