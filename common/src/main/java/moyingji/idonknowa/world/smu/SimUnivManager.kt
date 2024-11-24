@@ -18,24 +18,25 @@ object SimUnivManager {
         val raidsRegionId: MutableMap<UInt, RaidData> = mutableMapOf(),
     ) {
         fun valid(clear: Boolean = false, validChild: Boolean = false): Boolean {
-            // id: UInt -> (Region? -> id: UInt)
-            // 这里可以通过 Region? == null 取得 id(key): UInt 从而方便后续删除操作
-            val seq = raidsRegionId.asSequence()
-                .map { (u, _) -> VirtualManager.dataState.data.regions[u] to u }
+            // id: UInt -> (Region? -> id: UInt, data: RaidData)
+            // 这里可以通过 Region? == null 取得其他值从而方便后续 validChild 或删除操作
+            val seq = raidsRegionId
+                .asSequence().map { (u, d) ->
+                    Triple(VirtualManager.dataState.data.regions[u], u, d) }
             // validRaid 判断函数
             fun validRaid(
-                pair: Pair<VirtualManager.Region?, UInt>
+                tr: Triple<VirtualManager.Region?, UInt, RaidData>
             ): Boolean {
-                pair.first != null || return false
-                !validChild && raidsRegionId[pair.second]?.valid() == true || return false
+                tr.first != null || return false
+                tr.second == tr.third.regionId || return false
+                !validChild && tr.third.valid() || return false
                 return true }
             // 全部 Entry 均有效 返回 true
             if (seq.all(::validRaid)) return true
             // 清理 raidsRegionId 中 无效 Entry
             // v.map(::not) 对此函数结果取反 筛出无效 Entry
             if (!clear) return false; seq
-                .filter(::validRaid.map(Boolean::not))
-                .map { it.second }
+                .filter(::validRaid.map(Boolean::not)).map { it.second }
                 .forEach(raidsRegionId::remove)
             return false
         }
@@ -44,7 +45,8 @@ object SimUnivManager {
     @Serializable
     @OptIn(ExperimentalUuidApi::class)
     data class RaidData (
-        val playersData: MutableMap<Uuid, RaidPlayerData> = mutableMapOf(),
+        val regionId: UInt,
+        val playersData: MutableMap<Uuid, RaidEntrance> = mutableMapOf(),
     ) {
         fun valid(clear: Boolean = false): Boolean {
             // 逻辑同上 [Data.valid]
@@ -61,7 +63,7 @@ object SimUnivManager {
     }
 
     @Serializable
-    data class RaidPlayerData (
+    data class RaidEntrance (
         val enterWorldId: String,
         val enterPos: ATriple<Double>,
         val enterFace: APair<Float>,
