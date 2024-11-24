@@ -1,7 +1,6 @@
 package moyingji.idonknowa.serialization
 
-import com.mojang.datafixers.util.Either
-import com.mojang.datafixers.util.Pair
+import com.mojang.datafixers.util.*
 import com.mojang.serialization.*
 import com.mojang.serialization.codecs.EitherCodec
 

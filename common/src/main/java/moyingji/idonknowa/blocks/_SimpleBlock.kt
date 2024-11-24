@@ -2,11 +2,9 @@ package moyingji.idonknowa.blocks
 
 import moyingji.idonknowa.all.*
 import moyingji.idonknowa.core.*
-import moyingji.idonknowa.datagen.*
-import moyingji.idonknowa.rs.loot.dropSelf
-import moyingji.idonknowa.rs.loot.dropSilkAndOther
-import moyingji.idonknowa.rs.tag.ModTag
-import moyingji.idonknowa.rs.tag.tag
+import moyingji.idonknowa.datagen.withSimpleModel
+import moyingji.idonknowa.rs.loot.*
+import moyingji.idonknowa.rs.tag.*
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.BlockTags
 import net.minecraft.world.entity.player.Player
@@ -17,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import net.minecraft.world.level.material.MapColor
-import kotlin.math.*
+import kotlin.math.min
 
 // region PrimogemOre | 深层原石矿石
 class PrimogemOre : Block(BlockSettings.of()

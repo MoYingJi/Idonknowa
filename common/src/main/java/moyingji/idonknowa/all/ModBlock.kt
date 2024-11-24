@@ -1,7 +1,7 @@
 package moyingji.idonknowa.all
 
 import moyingji.idonknowa.blocks.*
-import moyingji.idonknowa.core.*
+import moyingji.idonknowa.core.RegS
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockBehaviour
 

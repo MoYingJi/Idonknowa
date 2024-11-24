@@ -1,6 +1,6 @@
 package moyingji.idonknowa.mia
 
-import moyingji.idonknowa.*
+import moyingji.idonknowa.Formatting
 import moyingji.idonknowa.all.ModItem
 import moyingji.idonknowa.core.Events
 import moyingji.idonknowa.lang.text

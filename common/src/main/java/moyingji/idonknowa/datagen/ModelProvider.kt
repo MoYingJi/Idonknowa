@@ -1,7 +1,7 @@
 package moyingji.idonknowa.datagen
 
 import moyingji.idonknowa.*
-import moyingji.idonknowa.core.*
+import moyingji.idonknowa.core.RegHelper
 import moyingji.idonknowa.datagen.ModModelProvider.blockModelProviders
 import moyingji.idonknowa.datagen.ModModelProvider.itemModelProviders
 import moyingji.lib.util.toOptional

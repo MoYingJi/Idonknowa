@@ -3,8 +3,7 @@ package moyingji.libsr.games
 import moyingji.lib.api.*
 import moyingji.lib.collections.TwoList
 import moyingji.libsr.games.Wish.WishItem
-import org.jetbrains.annotations.Contract
-import org.jetbrains.annotations.MustBeInvokedByOverriders
+import org.jetbrains.annotations.*
 import kotlin.random.*
 
 class Wish<T>(

@@ -6,7 +6,7 @@ import com.mojang.serialization.JsonOps
 import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.Text
 import moyingji.idonknowa.command.argument.JsonPathArgument
-import moyingji.idonknowa.command.argument.JsonPathArgument.*
+import moyingji.idonknowa.command.argument.JsonPathArgument.JsonPathResult
 import moyingji.idonknowa.lang.text
 import moyingji.lib.util.typed
 import net.minecraft.world.item.ItemStack

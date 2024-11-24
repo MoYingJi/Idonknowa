@@ -4,8 +4,7 @@ import moyingji.idonknowa.core.RegS
 import moyingji.idonknowa.serialization.property
 import net.fabricmc.api.EnvType.SERVER
 import net.fabricmc.api.Environment
-import net.minecraft.core.component.DataComponentType
-import net.minecraft.core.component.DataComponents
+import net.minecraft.core.component.*
 import net.minecraft.server.level.*
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.LivingEntity

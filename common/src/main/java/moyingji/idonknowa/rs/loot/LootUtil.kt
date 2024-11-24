@@ -2,14 +2,12 @@ package moyingji.idonknowa.rs.loot
 
 import moyingji.idonknowa.core.RegS
 import net.minecraft.world.level.ItemLike
-import net.minecraft.world.level.storage.loot.LootPool
-import net.minecraft.world.level.storage.loot.LootTable
-import net.minecraft.world.level.storage.loot.entries.LootItem
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer
+import net.minecraft.world.level.storage.loot.*
+import net.minecraft.world.level.storage.loot.entries.*
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction
 import net.minecraft.world.level.storage.loot.parameters.*
-import net.minecraft.world.level.storage.loot.providers.number.*
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue.exactly
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.between
 
 typealias LCParam<T> = LootContextParam<T>

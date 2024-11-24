@@ -1,9 +1,9 @@
 package moyingji.idonknowa.rs.tag
 
 import com.google.common.collect.*
-import moyingji.idonknowa.*
+import moyingji.idonknowa.Idonknowa
 import moyingji.idonknowa.Idonknowa.id
-import moyingji.idonknowa.core.*
+import moyingji.idonknowa.core.RegHelper
 import moyingji.lib.api.autoName
 import moyingji.lib.core.*
 import moyingji.lib.util.typed

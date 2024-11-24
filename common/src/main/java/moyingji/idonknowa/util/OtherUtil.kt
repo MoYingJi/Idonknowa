@@ -1,7 +1,7 @@
 package moyingji.idonknowa.util
 
 import dev.architectury.utils.Env
-import moyingji.idonknowa.*
+import moyingji.idonknowa.Id
 import moyingji.idonknowa.core.RegHelper
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.level.ItemLike

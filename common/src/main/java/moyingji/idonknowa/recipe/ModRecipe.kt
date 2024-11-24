@@ -6,7 +6,7 @@ import moyingji.idonknowa.mia.RecipeManagerMixinImpl
 import moyingji.idonknowa.recipe.builder.*
 import moyingji.idonknowa.recipe.recipes.RefineRecipe
 import moyingji.lib.api.static
-import net.minecraft.data.recipes.*
+import net.minecraft.data.recipes.RecipeBuilder
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.crafting.*
 

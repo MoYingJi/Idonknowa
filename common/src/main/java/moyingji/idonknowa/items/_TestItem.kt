@@ -6,7 +6,7 @@ import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.all.ItemSettings
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.withOnlyParent
-import moyingji.idonknowa.lang.*
+import moyingji.idonknowa.lang.textStyle
 import moyingji.lib.collections.MutableMapsMap
 import net.minecraft.ChatFormatting.*
 import net.minecraft.core.component.DataComponents
@@ -18,7 +18,6 @@ import net.minecraft.world.item.*
 import net.minecraft.world.item.Rarity.EPIC
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.level.block.state.BlockState
-import kotlin.collections.set
 
 @Suppress("ClassName")
 class _TestItem : Item(ItemSettings()

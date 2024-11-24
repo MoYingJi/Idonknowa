@@ -4,8 +4,7 @@ import moyingji.idonknowa.all.ItemSettings
 import moyingji.idonknowa.core.RegHelper
 import moyingji.idonknowa.datagen.withFlatModel
 import moyingji.idonknowa.util.isOf
-import net.minecraft.world.entity.player.Inventory
-import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.player.*
 import net.minecraft.world.inventory.*
 import net.minecraft.world.item.*
 

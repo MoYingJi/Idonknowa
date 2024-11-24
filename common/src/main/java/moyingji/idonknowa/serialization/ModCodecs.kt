@@ -5,7 +5,7 @@ import moyingji.idonknowa.Id
 import net.minecraft.core.UUIDUtil
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.*
-import java.util.UUID
+import java.util.*
 
 typealias SCodec<T> = StreamCodec<in RegistryFriendlyByteBuf, T>
 typealias CodecPair<T> = Pair<Codec<T>, SCodec<T>?>

@@ -1,8 +1,6 @@
 package moyingji.lib.util
 
-import moyingji.lib.api.ExpectFrom
-import moyingji.lib.api.ExpectXmap
-import moyingji.lib.api.Mutable
+import moyingji.lib.api.*
 import moyingji.lib.collections.*
 
 fun <T> Iterator<T>.iterable(): Iterable<T> = Iterable { this }

@@ -5,8 +5,8 @@ import moyingji.idonknowa.core.Events
 import moyingji.idonknowa.core.Events.ItemTooltip
 import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.mia.CIR
-import moyingji.lib.util.*
-import net.minecraft.ChatFormatting.*
+import moyingji.lib.util.str
+import net.minecraft.ChatFormatting.GRAY
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*

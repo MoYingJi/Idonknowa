@@ -1,10 +1,9 @@
 package moyingji.idonknowa.lang.langs
 
 import moyingji.idonknowa.all.*
-import moyingji.idonknowa.datagen.*
+import moyingji.idonknowa.datagen.LangProvider
 import moyingji.idonknowa.items.*
-import moyingji.idonknowa.lang.Translations
-import moyingji.idonknowa.lang.tranTo
+import moyingji.idonknowa.lang.*
 import moyingji.lib.util.typed
 
 object English : LangProvider {

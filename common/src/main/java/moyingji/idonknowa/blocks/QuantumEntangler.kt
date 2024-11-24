@@ -3,7 +3,7 @@ package moyingji.idonknowa.blocks
 import moyingji.idonknowa.Text
 import moyingji.idonknowa.all.BlockSettings
 import moyingji.idonknowa.core.*
-import moyingji.idonknowa.datagen.*
+import moyingji.idonknowa.datagen.withSimpleModel
 import moyingji.idonknowa.gui.*
 import moyingji.idonknowa.lang.text
 import moyingji.idonknowa.rs.loot.dropSelf

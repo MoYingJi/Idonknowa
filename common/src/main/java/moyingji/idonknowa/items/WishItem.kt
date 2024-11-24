@@ -11,12 +11,7 @@ import moyingji.idonknowa.gui.getChestMenuType
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultItems
 import moyingji.idonknowa.items.WishItem.Result.Companion.resultStar
 import moyingji.idonknowa.lang.*
-import moyingji.idonknowa.rs.loot.LootPoolBuilder
-import moyingji.idonknowa.rs.loot.LootUtil
-import moyingji.idonknowa.rs.loot.between
-import moyingji.idonknowa.rs.loot.item
-import moyingji.idonknowa.rs.loot.loot
-import moyingji.idonknowa.rs.loot.pool
+import moyingji.idonknowa.rs.loot.*
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
 import moyingji.lib.math.clamp

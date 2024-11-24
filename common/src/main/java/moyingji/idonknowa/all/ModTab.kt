@@ -5,7 +5,7 @@ import moyingji.idonknowa.core.*
 import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.util.default
 import net.minecraft.core.registries.Registries
-import net.minecraft.world.item.*
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.level.ItemLike
 
 private typealias TabRegS = RegS<CreativeModeTab>

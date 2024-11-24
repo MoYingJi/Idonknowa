@@ -8,8 +8,7 @@ import moyingji.idonknowa.core.*
 import moyingji.idonknowa.util.getId
 import moyingji.lib.util.*
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.recipes.RecipeBuilder
-import net.minecraft.data.recipes.ShapedRecipeBuilder
+import net.minecraft.data.recipes.*
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.crafting.*

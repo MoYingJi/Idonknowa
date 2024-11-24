@@ -3,10 +3,10 @@ package moyingji.idonknowa.recipe.recipes
 import moyingji.idonknowa.Id
 import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.all.ModItem
-import moyingji.idonknowa.core.*
+import moyingji.idonknowa.core.Refinable
 import moyingji.idonknowa.recipe.*
 import moyingji.idonknowa.util.isOf
-import moyingji.lib.util.*
+import moyingji.lib.util.typeNullable
 import net.minecraft.core.HolderLookup.Provider
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.*

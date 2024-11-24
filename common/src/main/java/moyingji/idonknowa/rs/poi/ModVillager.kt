@@ -3,7 +3,7 @@ package moyingji.idonknowa.rs.poi
 import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.all.*
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.world.item.*
+import net.minecraft.world.item.Items
 
 object ModVillager {
     // level: 新手 学徒 老手 专家 大师

@@ -4,9 +4,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.*
 import kotlin.annotation.AnnotationRetention.*
 import kotlin.annotation.AnnotationTarget.*
-import kotlin.reflect.KAnnotatedElement
-import kotlin.reflect.KCallable
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 typealias static = JvmStatic

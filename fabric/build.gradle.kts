@@ -1,4 +1,4 @@
-@file:Suppress("LocalVariableName")
+@file:Suppress("LocalVariableName", "UnstableApiUsage")
 
 architectury {
     fabric()

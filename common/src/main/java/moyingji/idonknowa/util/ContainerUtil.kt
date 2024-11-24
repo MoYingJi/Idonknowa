@@ -17,9 +17,9 @@ fun Container.firstOrNull(f: (ItemStack) -> Boolean): ItemStack?
 
 
 interface ModContainer : Container {
-    /** 调用于 [moyingji.idonknowa.mixin.SlotMixin.mayPlace] */
+    /** 调用于 [moyingji.idonknowa.mia.mixin.SlotMixin.mayPlace] */
     fun mayPlace(slot: Slot, stack: ItemStack): Boolean? = null
 
-    /** 调用于 [moyingji.idonknowa.mixin.SlotMixin.isActive] */
+    /** 调用于 [moyingji.idonknowa.mia.mixin.SlotMixin.isActive] */
     fun isActive(slot: Slot): Boolean? = null
 }

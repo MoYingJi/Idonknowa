@@ -1,6 +1,6 @@
 package moyingji.idonknowa.mia
 
-import com.google.common.collect.*
+import com.google.common.collect.ImmutableMap
 import com.google.common.collect.ImmutableMultimap.Builder
 import moyingji.idonknowa.Id
 import moyingji.idonknowa.recipe.ModRecipe

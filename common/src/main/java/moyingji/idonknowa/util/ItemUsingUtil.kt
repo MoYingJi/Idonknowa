@@ -1,10 +1,9 @@
 package moyingji.idonknowa.util
 
 import net.minecraft.world.*
-import net.minecraft.world.InteractionResult.*
+import net.minecraft.world.InteractionResult.SUCCESS_NO_ITEM_USED
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
 
 typealias ItResult = InteractionResult

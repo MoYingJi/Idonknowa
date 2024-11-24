@@ -1,7 +1,7 @@
 @file:Suppress("NOTHING_TO_INLINE")
 package moyingji.lib.math
 
-import moyingji.lib.api.*
+import moyingji.lib.api.Immutable
 import moyingji.lib.core.*
 import moyingji.lib.util.*
 

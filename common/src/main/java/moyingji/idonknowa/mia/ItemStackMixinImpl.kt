@@ -1,7 +1,7 @@
 package moyingji.idonknowa.mia
 
 import moyingji.idonknowa.items.StackDamageCanBreak
-import net.minecraft.server.level.*
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.*
 import java.util.function.Consumer

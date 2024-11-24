@@ -2,7 +2,7 @@ package moyingji.idonknowa.all
 
 import moyingji.idonknowa.Idonknowa
 import moyingji.idonknowa.core.*
-import moyingji.idonknowa.datagen.*
+import moyingji.idonknowa.datagen.withFlatModel
 import moyingji.idonknowa.items.*
 import net.minecraft.world.item.*
 
