@@ -16,7 +16,7 @@ typealias TranKey = TranslationKey
  * 为区分字面符和翻译键 使用 [TranslationKey]
  * 附带很多功能
  */
-class TranslationKey(val key: String) : Translatable, TranslateValue {
+class TranslationKey(val key: String) : ITransKey {
     override fun toString(): String = key
 
     @Contract("_ -> new")
@@ -97,6 +97,8 @@ interface TranslateValue {
         .let { String.format(it, *args) }.text()
 }
 
+interface ITransKey : Translatable, TranslateValue
+
 interface TranProvider { fun translate(key: String, value: String) }
 
 val language: Language get() = Language.getInstance()
@@ -108,7 +110,7 @@ object TranLinesSigns {
     const val BREAK = "BREAK"
 }
 
-class LazyTranslation : Translatable, TranslateValue {
+class LazyTranslation : ITransKey {
     val translate: TranProvider? = null
     val actions: MutableList<() -> Unit> = mutableListOf()
     var key: TranKey? = null

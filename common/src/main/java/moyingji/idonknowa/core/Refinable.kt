@@ -14,10 +14,10 @@ import net.minecraft.world.item.*
 import net.minecraft.world.level.ItemLike
 
 interface Refinable : ItemLike, TooltipUtil, StackInitListener, StackCustomRarity {
-    val translationKey: TranslationKey get() = this.asItem().descriptionId
+    val translationKey: TranKey get() = this.asItem().descriptionId
         .tranKey().suffix("refine")
-    val refineName: TranslationKey get() = translationKey.suffix("name")
-    val refineDesc: TranslationKey get() = translationKey.suffix("description")
+    val refineName: TranKey get() = translationKey.suffix("name")
+    val refineDesc: TranKey get() = translationKey.suffix("description")
     val refineMaxLevel: UByte get() = 5u
 
     val refineData: MutableMapsMap<String, UByte, String>

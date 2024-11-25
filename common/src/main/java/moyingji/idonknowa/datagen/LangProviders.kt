@@ -77,7 +77,7 @@ class TranBuilder(val builder: TranslationBuilder) : TranProvider {
     operator fun set(id: String, value: String)
     { builder.add(id, value) }
     @JvmName("setKey")
-    operator fun set(key: TranslationKey, value: String)
+    operator fun set(key: TranKey, value: String)
     { builder.add(key.key, value) }
 
     @JvmName("setItem")

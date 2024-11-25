@@ -35,10 +35,8 @@ class ProperValue<T>(
     }
 
     companion object {
-        fun ofDouble(default: Double): ProperValue<Double>
-        = ProperValue(default, ProperType.DOUBLE)
-        fun ofDouble(default: Int): ProperValue<Double>
-        = ofDouble(default.toDouble())
+        fun ofDouble(default: Number): ProperValue<Double>
+        = ProperValue(default.toDouble(), ProperType.DOUBLE)
     }
 
     private val modifiers: MutableList<Modifier<T>> = mutableListOf()

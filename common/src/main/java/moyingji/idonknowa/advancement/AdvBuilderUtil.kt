@@ -39,10 +39,10 @@ class AdvBuilder(
     var announceChat: Boolean = true; fun announceChat(announceChat: Boolean = true): AdvBuilder = also { this.announceChat = announceChat }
     var hidden: Boolean = false; fun hidden(hidden: Boolean = false): AdvBuilder = also { this.hidden = hidden }
 
-    var titleKey: TranslationKey? = null
-    var descriptionKey: TranslationKey? = null
-    infix fun title(key: TranslationKey): AdvBuilder = title(key.text()).also { titleKey = key }
-    infix fun description(key: TranslationKey): AdvBuilder = description(key.text()).also { descriptionKey = key }
+    var titleKey: TranKey? = null
+    var descriptionKey: TranKey? = null
+    infix fun title(key: TranKey): AdvBuilder = title(key.text()).also { titleKey = key }
+    infix fun description(key: TranKey): AdvBuilder = description(key.text()).also { descriptionKey = key }
     infix fun background(path: String): AdvBuilder = background(path.id(namespace))
     fun noToast(): AdvBuilder = showToast(false)
     fun noAnnounce(): AdvBuilder = announceChat(false)

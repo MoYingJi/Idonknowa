@@ -111,10 +111,10 @@ object Idonknowa {
     internal inline fun error(message: String) { logger.error(message.processMsg()) }
     // endregion
     // region Tools
-    fun String.idOrNull(namespace: String = MOD_ID): Id? = if (this.contains(':'))
+    fun String.idOrNull(namespace: String): Id? = if (this.contains(':'))
         Id.tryParse(this) else Id.tryBuild(namespace, this)
-    fun String.id(namespace: String = MOD_ID): Id = idOrNull(namespace)!!
-    val String.id: Id get() = idOrNull()!!
+    fun String.id(namespace: String): Id = idOrNull(namespace)!!
+    val String.id: Id get() = idOrNull(MOD_ID)!!
     val Id.autoString: String get() = if (this.namespace == "minecraft") this.path else this.toString()
     // endregion
 }
