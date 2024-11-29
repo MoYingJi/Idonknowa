@@ -3,7 +3,9 @@
 .kotlin
 build
 out
-run
 .directory
+
+run
+.cache
 
 /.idea/*
