@@ -7,6 +7,13 @@ fun <T> Iterator<T>.iterable(): Iterable<T> = Iterable { this }
 
 fun <T> Iterator<T>.take(count: Int): Iterator<T> = CounteredIterator(this, count)
 
+fun <T> Collection<T>.random(random: (until: Int) -> Int): T {
+    this.isNotEmpty() || throw NoSuchElementException()
+    return this.elementAt(random(this.size)) }
+fun <T> Array<out T>.random(random: (until: Int) -> Int): T {
+    this.isNotEmpty() || throw NoSuchElementException()
+    return this.elementAt(random(this.size)) }
+
 // region MutableIterable.removeFirst[OrNull] (predicate?)
 fun <T> MutableIterable<T>.removeFirstOrNull(predicate: (T) -> Boolean): T? {
     val i = this.iterator()

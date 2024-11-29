@@ -96,6 +96,30 @@ fun spiralSearch(
 }
 
 
+// region randomWithWeight
+fun <T> randomWithWeight(
+    collection: Collection<T>,
+    random: (until: Int) -> Int,
+    weight: (T) -> Int,
+): T {
+    collection.isNotEmpty() || throw NoSuchElementException()
+    val l: MutableList<T> = mutableListOf()
+    for (i in collection) repeat(weight(i)) { l.add(i) }
+    return l.random(random)
+}
+fun <T> randomWithWeight(
+    array: Array<T>,
+    random: (until: Int) -> Int,
+    weight: (T) -> Int,
+): T {
+    array.isNotEmpty() || throw NoSuchElementException()
+    val l: MutableList<T> = mutableListOf()
+    for (i in array) repeat(weight(i)) { l.add(i) }
+    return l.random(random)
+}
+// endregion
+
+
 
 // region 压缩 pair first second
 // 以下为 AI 生成

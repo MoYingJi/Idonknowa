@@ -1,7 +1,7 @@
 package moyingji.idonknowa.world.smu
 
 import dev.architectury.utils.Env
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 import moyingji.idonknowa.serialization.KSerJsonData
 import moyingji.idonknowa.util.OnlyCallOn
 import moyingji.idonknowa.world.virtual.VirtualManager
@@ -46,7 +46,7 @@ object SimUnivManager {
     @OptIn(ExperimentalUuidApi::class)
     data class RaidData (
         val regionId: UInt,
-        val playersData: MutableMap<Uuid, RaidEntrance> = mutableMapOf(),
+        val playersData: MutableMap<@Contextual Uuid, RaidEntrance> = mutableMapOf(),
     ) {
         fun valid(clear: Boolean = false): Boolean {
             // 逻辑同上 [Data.valid]

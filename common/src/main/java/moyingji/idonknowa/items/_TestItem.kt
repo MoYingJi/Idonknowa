@@ -1,12 +1,12 @@
 package moyingji.idonknowa.items
 
 import moyingji.idonknowa.*
-import moyingji.idonknowa.Idonknowa.autoString
 import moyingji.idonknowa.Idonknowa.id
 import moyingji.idonknowa.all.ItemSettings
 import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.withOnlyParent
 import moyingji.idonknowa.lang.textStyle
+import moyingji.idonknowa.util.withoutDefaultNamespace
 import moyingji.lib.collections.MutableMapsMap
 import net.minecraft.ChatFormatting.*
 import net.minecraft.core.component.DataComponents
@@ -62,7 +62,8 @@ class _TestItem : Item(ItemSettings()
         player.sendSystemMessage(title)
         for (c in stack.components)
             player.sendSystemMessage(Text.empty()
-                .append(c.type.toString().id.autoString.textStyle(GRAY))
+                .append(c.type.toString().id
+                    .withoutDefaultNamespace().textStyle(GRAY))
                 .append(" = ".textStyle(DARK_GRAY))
                 .append(c.value.toString())
             )
