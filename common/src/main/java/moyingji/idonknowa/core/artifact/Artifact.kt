@@ -110,8 +110,7 @@ data class Artifact(
             // 副词条部分
             val affixes: MutableList<Affix> = mutableListOf()
             val affixTypeIds = ARTI_AFFIX.keys
-                .map { it.toString() }
-                .let { HashSet(it) }
+                .map { it.toString() }.let { HashSet(it) }
             affixTypeIds -= pm.id
                 // random5/4 -> 0,0,0,1; 副词条个数 | 重复随机副词条
             repeat(random(5)/4 + 3) {
@@ -119,6 +118,7 @@ data class Artifact(
                 val r = randomWithWeight(affixTypeIds, random) {
                     ARTI_AFFIX_WEIGHT[it.id]?.toInt() ?: 100 }!!
                 val v = ARTI_AFFIX_VALUE[r.id].random(random).toString()
+                affixTypeIds -= r
                 affixes += Affix(r, listOf(v))
             }
             return Artifact(set, p, main, affixes)
