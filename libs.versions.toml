@@ -1,11 +1,11 @@
 [versions]
 # plugins version
-architectury-plugin = "3.4-SNAPSHOT"
-architectury-loom = "1.7-SNAPSHOT"
-shadow = "8.3.5"
+architectury-plugin = "3.4-SNAPSHOT" # maven.architectury.dev/architectury-plugin/architectury-plugin.gradle.plugin
+architectury-loom = "1.9-SNAPSHOT" # maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin
+shadow = "9.0.0-beta6" # gradleup.com/shadow/getting-started
 # kotlin language
-kotlin = "2.0.21"
-kotlin-ksp = "2.0.21-1.0.25"
+kotlin = "2.1.10" # kotlinlang.org/docs/releases.html#release-details
+kotlin-ksp = "2.1.10-1.0.29" # github.com/google/ksp/releases
 
 [libraries]
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
@@ -14,6 +14,6 @@ kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin-ksp" }
-architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" } # https://maven.architectury.dev/architectury-plugin/architectury-plugin.gradle.plugin/
-architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" } # https://maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" } # OLD com.github.johnrengelman.shadow

@@ -94,6 +94,17 @@ subprojects {
         // Kotlin Module Impl
         val fabric_kotlin_version: String by project
         implementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
+
+        // Arrow Kt
+        val arrow_kt_modules: String by project
+        val arrow_kt_version: String by project
+        val arktm = arrow_kt_modules.split(",")
+        arktm.forEach {
+            implementation("io.arrow-kt:arrow-$it:$arrow_kt_version")
+            "include"("io.arrow-kt:arrow-$it:$arrow_kt_version")
+        }
+        if ("optics" in arktm)
+            ksp("io.arrow-kt:arrow-optics-ksp-plugin:$arrow_kt_version")
     }
 
     tasks.processResources {
