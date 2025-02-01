@@ -1,9 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": { "all": "idonknowa:item/wish_result" },
-    "overrides": [
-        { "predicate": { "custom_model_data": 3 }, "model": "idonknowa:item/wish_result_3" },
-        { "predicate": { "custom_model_data": 4 }, "model": "idonknowa:item/wish_result_4" },
-        { "predicate": { "custom_model_data": 5 }, "model": "idonknowa:item/wish_result_5" }
-    ]
-}

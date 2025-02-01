@@ -6,8 +6,6 @@
     "client": [
     ],
     "mixins": [
-        "ItemStackMixin",
-        "ShapedRecipePatternDataMixin"
     ],
     "injectors": {
         "defaultRequire": 1

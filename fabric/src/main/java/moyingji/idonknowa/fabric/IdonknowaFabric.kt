@@ -14,7 +14,7 @@ class IdonknowaFabric : ModInitializer, ClientModInitializer, DataGeneratorEntry
     override fun onInitializeClient() {}
 
     override fun onInitializeDataGenerator(gener: FabricDataGenerator) {
-        LogUtils.getLogger().info("Hello Idonknowa from Fabric DataGen!")
-        Idonknowa.dataGen(gener)
+        LogUtils.getLogger().info("Hello Idonknowa from Fabric Datagen!")
+        Idonknowa.datagen(gener)
     }
 }

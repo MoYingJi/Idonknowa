@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "idonknowa:item/cosmic_big_lotto"
-  }
-}
