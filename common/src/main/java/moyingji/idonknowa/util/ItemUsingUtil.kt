@@ -1,13 +1,12 @@
 package moyingji.idonknowa.util
 
 import net.minecraft.world.*
-import net.minecraft.world.InteractionResult.SUCCESS_NO_ITEM_USED
+import net.minecraft.world.InteractionResult.SUCCESS_SERVER
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.level.Level
 
 typealias ItResult = InteractionResult
-typealias ItResultWith<T> = InteractionResultHolder<T>
 typealias ItHand = InteractionHand
 
 class ItemUsingArgs(
@@ -26,7 +25,7 @@ class ItemUsingArgs(
     fun success(): ItResultWith<ItemStack>
     = ItResultWith.success(stack)
     fun successNoItemUsed(): ItResultWith<ItemStack>
-    = ItResultWith(SUCCESS_NO_ITEM_USED, stack)
+    = ItResultWith(SUCCESS_SERVER, stack)
     fun consume(): ItResultWith<ItemStack>
     = ItResultWith.consume(stack)
     fun fail(): ItResultWith<ItemStack>

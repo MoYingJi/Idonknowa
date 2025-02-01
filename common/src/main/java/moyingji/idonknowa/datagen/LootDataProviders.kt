@@ -9,17 +9,18 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.minecraft.core.HolderLookup.Provider
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.util.context.ContextKeySet
 import net.minecraft.world.level.storage.loot.LootTable
 import net.minecraft.world.level.storage.loot.LootTable.Builder
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
 import java.util.function.BiConsumer
 
 object LootDataProviders {
-    val providers: MutableMap<LCParams, LPC> = mutableMapOf()
-    val builders: Multimap<LCParams, Pair<LootBuilder, Id>> = MultimapBuilder
+    val providers: MutableMap<ContextKeySet, LPC> = mutableMapOf()
+    val builders: Multimap<ContextKeySet, Pair<LootBuilder, Id>> = MultimapBuilder
         .hashKeys().arrayListValues().build()
 
-    private fun getOrCreateProvider(p: LCParams, d: DataPack): LPC = providers
+    private fun getOrCreateProvider(p: ContextKeySet, d: DataPack): LPC = providers
         .getOrPut(p) { { o: FabricDataOutput, l: CompFuture<Provider> ->
             LootDataProvider(o, l, p) }.also { d.addProvider(it) } }
 
@@ -38,10 +39,10 @@ typealias LPC = (FabricDataOutput, CompFuture<Provider>) -> LootDataProvider
 class LootDataProvider(
     output: FabricDataOutput,
     lookup: CompFuture<Provider>,
-    param: LCParams = LootContextParamSets.EMPTY
+    param: ContextKeySet = LootContextParamSets.EMPTY
 ) : SimpleFabricLootTableProvider(output, lookup, param) {
     override fun generate(output: BiConsumer<ResourceKey<LootTable>, Builder>) {
-        for ((b, i) in LootDataProviders.builders[lootContextType]) {
+        for ((b, i) in LootDataProviders.builders[contextType]) {
             val k = ResourceKey.create(Registries.LOOT_TABLE, i)
             output.accept(k, b)
         }

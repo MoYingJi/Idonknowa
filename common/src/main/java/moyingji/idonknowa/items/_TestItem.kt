@@ -10,6 +10,7 @@ import moyingji.idonknowa.util.withoutDefaultNamespace
 import moyingji.lib.collections.MutableMapsMap
 import net.minecraft.ChatFormatting.*
 import net.minecraft.core.component.DataComponents
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.*
 import net.minecraft.world.entity.player.Player
@@ -52,10 +53,10 @@ class _TestItem : Item(ItemSettings()
         if (click != ClickAction.SECONDARY) return false
         val other = slot.item
         if (other.isEmpty) return false
-        sendNbtMsg(player, other)
+        if (player is ServerPlayer) sendNbtMsg(player, other)
         return true
     }
-    fun sendNbtMsg(player: Player, stack: ItemStack) {
+    fun sendNbtMsg(player: ServerPlayer, stack: ItemStack) {
         player.sendSystemMessage(Text.literal("=== Idonknowa Test ==="))
         val title: MutableText = Text.empty()
         title.append(stack.displayName).append(" [Components]:")

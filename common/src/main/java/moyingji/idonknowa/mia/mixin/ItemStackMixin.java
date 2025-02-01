@@ -94,7 +94,7 @@ abstract class ItemStackMixin {
         final Level level,
         final Player player,
         final InteractionHand interactionHand,
-        final CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir
+        final CallbackInfoReturnable<InteractionHand> cir
     ) {
         if (((ItemStack)(Object)this).getItem() instanceof ItemUsingUtil item) {
             final var result = item.onUse(new ItemUsingArgs(level, player, interactionHand));

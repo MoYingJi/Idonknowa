@@ -5,10 +5,10 @@ import moyingji.idonknowa.core.RegHelper
 import moyingji.idonknowa.datagen.ModModelProvider.blockModelProviders
 import moyingji.idonknowa.datagen.ModModelProvider.itemModelProviders
 import moyingji.lib.util.toOptional
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider
-import net.minecraft.data.models.*
-import net.minecraft.data.models.model.*
+import net.minecraft.client.data.models.*
+import net.minecraft.client.data.models.model.*
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import java.util.*
@@ -56,7 +56,7 @@ fun <I: Item, R: RegHelper<I>> R.withModel(
 fun <I: Item, R: RegHelper<I>> R.withOnlyParent(parent: Id): R
 = withModel { ModModelTemplates.create(parent).create(
     ModelLocationUtils.getModelLocation(it),
-    TextureMapping(), this.output) }
+    TextureMapping(), this.modelOutput) }
 @JvmName("withOnlyParentItemModel")
 fun <I: Item, R: RegHelper<I>> R.withOnlyParent(parent: Item): R
 = withOnlyParent(ModelLocationUtils.getModelLocation(parent))

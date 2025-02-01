@@ -53,7 +53,7 @@ class QuantumEntangler : Block(BlockSettings.of()
     ): ItResult {
         player.displayClientMessage("Quantum Entangler".text(), true)
         player.openExtendedMenu(this)
-        return ItResult.SUCCESS_NO_ITEM_USED
+        return ItResult.SUCCESS_SERVER
     }
 
     class Menu(syncId: Int, inv: Inventory) : AbstractContainerMenu(menuType.value(), syncId) {
