@@ -30,6 +30,10 @@ dependencies {
     val fabric_kotlin_version: String by project
     if (!fabric_kotlin_version.startsWith("disabled", ignoreCase = true))
         modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
+
+    // owo lib
+    val owo_version: String by project
+    modImplementation("io.wispforest:owo-lib:$owo_version")
 }
 
 fabricApi {

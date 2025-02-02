@@ -54,9 +54,10 @@ subprojects {
         mavenLocal()
         flatDir { dir("libs") }
         maven("https://maven.parchmentmc.org") { name = "ParchmentMC"; includeGroup("org.parchmentmc.data") }
-        maven("https://maven.quiltmc.org/repository/release/") { name = "QuiltMC";  includeGroup("org.quiltmc") }
+        maven("https://maven.quiltmc.org/repository/release/") { name = "QuiltMC"; includeGroup("org.quiltmc") }
         maven("https://api.modrinth.com/maven") { name = "Modrinth"; includeGroup("maven.modrinth") }
         mavenCentral()
+        maven("https://maven.wispforest.io/releases/") { name = "WispForest" }
     }
 
     dependencies {

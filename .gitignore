@@ -8,4 +8,6 @@ out
 run
 .cache
 
+/common/src/generated/resources
+
 /.idea/*

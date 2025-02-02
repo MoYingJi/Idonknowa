@@ -21,7 +21,9 @@ class LangProvider (
         fun gen(pack: Pack) {
             reg.forEach { pack.addProvider(::LangProvider.partially1(it)) }
         }
+    }
 
+    object C {
         val zh = Data("zh_cn")
         val en = Data("en_us")
     }

@@ -4,15 +4,15 @@ import moyingji.idonknowa.Idonknowa.isDatagen
 import moyingji.idonknowa.datagen.LangProvider
 import moyingji.idonknowa.util.text
 import moyingji.lib.inspiration.TemplatedString
+import moyingji.lib.util.*
 import net.minecraft.item.Item
 import net.minecraft.text.*
 import net.minecraft.util.Language
 import org.jetbrains.annotations.Contract
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 class TransKey(val key: String) : TransFutureKey( { key } ),
-    ITransKey, TransProp {
+    ITransKey, PropReadA<TransKey> {
     init {
         require(key.isNotBlank())
     }
@@ -56,19 +56,31 @@ class TransKey(val key: String) : TransFutureKey( { key } ),
     override fun text(vararg args: Any?)
     : MutableText = Text.translatable(key, *args)
 
-    fun pre(): TransProp = object : TransProp {
-        override fun getValue(
-            thisRef: Any?,
-            property: KProperty<*>
-        ): TransKey = this@TransKey.prefix(property.name)
+    // 以 prefix/suffix 方式 创建新 key 或分组
+
+    fun pre(): PropReadA<TransKey> = PropReadA<TransKey> {
+        _, property ->
+        this@TransKey.prefix(property.name)
     }
     override fun getValue(
-        thisRef: Any?,
-        property: KProperty<*>
+        thisRef: Any?, property: KProperty<*>
     ): TransKey = this.suffix(property.name)
+
+    infix fun new(
+        t: Translatable.() -> Unit = {}
+    ): PropReadDPA<TransKey> = PropReadDPA<TransKey> {
+        r, p ->
+        val t = this@TransKey.getValue(r, p).apply(t)
+        PropReadA<TransKey> { _, _ -> t } }
 }
 
-typealias TransProp = ReadOnlyProperty<Any?, TransKey>
+// region 注释性方法
+@Suppress("NOTHING_TO_INLINE", "unused") inline fun <S: TranslateValue> S.args(vararg args: Pair<String, String>): S = this
+@Suppress("NOTHING_TO_INLINE", "unused") inline fun <S: PropReadA<TranslateValue>> S.args(vararg args: Pair<String, String>): S = this
+@Suppress("NOTHING_TO_INLINE", "unused") inline fun <S: PropReadDPA<TranslateValue>> S.args(vararg args: Pair<String, String>): S = this
+// endregion
+
+// 其他奇奇怪怪的东西
 
 val language: Language get() = Language.getInstance()
 
@@ -105,13 +117,13 @@ interface Translatable {
         if (isDatagen) tranLines(data, value.lines().map {{ it }})
     }
 
-    fun LangProvider.Data.to(value: () -> String)
+    infix fun LangProvider.Data.to(value: () -> String)
     { if (isDatagen) tran(this, value) }
-    fun LangProvider.Data.to(value: String)
+    infix fun LangProvider.Data.to(value: String)
     { if (isDatagen) tran(this, value) }
-    fun LangProvider.Data.toLines(value: Iterable<() -> String>)
+    infix fun LangProvider.Data.toLines(value: Iterable<() -> String>)
     { if (isDatagen) tranLines(this, value) }
-    fun LangProvider.Data.toLines(value: String)
+    infix fun LangProvider.Data.toLines(value: String)
     { if (isDatagen) tranLines(this, value) }
 }
 
@@ -131,5 +143,6 @@ fun String.tran(): TransKey = TransKey(this)
 
 fun Item.tran(): Translatable = TransFutureKey { this.translationKey }
 
-fun Item.tran(f: Translatable.() -> Unit) { f(tran()) }
+infix fun <I: Item> I.tran(f: Translatable.() -> Unit)
+: I = this.also { f(tran()) }
 

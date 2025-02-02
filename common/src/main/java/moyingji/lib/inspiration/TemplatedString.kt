@@ -18,6 +18,8 @@ class TemplatedString(
     operator fun set(key: String, value: String): TemplatedString = this.also { values[key] = value }
     infix fun add(pair: Pair<String, String>): TemplatedString = this.also { values += pair }
     fun add(key: String, value: String): TemplatedString = this.also { values[key] = value }
+    fun add(vararg pairs: Pair<String, String>): TemplatedString = this.also { values += pairs }
     infix fun replace(pair: Pair<String, String>): TemplatedString = this.also { values += pair }
     fun replace(key: String, value: String): TemplatedString = this.also { values[key] = value }
+    fun replace(vararg pairs: Pair<String, String>): TemplatedString = this.also { values += pairs }
 }
