@@ -39,8 +39,9 @@ object Translations {
         shiftColor: Formatting =
             if (actionColor == null)
                 Formatting.DARK_GRAY else Formatting.WHITE,
+        hasShiftDown: () -> Boolean = Screen::hasShiftDown,
         action: T.() -> Unit
-    ) { if (Screen.hasShiftDown()) {
+    ) { if (hasShiftDown()) {
             if (actionColor != null)
                 tooltip += detailsShift(backColor, actionColor)
             action(tooltip)

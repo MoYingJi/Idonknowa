@@ -5,7 +5,7 @@ import moyingji.idonknowa.datagen.LangProvider
 import moyingji.idonknowa.util.text
 import moyingji.lib.inspiration.TemplatedString
 import moyingji.lib.util.*
-import net.minecraft.item.Item
+import net.minecraft.item.ItemConvertible
 import net.minecraft.text.*
 import net.minecraft.util.Language
 import org.jetbrains.annotations.Contract
@@ -141,8 +141,6 @@ open class TransFutureKey(val keyFuture: () -> String) : Translatable {
 
 fun String.tran(): TransKey = TransKey(this)
 
-fun Item.tran(): Translatable = TransFutureKey { this.translationKey }
+fun ItemConvertible.tran(): Translatable = TransFutureKey { asItem().translationKey }
 
-infix fun <I: Item> I.tran(f: Translatable.() -> Unit)
-: I = this.also { f(tran()) }
-
+infix fun <I: ItemConvertible> I.tran(f: Translatable.() -> Unit): I = this.also { f(tran()) }

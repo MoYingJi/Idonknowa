@@ -35,9 +35,29 @@ abstract class RSProvider<T>(
 
     open class Base<T>(
         reg: RegistryKey<Registry<T>>,
-        namespace: String,
-        val provider: () -> T = { throw NotImplementedError() }
+        namespace: String = Idonknowa.MOD_ID,
+        val provider: () -> T = { throw NotImplementedError() },
     ) : RSProvider<T>(reg, namespace) {
+        constructor(
+            reg: RegistryKey<Registry<T>>,
+            provider: () -> T
+        ) : this(reg, Idonknowa.MOD_ID, provider)
         override fun provide(id: Identifier): T = provider()
+    }
+
+    open class SetKey<S, T>(
+        reg: RegistryKey<Registry<T>>,
+        val settings: S,
+        val factory: (S) -> T,
+        val keySet: (S, RegistryKey<T>) -> Unit
+            = { _, _ -> },
+        namespace: String = Idonknowa.MOD_ID,
+    ) : RSProvider<T>(reg, namespace) {
+        open fun keySet(settings: S, key: RegistryKey<T>)
+        { keySet.invoke(settings, key) }
+        override fun provide(id: Identifier): T {
+            keySet(settings, RegistryKey.of(registry, id))
+            return factory(settings)
+        }
     }
 }

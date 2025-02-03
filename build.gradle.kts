@@ -61,6 +61,10 @@ subprojects {
     }
 
     dependencies {
+        fun include(dep: Any): Dependency?
+        = if (this@subprojects.name != "common")
+            "include"(dep) else null
+
         // Minecraft
         val minecraft_version: String by project
         "minecraft"("::$minecraft_version")
@@ -102,7 +106,7 @@ subprojects {
         val arktm = arrow_kt_modules.split(",")
         arktm.forEach {
             implementation("io.arrow-kt:arrow-$it:$arrow_kt_version")
-            "include"("io.arrow-kt:arrow-$it:$arrow_kt_version")
+            include("io.arrow-kt:arrow-$it:$arrow_kt_version")
         }
         if ("optics" in arktm)
             ksp("io.arrow-kt:arrow-optics-ksp-plugin:$arrow_kt_version")
@@ -113,7 +117,7 @@ subprojects {
         // 捕获由文件不存在引起的 ClosedFileSystemException
         for (f in files) runCatching { filesMatching(f) {
             expand("version" to project.version)
-        } }
+        } }.onFailure { it.printStackTrace() }
     }
 
     kotlin {

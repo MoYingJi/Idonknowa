@@ -38,6 +38,16 @@ dependencies {
 
 fabricApi {
     configureDataGeneration {
+        client = true
         outputDirectory = project(":common").file("src/generated/resources")
+    }
+}
+
+loom {
+    runConfigs {
+        create("mixinExport") {
+            client()
+            vmArgs += "-Dmixin.debug.export=true"
+        }
     }
 }

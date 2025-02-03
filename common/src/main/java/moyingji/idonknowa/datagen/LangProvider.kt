@@ -31,7 +31,7 @@ class LangProvider (
     override fun generateTranslations(
         lookup: WrapperLookup,
         builder: TranslationBuilder
-    ) {
-        data.map.forEach { (k, v) -> builder.add(k(), v()) }
+    ) { data.map.forEach { (k, v)
+        -> builder.add(k(), v()) }
     }
 }

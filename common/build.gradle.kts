@@ -7,7 +7,9 @@ architectury {
 
 sourceSets.main {
     java.srcDirs("src/generated/java")
-    resources.srcDirs("src/generated/resources")
+    // resources.srcDirs("src/generated/resources")
+    resources.exclude { it.name.startsWith(".cache") }
+    // TODO ↑
 }
 
 dependencies {
