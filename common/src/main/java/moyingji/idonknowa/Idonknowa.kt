@@ -31,6 +31,7 @@ object Idonknowa {
 
     val isDatagen: Boolean = System.getProperty("fabric-api.datagen") != null
     fun datagen(gener: FabricDataGenerator) {
+        isDatagen || return
         val pack: Pack = gener.createPack()
         // Both
         LangProvider.gen(pack)
