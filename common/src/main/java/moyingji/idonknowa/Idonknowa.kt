@@ -4,7 +4,9 @@ import com.mojang.logging.LogUtils
 import dev.architectury.injectables.annotations.ExpectPlatform
 import moyingji.idonknowa.all.*
 import moyingji.idonknowa.core.Events
-import moyingji.idonknowa.datagen.*
+import moyingji.idonknowa.datagen.LangProvider
+import moyingji.idonknowa.datagen.drop.BlockLootProvider
+import moyingji.idonknowa.datagen.model.ModelProvider
 import moyingji.idonknowa.lang.Translations
 import moyingji.idonknowa.platform.*
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator

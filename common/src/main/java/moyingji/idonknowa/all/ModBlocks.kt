@@ -4,7 +4,7 @@ import moyingji.idonknowa.all.block.PrimogemOreBlock
 import moyingji.idonknowa.autoreg.*
 import moyingji.idonknowa.datagen.LangProvider.C.en
 import moyingji.idonknowa.datagen.LangProvider.C.zh
-import moyingji.idonknowa.datagen.models.*
+import moyingji.idonknowa.datagen.model.*
 import net.minecraft.block.*
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Rarity
