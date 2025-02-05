@@ -11,6 +11,9 @@ typealias BlockSettings = AbstractBlock.Settings
 infix fun <S: RSProvider<T>, T> S.listen(f: RegS<T>.(T) -> Unit): S
 = this.apply { action { s -> s.listen { f(s, it) } } }
 
+inline infix fun <S: RSProvider<*>> S.apply(f: S.() -> Unit)
+: S { f(); return this }
+
 // region Item
 class RSItemProvider(
     settings: ItemSettings,

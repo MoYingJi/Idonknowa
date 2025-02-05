@@ -38,7 +38,7 @@ class PrimogemOreBlock(settings: Settings) : Block(settings) {
             AdvancedExplosionBehavior(
                 /* destroyBlocks = */ false,
                 /* damageEntities = */ false,
-                /* knockbackModifier = */ Optional.empty(),
+                /* knockbackModifier = */ Optional.of(0F),
                 /* immuneBlocks = */ Optional.empty()
             ),
             pos.center, 4F, false, ExplosionSourceType.BLOCK
