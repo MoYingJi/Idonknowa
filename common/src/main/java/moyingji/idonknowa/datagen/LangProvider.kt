@@ -12,10 +12,30 @@ class LangProvider (
     output: FabricDataOutput,
     lookup: CompletableFuture<WrapperLookup>
 ) : FabricLanguageProvider(output, data.langCode, lookup) {
-    class Data(val langCode: String) {
-        val map: MutableMap<() -> String, () -> String> = mutableMapOf()
-        init { reg.add(this) }
+    object C {
+        val zh = Data("zh_cn")
+        val en = Data("en_us")
     }
+
+    class Data(val langCode: String) {
+        val map: MutableMap<() -> String, () -> String>
+        = mutableMapOf(); get() = if (!isFrozen) field
+            else error(lazyMessage())
+
+        var isFrozen = false; private set
+        fun freeze() { isFrozen = true }
+        val lazyMessage = {
+            "LangProvider.Data ($langCode) is Frozen!"
+        }
+
+        init { reg.add(this) }
+
+        operator fun set(key: () -> String, value: () -> String)
+        { map[key] = value }
+        operator fun plusAssign(pair: Pair<() -> String, () -> String>)
+        { map += pair }
+    }
+
     companion object {
         val reg: MutableList<Data> = mutableListOf()
         fun gen(pack: Pack) {
@@ -23,15 +43,12 @@ class LangProvider (
         }
     }
 
-    object C {
-        val zh = Data("zh_cn")
-        val en = Data("en_us")
-    }
-
     override fun generateTranslations(
         lookup: WrapperLookup,
         builder: TranslationBuilder
-    ) { data.map.forEach { (k, v)
-        -> builder.add(k(), v()) }
+    ) {
+        for ((k, v) in data.map)
+            builder.add(k(), v())
+        data.freeze()
     }
 }

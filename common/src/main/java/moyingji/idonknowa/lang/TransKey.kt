@@ -11,7 +11,7 @@ import net.minecraft.util.Language
 import org.jetbrains.annotations.Contract
 import kotlin.reflect.KProperty
 
-class TransKey(val key: String) : TransFutureKey( { key } ),
+class TransKey(val key: String) : TransKeyCall( { key } ),
     ITransKey, PropReadA<TransKey> {
     init {
         require(key.isNotBlank())
@@ -71,7 +71,7 @@ class TransKey(val key: String) : TransFutureKey( { key } ),
     ): PropReadDPA<TransKey> = PropReadDPA<TransKey> {
         r, p ->
         val t = this@TransKey.getValue(r, p).apply(t)
-        PropReadA<TransKey> { _, _ -> t } }
+        PropConst<TransKey>(t) }
 }
 
 // region 注释性方法
@@ -127,20 +127,64 @@ interface Translatable {
     { if (isDatagen) tranLines(this, value) }
 }
 
-open class TransFutureKey(val keyFuture: () -> String) : Translatable {
+// region 两种无需立刻获取 key 的 Translatable 实现
+
+open class TransKeyCall(val keyCall: () -> String) : Translatable {
     override fun tran(data: LangProvider.Data, value: () -> String) {
-        if (isDatagen) data.map += keyFuture to value
+        if (isDatagen) data += keyCall to value
     }
     override fun tranLines(
         data: LangProvider.Data,
         values: Iterable<() -> String>
     ) { isDatagen || return
         for ((i, line) in values.withIndex())
-            data.map += { "${keyFuture()}.line$i" } to line }
+            data += { "${keyCall()}.line$i" } to line
+    }
 }
+
+class TransLazyKey(val keyLazy: Lazy<String>): Translatable {
+    override fun tran(data: LangProvider.Data, value: () -> String) {
+        if (isDatagen) data += keyLazy::value to value
+    }
+    override fun tranLines(
+        data: LangProvider.Data,
+        values: Iterable<() -> String>
+    ) { isDatagen || return
+        for ((i, line) in values.withIndex())
+            data += { "${keyLazy.value}.line$i" } to line
+    }
+    constructor(keyCall: () -> String) : this( lazy { keyCall() } )
+}
+
+class TransAcceptedKey() : Translatable {
+    val acceptors: MutableList<(key: Translatable) -> Unit> = mutableListOf()
+    val keys: MutableList<Translatable> = mutableListOf()
+    fun accept(key: () -> String) {
+        !isDatagen || return
+        val key = TransKeyCall(key)
+        acceptors.forEach { it(key) }
+        keys += key
+    }
+
+    fun value(t: Translatable.() -> Unit) {
+        isDatagen || return
+        keys.forEach(t)
+        acceptors += t
+    }
+
+    override fun tran(
+        data: LangProvider.Data, value: () -> String
+    ) { value { tran(data, value) } }
+    override fun tranLines(
+        data: LangProvider.Data,
+        values: Iterable<() -> String>
+    ) { value { tranLines(data, values) } }
+}
+
+// endregion
 
 fun String.tran(): TransKey = TransKey(this)
 
-fun ItemConvertible.tran(): Translatable = TransFutureKey { asItem().translationKey }
+fun ItemConvertible.tran(): Translatable = TransKeyCall { asItem().translationKey }
 
 infix fun <I: ItemConvertible> I.tran(f: Translatable.() -> Unit): I = this.also { f(tran()) }

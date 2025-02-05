@@ -5,9 +5,13 @@ import moyingji.idonknowa.datagen.LangProvider.C.en
 import moyingji.idonknowa.datagen.LangProvider.C.zh
 import moyingji.idonknowa.datagen.models.*
 import net.minecraft.item.Item
+import net.minecraft.util.Rarity
 
-object ModItem {
-    val PRIMOGEM: RegS<Item> by item() tran {
+object ModItems {
+    val PRIMOGEM: RegS<Item> by item {
+        fireproof()
+        rarity(Rarity.RARE)
+    } tran {
         zh to { "原石" }
         en to { "Primogem" }
     } model generated

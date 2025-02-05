@@ -2,7 +2,7 @@ package moyingji.idonknowa
 
 import com.mojang.logging.LogUtils
 import dev.architectury.injectables.annotations.ExpectPlatform
-import moyingji.idonknowa.all.ModItem
+import moyingji.idonknowa.all.*
 import moyingji.idonknowa.core.Events
 import moyingji.idonknowa.datagen.*
 import moyingji.idonknowa.lang.Translations
@@ -22,7 +22,8 @@ object Idonknowa {
     fun init() {
         ModLoaderType.check()
 
-        ModItem // init
+        ModItems // init
+        ModBlocks // init
 
         Translations // init
 
@@ -34,6 +35,7 @@ object Idonknowa {
         isDatagen || return
         val pack: Pack = gener.createPack()
         // Both
+        pack.addProvider(::BlockLootProvider)
         LangProvider.gen(pack)
         // Client
         isClient() || return

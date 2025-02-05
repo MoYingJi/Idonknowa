@@ -6,14 +6,22 @@ import net.minecraft.client.data.*
 
 class ModelProvider(output: FabricDataOutput) : FabricModelProvider(output) {
     companion object {
-        val itemsF: MutableList<ItemModelGenerator.() -> Unit> = mutableListOf()
-        val blocksF: MutableList<BlockStateModelGenerator.() -> Unit> = mutableListOf()
+        const val FROZEN_MESSAGE = "Model Provider is Frozen!"
+        val itemsF: MutableList<ItemModelGenerator.() -> Unit>
+        = mutableListOf(); get() = if (!isItemF) field else error(FROZEN_MESSAGE)
+        val blocksF: MutableList<BlockStateModelGenerator.() -> Unit>
+        = mutableListOf(); get() = if (!isItemF) field else error(FROZEN_MESSAGE)
+
+        private var isItemF = false
+        private var isBlockF = false
     }
 
     override fun generateItemModels(gener: ItemModelGenerator) {
         itemsF.forEach { it(gener) }
+        isItemF = true
     }
     override fun generateBlockStateModels(gener: BlockStateModelGenerator) {
         blocksF.forEach { it(gener) }
+        isBlockF = true
     }
 }

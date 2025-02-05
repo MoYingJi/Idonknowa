@@ -1,7 +1,15 @@
 package moyingji.lib.util
 
-import kotlin.properties.*
+@Suppress("UNCHECKED_CAST")
+fun <T> Any?.typed(): T = this as T
 
-typealias PropDPA<T> = PropertyDelegateProvider<Any?, T>
-typealias PropReadA<T> = ReadOnlyProperty<Any?, T>
-typealias PropReadDPA<T> = PropDPA<PropReadA<T>>
+object FuckersUtil {
+    inline fun <T> T.equOverHelper(
+        other: Any?,
+        condition: T.(T) -> Boolean
+    ): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        return condition(this, other.typed())
+    }
+}

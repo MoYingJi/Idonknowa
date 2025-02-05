@@ -1,6 +1,6 @@
 package moyingji.idonknowa.autoreg
 
-import arrow.core.partially1
+import arrow.core.*
 import dev.architectury.registry.registries.*
 import moyingji.idonknowa.Idonknowa
 import moyingji.idonknowa.util.id
@@ -19,18 +19,28 @@ abstract class RSProvider<T>(
         .get(namespace).get(registry)
 
     val actions: MutableList<(RegS<T>) -> Unit> = mutableListOf()
-    infix fun action(f: (RegS<T>) -> Unit) { actions += f }
+    infix fun action(f: (RegS<T>) -> Unit) {
+        regs.fold( { f(it) }, { actions += f } )
+    }
 
     abstract fun provide(id: Identifier): T
+
+    fun register(id: Identifier): RegS<T> {
+        require(regs.isRight())
+        val rs: RegS<T> = registrar.register(id, ::provide.partially1(id))
+        regs = Either.Left(rs)
+        actions.removeIf { it(rs); true }
+        return rs
+    }
+    fun register(name: String): RegS<T> = register(name.id(namespace))
+
+    var regs: Either<RegS<T>, Unit> = Either.Right(Unit)
+        protected set
 
     override fun provideDelegate(thisRef: Any?, property: KProperty<*>)
     : PropReadA<RegS<T>> {
         val name = property.regName(String::lowercase)
-        val id = name.id(namespace)
-        val rs: RegS<T> = registrar.register(id, ::provide.partially1(id))
-        actions.forEach { it(rs) }
-        return PropReadA<RegS<T>> {
-            _, _ -> rs }
+        return PropConst<RegS<T>>(register(name))
     }
 
     open class Base<T>(
