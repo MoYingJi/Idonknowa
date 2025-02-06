@@ -4,7 +4,7 @@ import arrow.core.*
 import dev.architectury.registry.registries.*
 import moyingji.idonknowa.Idonknowa
 import moyingji.idonknowa.util.id
-import moyingji.lib.util.*
+import moyingji.lib.prop.*
 import net.minecraft.registry.*
 import net.minecraft.util.Identifier
 import kotlin.reflect.KProperty
@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
 abstract class RSProvider<T>(
     val registry: RegistryKey<Registry<T>>,
     val namespace: String = Idonknowa.MOD_ID
-) : PropReadDPA<RegS<T>> {
+) : PropNamed<RegS<T>> {
     init { require(Identifier.isNamespaceValid(namespace)) }
 
     open val registrar: Registrar<T> = RegistrarManager
@@ -34,13 +34,15 @@ abstract class RSProvider<T>(
     }
     fun register(name: String): RegS<T> = register(name.id(namespace))
 
+    override fun getValueFromName(name: String): RegS<T> = register(name)
+
     var regs: Either<RegS<T>, Unit> = Either.Right(Unit)
         protected set
 
     override fun provideDelegate(thisRef: Any?, property: KProperty<*>)
     : PropReadA<RegS<T>> {
-        val name = property.regName(String::lowercase)
-        return PropConst<RegS<T>>(register(name))
+        val name = property.propName(String::lowercase)
+        return register(name).propConst()
     }
 
     open class Base<T>(

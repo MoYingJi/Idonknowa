@@ -32,6 +32,6 @@ object ModBlocks {
         this model cubeAll
         this drop self
         this tag BlockTags.PICKAXE_MINEABLE
-        this tag Tags.Block.NEEDS_NETHERITE_TOOL
+        this tag Tags.B.NEEDS_NETHERITE_TOOL
     }
 }

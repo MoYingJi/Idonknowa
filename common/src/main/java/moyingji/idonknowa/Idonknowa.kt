@@ -2,7 +2,7 @@ package moyingji.idonknowa
 
 import com.mojang.logging.LogUtils
 import moyingji.idonknowa.all.*
-import moyingji.idonknowa.core.Events
+import moyingji.idonknowa.core.*
 import moyingji.idonknowa.datagen.LangProvider
 import moyingji.idonknowa.datagen.drop.BlockLootProvider
 import moyingji.idonknowa.datagen.model.ModelProvider
@@ -24,6 +24,8 @@ object Idonknowa {
 
         ModItems // init
         ModBlocks // init
+
+        Tags // init
 
         Translations // init
 

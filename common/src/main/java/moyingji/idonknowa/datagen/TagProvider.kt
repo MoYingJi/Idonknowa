@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
 import net.minecraft.registry.RegistryWrapper.WrapperLookup
 import net.minecraft.registry.tag.TagKey
+import net.minecraft.util.Identifier
 import java.util.concurrent.CompletableFuture
 
 typealias TagBuilder<T> = FabricTagProvider<T>.FabricTagBuilder
@@ -24,10 +25,10 @@ class TagProvider<T>(
     output, data.reg, lookup
 ) {
     companion object {
-        val map: MutableMap<RegKeyOutReg<*>, Data<*>> = mutableMapOf()
+        val map: MutableMap<Identifier, Data<*>> = mutableMapOf()
 
         fun <T> data(registry: RegKeyOutReg<T>): Data<T>
-        = map.getOrPut(registry) { Data(registry) }.typed()
+        = map.getOrPut(registry.value) { Data(registry) }.typed()
 
         fun gen(pack: Pack) {
             for (d in map.values) pack.addProvider {
@@ -53,19 +54,25 @@ class TagProvider<T>(
         isDatagen || return
         val map = data.map
         data.freeze()
-        for (tag in map.keys()) {
-            val b = getOrCreateTagBuilder(tag)
-            map.get(tag).forEach { b.it() }
-        }
+        for ((t, f) in map.entries())
+            f(getOrCreateTagBuilder(t))
     }
 }
 
-infix fun <T> TagKey<T>.tag(builder: TagBuilder<T>.() -> Unit) {
-    isDatagen || return
+infix fun <K: TagKey<T>, T> K.tagFor(
+    builder: TagBuilder<T>.() -> Unit
+): K {
+    isDatagen || return this
     val d = data(registryRef)
     d.map.put(this, builder)
+    return this
 }
 
-infix fun <T> T.tag(tag: TagKey<T>): T = also { tag.tag { add(it) } }
+infix fun <T> TagKey<T>.tagTo(tag: TagKey<T>): TagKey<T>
+= also { tag.tagFor { addTag(this@tagTo) } }
+infix fun <T> TagKey<T>.tagOptionalTo(tag: TagKey<T>): TagKey<T>
+= also { tag.tagFor { addOptionalTag(this@tagOptionalTo) } }
+
+infix fun <T> T.tag(tag: TagKey<T>): T = also { tag.tagFor { add(it) } }
 infix fun <S: RegS<T>, T> S.tag(tag: TagKey<T>): S = also { listen { it.tag(tag) } }
 infix fun <P: RSProvider<T>, T> P.tag(tag: TagKey<T>): P = listen { it.tag(tag) }

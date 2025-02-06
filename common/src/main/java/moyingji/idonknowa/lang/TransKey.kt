@@ -4,7 +4,7 @@ import moyingji.idonknowa.Idonknowa.isDatagen
 import moyingji.idonknowa.datagen.LangProvider
 import moyingji.idonknowa.util.text
 import moyingji.lib.inspiration.TemplatedString
-import moyingji.lib.util.*
+import moyingji.lib.prop.*
 import net.minecraft.item.ItemConvertible
 import net.minecraft.text.*
 import net.minecraft.util.Language
@@ -71,7 +71,7 @@ class TransKey(val key: String) : TransKeyCall( { key } ),
     ): PropReadDPA<TransKey> = PropReadDPA<TransKey> {
         r, p ->
         val t = this@TransKey.getValue(r, p).apply(t)
-        PropConst<TransKey>(t) }
+        t.propConst() }
 }
 
 // region 注释性方法
