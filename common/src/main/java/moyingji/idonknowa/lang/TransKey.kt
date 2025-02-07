@@ -1,8 +1,8 @@
 package moyingji.idonknowa.lang
 
 import moyingji.idonknowa.Idonknowa.isDatagen
-import moyingji.idonknowa.datagen.LangProvider
-import moyingji.idonknowa.util.text
+import moyingji.idonknowa.datagen.LangData
+import moyingji.idonknowa.util.*
 import moyingji.lib.inspiration.TemplatedString
 import moyingji.lib.prop.*
 import net.minecraft.item.ItemConvertible
@@ -104,50 +104,60 @@ interface TranslateValue {
 }
 
 interface Translatable {
-    fun tran(data: LangProvider.Data, value: () -> String)
-    fun tranLines(data: LangProvider.Data, values: Iterable<() -> String>)
+    fun tran(data: LangData, value: () -> String)
+    fun tranLines(data: LangData, values: Iterable<() -> String>)
 
-    fun tran(data: LangProvider.Data, value: String) {
+    fun tran(data: LangData, value: String) {
         isDatagen || return
         val str = value.trim()
         require(!str.contains('\n'))
         tran(data) { value }
     }
-    fun tranLines(data: LangProvider.Data, value: String) {
+    fun tranLines(data: LangData, value: String) {
         if (isDatagen) tranLines(data, value.lines().map {{ it }})
     }
 
-    infix fun LangProvider.Data.to(value: () -> String)
-    { if (isDatagen) tran(this, value) }
-    infix fun LangProvider.Data.to(value: String)
-    { if (isDatagen) tran(this, value) }
-    infix fun LangProvider.Data.toLines(value: Iterable<() -> String>)
-    { if (isDatagen) tranLines(this, value) }
-    infix fun LangProvider.Data.toLines(value: String)
-    { if (isDatagen) tranLines(this, value) }
+    infix fun LangData.to(value: () -> String): LangData
+    = apply { if (isDatagen) tran(this, value) }
+    infix fun LangData.to(value: String): LangData
+    = apply { if (isDatagen) tran(this, value) }
+    infix fun LangData.toLines(value: Iterable<() -> String>): LangData
+    = apply { if (isDatagen) tranLines(this, value) }
+    infix fun LangData.toLines(value: String): LangData
+    = apply { if (isDatagen) tranLines(this, value) }
 }
 
 // region 两种无需立刻获取 key 的 Translatable 实现
 
 open class TransKeyCall(val keyCall: () -> String) : Translatable {
-    override fun tran(data: LangProvider.Data, value: () -> String) {
+    override fun tran(data: LangData, value: () -> String) {
         if (isDatagen) data += keyCall to value
     }
     override fun tranLines(
-        data: LangProvider.Data,
+        data: LangData,
         values: Iterable<() -> String>
     ) { isDatagen || return
         for ((i, line) in values.withIndex())
             data += { "${keyCall()}.line$i" } to line
     }
+
+    // region itemAutoDesc / 仅限 ItemConvertible 的自动描述!
+    fun LangData.itemAutoDesc(
+        shift: Boolean, at: String, lines: String
+    ): LangData = apply { if (isDatagen) { TransKeyCall {
+        TooltipUtil.getAutoDescKey(keyCall().tran(), shift, at).key
+    }.tranLines(this, lines) } }
+    infix fun LangData.itemAutoDesc(lines: String): LangData
+    = apply { itemAutoDesc(true, "before", lines) }
+    // endregion
 }
 
 class TransLazyKey(val keyLazy: Lazy<String>): Translatable {
-    override fun tran(data: LangProvider.Data, value: () -> String) {
+    override fun tran(data: LangData, value: () -> String) {
         if (isDatagen) data += keyLazy::value to value
     }
     override fun tranLines(
-        data: LangProvider.Data,
+        data: LangData,
         values: Iterable<() -> String>
     ) { isDatagen || return
         for ((i, line) in values.withIndex())
@@ -173,10 +183,10 @@ class TransAcceptedKey() : Translatable {
     }
 
     override fun tran(
-        data: LangProvider.Data, value: () -> String
+        data: LangData, value: () -> String
     ) { value { tran(data, value) } }
     override fun tranLines(
-        data: LangProvider.Data,
+        data: LangData,
         values: Iterable<() -> String>
     ) { value { tranLines(data, values) } }
 }
@@ -185,6 +195,10 @@ class TransAcceptedKey() : Translatable {
 
 fun String.tran(): TransKey = TransKey(this)
 
-fun ItemConvertible.tran(): Translatable = TransKeyCall { asItem().translationKey }
+fun ItemConvertible.transKey(): TransKey = TransKey(asItem().translationKey)
+fun ItemConvertible.lazyTran(): TransKeyCall = TransKeyCall { asItem().translationKey }
 
-infix fun <I: ItemConvertible> I.tran(f: Translatable.() -> Unit): I = this.also { f(tran()) }
+infix fun <I: ItemConvertible> I.tran(f: TransKey.() -> Unit)
+: I = this.also { f(transKey()) }
+infix fun <I: ItemConvertible> I.lazyTran(f: TransKeyCall.() -> Unit)
+: I = this.also { f(lazyTran()) }

@@ -12,7 +12,7 @@ object ModItems {
         fireproof()
         rarity(Rarity.RARE)
     } tran {
-        zh to { "原石" }
-        en to { "Primogem" }
+        zh to "原石"
+        en to "Primogem"
     } model generated
 }

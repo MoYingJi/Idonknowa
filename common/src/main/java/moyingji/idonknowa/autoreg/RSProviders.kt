@@ -30,7 +30,7 @@ fun item(
 
 @JvmName("tranItem")
 infix fun <P: RSProvider<Item>> P.tran(
-    f: Translatable.() -> Unit
+    f: TransKey.() -> Unit
 ): P = listen { it tran f }
 
 // endregion
@@ -51,21 +51,20 @@ fun block(
 
 @JvmName("tranBlock")
 infix fun <P: RSProvider<Block>> P.tran(
-    f: Translatable.() -> Unit
+    f: TransKey.() -> Unit
 ): P = listen { it tran f }
 
 class BlockItemProviderData<B: Block>(
     val caller: RSProvider<B>,
     var factory: (B, ItemSettings) -> BlockItem = ::BlockItem,
-    var settings: ItemSettings.() -> Unit = {},
     var setter: RSItemProvider.() -> Unit = {},
 ) {
     infix fun factory(factory: (B, ItemSettings) -> BlockItem)
     : BlockItemProviderData<B> = apply { this.factory = factory }
-    infix fun settings(settings: ItemSettings.() -> Unit)
-    : BlockItemProviderData<B> = apply { this.settings = settings }
     infix fun setter(setter: RSItemProvider.() -> Unit)
     : BlockItemProviderData<B> = apply { this.setter = setter }
+
+    val settings = ItemSettings()
 }
 
 infix fun <P: RSProvider<B>, B: Block> P.withBlockItem(
@@ -73,8 +72,7 @@ infix fun <P: RSProvider<B>, B: Block> P.withBlockItem(
 ): P = listen { block ->
     val dp = BlockItemProviderData<B>(this@withBlockItem)
     dp.apply(data)
-    val settings = ItemSettings().apply(dp.settings)
-    val provider = RSItemProvider(settings) { dp.factory(block, it) }
+    val provider = RSItemProvider(dp.settings) { dp.factory(block, it) }
     provider.apply(dp.setter).register(this.id)
 }
 

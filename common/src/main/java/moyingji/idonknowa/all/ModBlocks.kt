@@ -21,13 +21,16 @@ object ModBlocks {
         sounds(BlockSoundGroup.DEEPSLATE)
         requiresTool()
     } withBlockItem {
-        settings {
-            fireproof()
-            rarity(Rarity.RARE)
-        } model blockItem
+        settings.fireproof().rarity(Rarity.RARE)
+        this model blockItem
     } tran {
-        zh to { "深层原石矿石" }
-        en to { "Deepslate Primogem Ore" }
+        zh to "深层原石矿石" itemAutoDesc """
+                一种稀有的矿石，一般不容易被发现，你需要有一把好镐才能挖动
+            """.trimIndent()
+        en to "Deepslate Primogem Ore" itemAutoDesc """
+                A rare ore, which is hard to find
+                you need a good pickaxe to mine it.
+            """.trimIndent()
     } datagen {
         this model cubeAll
         this drop self

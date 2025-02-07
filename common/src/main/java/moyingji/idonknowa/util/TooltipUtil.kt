@@ -2,9 +2,9 @@ package moyingji.idonknowa.util
 
 import arrow.core.partially1
 import moyingji.idonknowa.core.Events
+import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.lang.Translations.display_details
 import moyingji.idonknowa.lang.Translations.hold_to
-import moyingji.idonknowa.lang.tran
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.item.Item
 import net.minecraft.text.*
@@ -17,8 +17,8 @@ object TooltipUtil {
      * 已经在 [Events.default] 中被默认调用
      *
      * 自动检查以下本地化键 (`xxx` 代表物品名称对应的本地化键)
-     * - `xxx.idonknowa.desc.shift.before` (多行, 提示按住 Shift)
-     * - `xxx.idonknowa.desc.shift.after` (多行, 提示按住 Shift)
+     * - `xxx.idonknowa.desc.before.shift` (多行, 提示按住 Shift)
+     * - `xxx.idonknowa.desc.after.shift` (多行, 提示按住 Shift)
      * - `xxx.idonknowa.desc.before` (多行或单行, 无需 Shift)
      * - `xxx.idonknowa.desc.after` (多行或单行, 无需 Shift)
      */
@@ -28,9 +28,8 @@ object TooltipUtil {
             suffix: String,
             tooltip: TooltipArgs,
         ) {
-            val key = tooltip.item.translationKey.tran()
-                .suffix("idonknowa.desc").suffix(suffix)
-                .apply { if (shift) suffix("shift") }
+            val key = getAutoDescKey(
+                tooltip.item.transKey(), shift, suffix)
             if (key.hasLines) {
                 detailsShift(
                     tooltip = tooltip,
@@ -52,6 +51,14 @@ object TooltipUtil {
         Events.ItemTooltip.AFTER_ITEM
             .register(tipDefDescF.partially1("after"))
     }
+
+    fun getAutoDescKey(
+        original: TransKey,
+        isNeedsShift: Boolean,
+        at: String
+    ): TransKey = original
+        .suffix("idonknowa.desc").suffix(at)
+        .suffix(if (isNeedsShift) "shift" else "")
 }
 
 // region detailsShift 实现了 Tooltip 里最常见的 Shift 显示详细信息

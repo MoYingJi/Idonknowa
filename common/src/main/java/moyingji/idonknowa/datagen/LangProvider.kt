@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider
 import net.minecraft.registry.RegistryWrapper.WrapperLookup
 import java.util.concurrent.CompletableFuture
 
+typealias LangData = LangProvider.Data
+
 class LangProvider (
     val data: Data,
     output: FabricDataOutput,

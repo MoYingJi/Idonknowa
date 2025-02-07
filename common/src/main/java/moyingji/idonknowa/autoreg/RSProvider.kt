@@ -28,6 +28,7 @@ abstract class RSProvider<T>(
     fun register(id: Identifier): RegS<T> {
         require(regs.isRight())
         val rs: RegS<T> = registrar.register(id, ::provide.partially1(id))
+        rs.listen { if (it is RSCallback) it.acceptRegistered() }
         regs = Either.Left(rs)
         actions.removeIf { it(rs); true }
         return rs
