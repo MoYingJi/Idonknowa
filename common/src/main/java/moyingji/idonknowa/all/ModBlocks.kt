@@ -25,7 +25,8 @@ object ModBlocks {
         this model blockItem
     } tran {
         zh to "深层原石矿石" itemAutoDesc """
-                一种稀有的矿石，一般不容易被发现，你需要有一把好镐才能挖动
+                一种稀有的矿石，一般不容易被发现
+                你需要有一把好镐才能挖动
             """.trimIndent()
         en to "Deepslate Primogem Ore" itemAutoDesc """
                 A rare ore, which is hard to find

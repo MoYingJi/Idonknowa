@@ -1,10 +1,10 @@
 package moyingji.lib.util
 
-@Suppress("UNCHECKED_CAST")
-fun <T> Any?.typed(): T = this as T
+@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
+inline fun <T> Any?.typed(): T = this as T
 
 object FuckersUtil {
-    inline fun <T> T.equOverHelper(
+    inline fun <T> T.equalsOverrideHelper(
         other: Any?,
         condition: T.(T) -> Boolean
     ): Boolean {
