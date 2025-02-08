@@ -4,6 +4,7 @@ import dev.architectury.plugin.ArchitectPluginExtension
 import groovy.json.JsonOutput
 import net.fabricmc.loom.task.RemapJarTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.internal.ensureParentDirsCreated
 import net.fabricmc.loom.api.LoomGradleExtensionAPI as Loom
 
 plugins {
@@ -135,6 +136,10 @@ subprojects {
 
             this.name = name.replace(".x.yml", ".json")
             val to = this.relativePath.getFile(destinationDir)
+            if (!to.exists()) {
+                to.ensureParentDirsCreated()
+                to.createNewFile()
+            }
             to.writeText(json)
             this.exclude()
         }
