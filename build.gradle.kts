@@ -1,6 +1,7 @@
 @file:Suppress("LocalVariableName")
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dev.architectury.plugin.ArchitectPluginExtension
+import groovy.json.JsonOutput
 import net.fabricmc.loom.task.RemapJarTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import net.fabricmc.loom.api.LoomGradleExtensionAPI as Loom
@@ -31,6 +32,12 @@ allprojects {
 val kotlinTarget = JvmTarget.JVM_21
 val javaVersion = JavaVersion.VERSION_21
 val javaRelease = 21
+
+buildscript {
+    dependencies {
+        classpath("org.yaml:snakeyaml:2.3")
+    }
+}
 
 subprojects {
     with(rootProject.libs.plugins) { listOf(
@@ -103,12 +110,12 @@ subprojects {
         // Arrow Kt
         val arrow_kt_modules: String by project
         val arrow_kt_version: String by project
-        val arktm = arrow_kt_modules.split(",")
-        arktm.forEach {
+        val akm = arrow_kt_modules.split(",")
+        akm.forEach {
             implementation("io.arrow-kt:arrow-$it:$arrow_kt_version")
             include("io.arrow-kt:arrow-$it:$arrow_kt_version")
         }
-        if ("optics" in arktm)
+        if ("optics" in akm)
             ksp("io.arrow-kt:arrow-optics-ksp-plugin:$arrow_kt_version")
     }
 
@@ -118,6 +125,19 @@ subprojects {
         for (f in files) runCatching { filesMatching(f) {
             expand("version" to project.version)
         } }.onFailure { it.printStackTrace() }
+
+        // yaml 文件处理
+        filesMatching("**/*.x.yml") {
+            val parser = org.yaml.snakeyaml.Yaml()
+            val content = file.readText()
+            val data: Any = parser.load(content)
+            val json = JsonOutput.prettyPrint(JsonOutput.toJson(data))
+
+            this.name = name.replace(".x.yml", ".json")
+            val to = this.relativePath.getFile(destinationDir)
+            to.writeText(json)
+            this.exclude()
+        }
     }
 
     kotlin {
