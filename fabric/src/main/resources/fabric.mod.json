@@ -21,9 +21,9 @@
         "minecraft": "*",
         "java": "*",
         "architectury": "*",
-        "fabric-language-kotlin": "*"
+        "fabric-api": "*",
+        "fabric-language-kotlin": "*",
+        "owo": "*"
     },
-    "suggests": {
-        "fabric-api": "*"
-    }
+    "suggests": {}
 }
