@@ -21,13 +21,15 @@ This mod is inspired by Hoy-ver Games or other games I like, adding some items a
 
 这里有 | There have :
 * 精炼系统 | Refinement System
+
+正在重构 | Refactoring :
 * 祈愿 | Wishes
 * 奇物 (计划是模拟宇宙的一部分) | Curios (Plan to be a part of the Simulated Universe)
 * 模组物品村民交易 | Mod Items Villager Trading
 
 未来**可能**有的 | **Possible** Features :
 * 完整的模拟宇宙 | Whole Simulated Universe (太难我太菜做不来)
-* 米家解密小游戏 | Puzzle from Hoy-ver (不知道怎么实现 交互、GUI、网络请求、数据存储均苦手)
+* 部分解密小游戏 | Some Puzzle (不知道怎么实现 交互、GUI、网络请求、数据存储均苦手)
 * 类似圣遗物系统 | Relics or Artifacts System like (数值和词条方面)
 * BOSS (实体苦手 模型苦手 AI苦手 省流 太菜做不来)
 * 本地或网络音乐唱片 | Local or Network Music Discs (网络请求苦手 音频流苦手 为什么不后台挂个播放器)
@@ -37,7 +39,7 @@ This mod is inspired by Hoy-ver Games or other games I like, adding some items a
 前置 | Requires :
 * Fabric Loader / NeoForge (不推荐但支持吧) / Quilt Loader (理论上支持/计划支持)
 * Architectury API (Fabric/NeoForge)
-* Fabric Language Kotlin (Fabric) / Kotlin for Forge (NeoForge) / 或其他任何 Kotlin 标准库实现 / Or any Kotlin Standard Library implementation
+* Fabric Language Kotlin (Fabric) / Kotlin for Forge (NeoForge) / 或其他任何 Kotlin 标准库实现 / Or any Kotlin Std Lib Impl
 
 可选前置 | Optional Requires : (如果崩了就装上 因为没在别的平台测试)
-* Fabric API (Fabric) / Forgified Fabric API (NeoForge) / 或其他任何 Fabric API 实现 / Or any Fabric API implementation
+* Fabric API (Fabric) / Forgified Fabric API (NeoForge) / 或其他任何 Fabric API 实现 / Or any Fabric API Impl
