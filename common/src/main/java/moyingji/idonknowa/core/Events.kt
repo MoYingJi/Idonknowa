@@ -19,5 +19,6 @@ object Events {
 
     fun default() {
         TooltipUtil.regSimpleAutoDesc()
+        TooltipUtil.regAutoTooltipDataComp()
     }
 }

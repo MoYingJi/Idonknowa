@@ -40,9 +40,11 @@ abstract class RSProvider<T>(
     var regs: Either<RegS<T>, Unit> = Either.Right(Unit)
         protected set
 
+    open fun processPropName(name: String): String = name.lowercase()
+
     override fun provideDelegate(thisRef: Any?, property: KProperty<*>)
     : PropReadA<RegS<T>> {
-        val name = property.propName(String::lowercase)
+        val name = property.propName(::processPropName)
         return register(name).propConst()
     }
 

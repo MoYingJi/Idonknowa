@@ -56,6 +56,27 @@ object TooltipUtil {
         .suffix("idonknowa.desc").suffix(at)
         .suffix(if (isNeedsShift) "shift" else "")
         .multilines()
+
+
+    /**
+     * 使用 [Events.ItemTooltip.AFTER_ITEM] 注册
+     * 使得带有 [TooltipProcessor] 的 数据组件 自动调用
+     */
+    fun regAutoTooltipDataComp() {
+        Events.ItemTooltip.AFTER_ITEM.register {
+            it.stack.components.forEach { comp ->
+                val value: Any = comp.value
+                if (value is TooltipProcessor)
+                    value.processTooltip(it)
+            }
+        }
+    }
+}
+
+// 我知道有 TooltipAppender 但那个只接受 Consumer<Text> 而没啥信息
+// 而且自己搞一个也方便自动处理
+interface TooltipProcessor {
+    fun processTooltip(tooltip: TooltipArgs) {}
 }
 
 // region detailsShift 实现了 Tooltip 里最常见的 Shift 显示详细信息

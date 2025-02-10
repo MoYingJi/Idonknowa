@@ -11,13 +11,12 @@ import net.minecraft.util.Language
 import org.jetbrains.annotations.Contract
 import kotlin.reflect.KProperty
 
-class TransKey(val key: String) : TransKeyCall( { key } ),
-    ITransKey, PropReadA<TransKey> {
+data class TransKey(
+    override val key: String
+) : TransKeyCall( { key } ), ITransKey, PropReadA<TransKey> {
     init {
         require(key.isNotBlank())
     }
-
-    override fun toString(): String = key
 
     @Contract("_ -> new")
     infix fun suffix(suffix: String): TransKey
@@ -32,14 +31,6 @@ class TransKey(val key: String) : TransKeyCall( { key } ),
     @Contract("_ -> new")
     infix fun replaceSuffix(suffix: String): TransKey
     = TransKey(key.substringBeforeLast('.') + "." + suffix)
-
-    override val hasValue: Boolean
-        get() = language.hasTranslation(key)
-
-    override val value: String get() = language.get(key)
-
-    override fun text(vararg args: Any?)
-    : MutableText = Text.translatable(key, *args)
 
     // 以 prefix/suffix 方式 创建新 key 或分组
 
@@ -70,13 +61,17 @@ class TransKey(val key: String) : TransKeyCall( { key } ),
 
 val language: Language get() = Language.getInstance()
 
-object TranLinesSigns {
-    const val EMPTY_LINE = "EMPTY_LINE"
-    const val EMPTY_STRING = "EMPTY_STRING"
-    const val BREAK = "BREAK"
-}
+interface ITransKey : TranslateValue, Translatable {
+    val key: String
 
-interface ITransKey : TranslateValue, Translatable
+    override val hasValue: Boolean
+        get() = language.hasTranslation(key)
+    override val value: String
+        get() = language.get(key)
+
+    override fun text(vararg args: Any?)
+    : MutableText = Text.translatable(key, *args)
+}
 
 interface TranslateValue {
     val hasValue: Boolean
@@ -118,11 +113,12 @@ open class TransKeyCall(val keyCall: () -> String) : Translatable {
     // endregion
 }
 
-class TransLazyKey(val keyLazy: Lazy<String>): Translatable {
+class TransLazyKey(val keyLazy: Lazy<String>): ITransKey {
     override fun tran(data: LangData, value: () -> String) {
         if (isDatagen) data += keyLazy::value to value
     }
     constructor(keyCall: () -> String) : this( lazy { keyCall() } )
+    override val key: String by keyLazy
 }
 
 class TransAcceptedKey() : Translatable {
