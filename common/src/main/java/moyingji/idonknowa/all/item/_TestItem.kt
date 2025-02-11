@@ -23,10 +23,10 @@ class _TestItem(settings: Settings) : Item(
         init {
             Regs.REFINE[id] = this
             name.apply {
-                zh to "查改之力"
+                zh to "「查改之力」"
             }
             desc.apply {
-                zh to "运用创世之力进行调试\n之 @{ten}@{one}"
+                zh to "运用创世之力进行调试\n之「@{ten}@{one}」"
             }
             data.build {
                 1  values { "ten" to "" }
