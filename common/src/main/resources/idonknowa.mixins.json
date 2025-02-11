@@ -6,7 +6,9 @@
     "client": [
     ],
     "mixins": [
-        "ItemStackMixin"
+        "ItemMixin",
+        "ItemStackMixin",
+        "ServerRecipeManagerMixin"
     ],
     "injectors": {
         "defaultRequire": 1

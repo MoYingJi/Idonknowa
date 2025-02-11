@@ -3,10 +3,9 @@ package moyingji.idonknowa.all
 import moyingji.idonknowa.all.block.PrimogemOreBlock
 import moyingji.idonknowa.autoreg.*
 import moyingji.idonknowa.core.Tags
-import moyingji.idonknowa.datagen.LangProvider.C.en
-import moyingji.idonknowa.datagen.LangProvider.C.zh
 import moyingji.idonknowa.datagen.datagen
 import moyingji.idonknowa.datagen.drop.*
+import moyingji.idonknowa.datagen.lang.*
 import moyingji.idonknowa.datagen.model.*
 import moyingji.idonknowa.datagen.tag.tag
 import net.minecraft.block.*

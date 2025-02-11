@@ -4,7 +4,9 @@ import moyingji.idonknowa.core.Regs
 import moyingji.idonknowa.lang.*
 import moyingji.idonknowa.util.*
 import moyingji.lib.util.firstKeyOf
+import net.minecraft.item.ItemStack
 import net.minecraft.util.*
+import org.jetbrains.annotations.Contract
 
 open class Refine(
     val maxRefineLevel: Int = 5
@@ -17,6 +19,40 @@ open class Refine(
 
     open val tooltipBackground: Formatting = Formatting.GRAY
     open val tooltipDataColor: Formatting = Formatting.YELLOW
+
+    open fun matchUpgradeLevel(
+        stack: ItemStack, other: ItemStack
+    ): Int {
+        other.isOf(stack.item) || return 0
+        val l = stack.refineData!!.level
+        val u = other.refineData?.level ?: 1
+        if (u + l > maxRefineLevel) return 0
+        return u
+    }
+
+    /**
+     * 新物品应直接继承原物品 即 [stack] 的数据
+     * 仅修改精炼等级和耐久度
+     * 但 用于精炼的物品 即 [other] 数据不应该被继承
+     * 包括附魔等其他属性都不会被继承 精炼等级和耐久度除外
+     */
+    @Contract("refinable_matched, matched -> new else fail")
+    open fun upgrade(
+        stack: ItemStack, other: ItemStack
+    ): ItemStack {
+        val r = stack.copy()
+        // 精炼等级叠加
+        val rd = stack.refineData!!
+        require(this == rd.refine)
+        val ul = matchUpgradeLevel(stack, other)
+        require(ul > 0)
+        r.refineData = rd.copy(level = rd.level + ul)
+        // 耐久度叠加
+        if (stack.isDamageable)
+            r.durability = stack.durability + other.durability
+        // 返回
+        return r
+    }
 
     fun appendTooltip(tooltip: TooltipArgs, level: Int) {
         // Title Line
@@ -59,13 +95,14 @@ open class Refine(
         = Array(maxRefineLevel) { mutableMapOf() }
 
         override fun getValue(level: Int, key: String): String? {
-            return if (level < 0 || level >= maxRefineLevel) null
-            else ar[level][key] ?: getValue(level - 1, key)
+            return if (level < 1 || level > maxRefineLevel) null
+            else ar[level-1][key] ?: getValue(level-1, key)
         }
         override fun setValue(level: Int, key: String, value: String?) {
-            if (level < 0 || level >= maxRefineLevel) return
-            if (value == null) ar[level].remove(key)
-            else ar[level][key] = value
+            if (level < 1 || level > maxRefineLevel) return
+            val l = ar[level - 1]
+            if (value == null) l.remove(key)
+            else l[key] = value
         }
         override val keys: Set<String> get() = ar[0].keys
             // get() = ar.flatMap { it.keys }.distinct()

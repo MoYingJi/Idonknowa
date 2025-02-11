@@ -6,7 +6,7 @@ import moyingji.idonknowa.core.Regs
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
 import net.minecraft.network.codec.*
-import net.minecraft.util.*
+import net.minecraft.util.Identifier
 
 data class RefineData (
     val id: Identifier,
@@ -15,7 +15,7 @@ data class RefineData (
     companion object {
         val CODEC: Codec<RefineData>
         = RecordCodecBuilder.create { it.group(
-            Identifier.CODEC.fieldOf("refine").forGetter { it.id },
+            Identifier.CODEC.fieldOf("id").forGetter { it.id },
             Codec.INT.fieldOf("level").forGetter { it.level },
         ).apply(it, ::RefineData) }
 
@@ -30,20 +30,9 @@ data class RefineData (
     }
 
     val refine: Refine = Regs.REFINE[id]!!
-
-    fun isValid(): Boolean {
-        Regs.REFINE.containsKey(id) || return false
-        level in 1..refine.maxRefineLevel || return false
-        return true
-    }
+    init { require(level in 1..refine.maxRefineLevel) }
 
     override fun processTooltip(tooltip: TooltipArgs) {
-        if (!isValid()) {
-            tooltip += "RefineData 数据组件出错!".text(Formatting.RED)
-            tooltip += "RefineId: $id".text(Formatting.RED)
-            tooltip += "RefineLevel: $level".text(Formatting.RED)
-            return
-        }
         refine.appendTooltip(tooltip, level)
     }
 }

@@ -14,11 +14,6 @@ class LangProvider (
     output: FabricDataOutput,
     lookup: CompletableFuture<WrapperLookup>
 ) : FabricLanguageProvider(output, data.langCode, lookup) {
-    object C {
-        val zh = Data("zh_cn")
-        val en = Data("en_us")
-    }
-
     class Data(val langCode: String) {
         val map: MutableMap<() -> String, () -> String>
         = mutableMapOf(); get() = if (!isFrozen) field

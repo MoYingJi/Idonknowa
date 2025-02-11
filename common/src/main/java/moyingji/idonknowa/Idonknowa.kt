@@ -9,6 +9,7 @@ import moyingji.idonknowa.datagen.model.ModelProvider
 import moyingji.idonknowa.datagen.tag.TagProvider
 import moyingji.idonknowa.lang.Translations
 import moyingji.idonknowa.platform.*
+import moyingji.idonknowa.recipe.ModRecipe
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator.Pack
 import org.slf4j.Logger
@@ -26,6 +27,7 @@ object Idonknowa {
         ModBlocks // init
 
         Tags // init
+        ModRecipe // init
 
         Translations // init
 

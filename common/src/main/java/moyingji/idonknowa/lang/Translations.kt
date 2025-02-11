@@ -1,8 +1,7 @@
 package moyingji.idonknowa.lang
 
 import moyingji.idonknowa.Idonknowa
-import moyingji.idonknowa.datagen.LangProvider.C.en
-import moyingji.idonknowa.datagen.LangProvider.C.zh
+import moyingji.idonknowa.datagen.lang.*
 
 object Translations {
     val idonknowa = TransKey(Idonknowa.MOD_ID)

@@ -28,12 +28,12 @@ abstract class ItemStackMixin {
         at = @At(value = "INVOKE", target = TOOLTIP_TARGET),
         cancellable = true
     )
-    void getTooltipBefore(
-        Item.TooltipContext context,
-        PlayerEntity player,
-        TooltipType type,
-        CallbackInfoReturnable<List<Text>> cir,
-        @Local List<Text> tooltip
+    final void getTooltipBefore(
+        final Item.TooltipContext context,
+        final PlayerEntity player,
+        final TooltipType type,
+        final CallbackInfoReturnable<List<Text>> cir,
+        final @Local List<Text> tooltip
     ) { ItemStack self = (ItemStack) (Object) this;
         ItemStackMixinImpl.INSTANCE.getTooltip(
             self, context, player, type, cir, tooltip, false
@@ -44,12 +44,12 @@ abstract class ItemStackMixin {
         at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = TOOLTIP_TARGET),
         cancellable = true
     )
-    void getTooltipAfter(
-        Item.TooltipContext context,
-        PlayerEntity player,
-        TooltipType type,
-        CallbackInfoReturnable<List<Text>> cir,
-        @Local List<Text> tooltip
+    final void getTooltipAfter(
+        final Item.TooltipContext context,
+        final PlayerEntity player,
+        final TooltipType type,
+        final CallbackInfoReturnable<List<Text>> cir,
+        final @Local List<Text> tooltip
     ) { ItemStack self = (ItemStack) (Object) this;
         ItemStackMixinImpl.INSTANCE.getTooltip(
             self, context, player, type, cir, tooltip, true
