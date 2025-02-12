@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class ItemMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     final void afterInit(
-        Item.Settings settings,
-        CallbackInfo ci
+        final Item.Settings settings,
+        final CallbackInfo ci
     ) { ItemMixinImpl.INSTANCE.afterInit(
         (Item)(Object) this, settings, ci); }
 }

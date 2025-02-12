@@ -20,14 +20,11 @@ open class Refine(
     open val tooltipBackground: Formatting = Formatting.GRAY
     open val tooltipDataColor: Formatting = Formatting.YELLOW
 
-    open fun matchUpgradeLevel(
-        stack: ItemStack, other: ItemStack
-    ): Int {
-        other.isOf(stack.item) || return 0
-        val l = stack.refineData!!.level
-        val u = other.refineData?.level ?: 1
-        if (u + l > maxRefineLevel) return 0
-        return u
+    open fun getUpgradeValue(other: ItemStack): Int {
+        val d = other.refineData
+        if (d == null) return 0
+        if (this != d.refine) return 0
+        return d.level
     }
 
     /**
@@ -44,7 +41,7 @@ open class Refine(
         // 精炼等级叠加
         val rd = stack.refineData!!
         require(this == rd.refine)
-        val ul = matchUpgradeLevel(stack, other)
+        val ul = getUpgradeValue(other)
         require(ul > 0)
         r.refineData = rd.copy(level = rd.level + ul)
         // 耐久度叠加

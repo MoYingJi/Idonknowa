@@ -17,7 +17,7 @@ object RefineUpSmithingRecipe : SmithingRecipe {
     ): Boolean {
         template.get().test(input.template) || return false
         val rd = input.base.refineData ?: return false
-        rd.refine.matchUpgradeLevel(input.base, input.addition) > 0 || return false
+        rd.refine.getUpgradeValue(input.addition) > 0 || return false
         return true
     }
 

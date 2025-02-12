@@ -8,6 +8,7 @@
     "mixins": [
         "ItemMixin",
         "ItemStackMixin",
+        "RecipePropertySetMixin",
         "ServerRecipeManagerMixin"
     ],
     "injectors": {
