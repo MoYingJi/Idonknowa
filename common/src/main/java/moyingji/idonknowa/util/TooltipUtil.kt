@@ -94,10 +94,16 @@ fun <T: MutableList<Text>> detailsShift(
     actionColor: Formatting? = Formatting.WHITE,
     shiftColor: Formatting = Formatting.GRAY,
     hasShiftDown: () -> Boolean = Screen::hasShiftDown,
+    condition: () -> Boolean = { true },
     action: T.() -> Unit
-) { if (hasShiftDown()) {
-    if (actionColor != null)
-        tooltip += detailsShift(backColor, actionColor)
-    action(tooltip)
-} else tooltip += detailsShift(backColor, shiftColor) }
+) {
+    if (!condition()) {
+        action(tooltip); return
+    }
+    if (hasShiftDown()) {
+        if (actionColor != null)
+            tooltip += detailsShift(backColor, actionColor)
+        action(tooltip)
+    } else tooltip += detailsShift(backColor, shiftColor)
+}
 // endregion

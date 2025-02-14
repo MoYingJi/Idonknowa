@@ -9,7 +9,7 @@ import net.minecraft.util.*
 import org.jetbrains.annotations.Contract
 
 open class Refine(
-    val maxRefineLevel: Int = 5
+    val maxRefineLevel: UByte = 5u
 ) {
     open val id: Identifier by lazy { Regs.REFINE.firstKeyOf(this) }
     open val name: ITransKey = TransLazyKey { id.toTranslationKey("refine") }
@@ -20,12 +20,14 @@ open class Refine(
     open val tooltipBackground: Formatting = Formatting.GRAY
     open val tooltipDataColor: Formatting = Formatting.YELLOW
 
-    open fun getUpgradeValue(other: ItemStack): Int {
+    open fun getUpgradeValue(other: ItemStack): UByte {
         val d = other.refineData
-        if (d == null) return 0
-        if (this != d.refine) return 0
+        if (d == null) return 0u
+        if (this != d.refine) return 0u
         return d.level
     }
+    fun isCanBeUpAddition(other: ItemStack): Boolean
+    = getUpgradeValue(other) > 0u
 
     /**
      * 新物品应直接继承原物品 即 [stack] 的数据
@@ -42,8 +44,8 @@ open class Refine(
         val rd = stack.refineData!!
         require(this == rd.refine)
         val ul = getUpgradeValue(other)
-        require(ul > 0)
-        r.refineData = rd.copy(level = rd.level + ul)
+        require(ul > 0u)
+        r.refineData = rd.copy(level = (rd.level + ul).toUByte())
         // 耐久度叠加
         if (stack.isDamageable)
             r.durability = stack.durability + other.durability
@@ -51,7 +53,8 @@ open class Refine(
         return r
     }
 
-    fun appendTooltip(tooltip: TooltipArgs, level: Int) {
+    open fun isDescNeedShift(): Boolean = true
+    fun appendTooltip(tooltip: TooltipArgs, level: UByte) {
         // Title Line
         val levelColor = if (level == maxRefineLevel)
             Formatting.AQUA else Formatting.YELLOW
@@ -62,42 +65,44 @@ open class Refine(
                 append(" [MAX]".text(Formatting.GOLD)) }
             .formatted(Formatting.LIGHT_PURPLE)
         // Desc
-        desc.tempValue.apply {
+        detailsShift(
+            tooltip, condition = ::isDescNeedShift
+        ) { desc.tempValue.apply {
             data.keys.forEach {
                 val value = data.getValue(level, it)!!
                 this += it to "$tooltipDataColor$value$tooltipBackground"
             }
-            value.lines().forEach {
-                tooltip += it.text(tooltipBackground)
-            }
-        }
+            for (l in value.lines())
+                tooltip += l.text(tooltipBackground)
+        } }
     }
 
     // region Data Values 存储各精炼等级对应的数据
     interface DataValues {
-        val maxRefineLevel: Int
+        val maxRefineLevel: UByte
 
         // 此处的值会从上一级继承 递归调用 如果一直没有值 则返回 null
-        fun getValue(level: Int, key: String): String?
+        fun getValue(level: UByte, key: String): String?
         // 所有键 此处必须保证每个等级都有 (所以只取一级就行)
         val keys: Set<String>
     }
     interface MutableDataValues : DataValues {
-        fun setValue(level: Int, key: String, value: String?)
+        fun setValue(level: UByte, key: String, value: String?)
     }
     class DataValuesImpl(
-        override val maxRefineLevel: Int = 5
+        override val maxRefineLevel: UByte = 5u
     ) : MutableDataValues {
         val ar: Array<MutableMap<String, String>>
-        = Array(maxRefineLevel) { mutableMapOf() }
+        = Array(maxRefineLevel.toInt()) { mutableMapOf() }
 
-        override fun getValue(level: Int, key: String): String? {
-            return if (level < 1 || level > maxRefineLevel) null
-            else ar[level-1][key] ?: getValue(level-1, key)
+        override fun getValue(level: UByte, key: String): String? {
+            val lower = (level - 1u).toUByte()
+            return if (level < 1u || level > maxRefineLevel) null
+            else ar[lower.toInt()][key] ?: getValue(lower.toUByte(), key)
         }
-        override fun setValue(level: Int, key: String, value: String?) {
-            if (level < 1 || level > maxRefineLevel) return
-            val l = ar[level - 1]
+        override fun setValue(level: UByte, key: String, value: String?) {
+            if (level < 1u || level > maxRefineLevel) return
+            val l = ar[level.toInt() - 1]
             if (value == null) l.remove(key)
             else l[key] = value
         }

@@ -5,24 +5,24 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import moyingji.idonknowa.core.Regs
 import moyingji.idonknowa.serialization.*
 import moyingji.idonknowa.util.*
-import net.minecraft.network.codec.*
+import net.minecraft.network.codec.PacketCodec
 import net.minecraft.util.Identifier
 
 data class RefineData (
     val id: Identifier,
-    val level: Int = 1,
+    val level: UByte = 1u,
 ) : TooltipProcessor {
     companion object {
         val CODEC: Codec<RefineData>
         = RecordCodecBuilder.create { it.group(
             Identifier.CODEC.fieldOf("id").forGetter { it.id },
-            Codec.INT.fieldOf("level").forGetter { it.level },
+            ModCodec.UBYTE_C.fieldOf("level").forGetter { it.level },
         ).apply(it, ::RefineData) }
 
         val PACKET_CODEC: CoPRB<RefineData>
         = PacketCodec.tuple(
             Identifier.PACKET_CODEC, { it.id },
-            PacketCodecs.INTEGER, { it.level },
+            ModCodec.UBYTE_S, { it.level },
             ::RefineData
         )
 
@@ -30,7 +30,7 @@ data class RefineData (
     }
 
     val refine: Refine = Regs.REFINE[id]!!
-    init { require(level in 1..refine.maxRefineLevel) }
+    init { require(level in 1u..refine.maxRefineLevel.toUInt()) }
 
     override fun processTooltip(tooltip: TooltipArgs) {
         refine.appendTooltip(tooltip, level)

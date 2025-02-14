@@ -18,7 +18,7 @@ class _TestItem(settings: Settings) : Item(
         zh to "「调试」之仙女棒"
     } }
 
-    object DebugRefine : Refine(37) {
+    object DebugRefine : Refine(37u) {
         override val id: Identifier = "debug".id()
         init {
             Regs.REFINE[id] = this

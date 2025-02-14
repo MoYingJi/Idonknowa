@@ -4,8 +4,7 @@ import moyingji.idonknowa.core.Regs
 import moyingji.idonknowa.core.refine.refineData
 import moyingji.idonknowa.util.id
 import net.minecraft.item.ItemStack
-import net.minecraft.recipe.Recipe
-import net.minecraft.recipe.RecipePropertySet
+import net.minecraft.recipe.*
 import net.minecraft.registry.RegistryKey
 import net.minecraft.util.Identifier
 
@@ -26,7 +25,7 @@ object ModRecipe {
             if (stack.refineData != null)
                 return true
         if (key == RecipePropertySet.SMITHING_ADDITION)
-            if (Regs.REFINE.values.any { it.getUpgradeValue(stack) > 0 })
+            if (Regs.REFINE.values.any { it.getUpgradeValue(stack) > 0u })
                 return true
         return null
     }

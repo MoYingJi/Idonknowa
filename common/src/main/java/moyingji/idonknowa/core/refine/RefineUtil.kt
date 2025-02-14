@@ -8,9 +8,11 @@ import net.minecraft.item.ItemStack
 class RefineValuesBuildScope(val data: DataValues) {
     init { require(data is Refine.MutableDataValues) }
 
-    infix fun Int.values(f: Level.() -> Unit) { f(Level(this)) }
+    infix fun Int.values(
+        f: Level.() -> Unit
+    ) { f(Level(this.toUByte())) }
 
-    inner class Level(val level: Int) {
+    inner class Level(val level: UByte) {
         val values: Refine.MutableDataValues = data
             as Refine.MutableDataValues
 
