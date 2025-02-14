@@ -3,7 +3,6 @@ package moyingji.idonknowa.core.refine
 import moyingji.idonknowa.all.item.ModSmithingTemplate
 import moyingji.idonknowa.datagen.lang.zh
 import moyingji.idonknowa.lang.tran
-import net.minecraft.item.ItemConvertible
 import net.minecraft.util.Rarity
 
 class RefineTempItem(
@@ -19,9 +18,4 @@ class RefineTempItem(
         additionIcon += ES_ALL
         defaultFormatting()
     }, settings.fireproof().rarity(Rarity.RARE)
-) {
-    companion object {
-        val refinable: MutableList<ItemConvertible> = mutableListOf()
-        val refine_addition: MutableList<ItemConvertible> = mutableListOf()
-    }
-}
+)

@@ -1,9 +1,9 @@
 package moyingji.idonknowa.mia.impl
 
-import moyingji.idonknowa.Idonknowa
+import dev.architectury.utils.GameInstance
 import moyingji.idonknowa.mia.CIR
 import moyingji.idonknowa.recipe.ModRecipe
-import moyingji.lib.util.firstKeyOf
+import moyingji.lib.util.firstKeyOrNull
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.RecipePropertySet
 
@@ -13,10 +13,10 @@ object RecipePropertySetMixinImpl {
         stack: ItemStack,
         cir: CIR<Boolean>,
     ) {
-        val server = Idonknowa.server!!
-        val r = server.recipeManager
-            .propertySets.firstKeyOf(self)
-        val b = ModRecipe.recipeCanUse(r, stack)
+        val server = GameInstance.getServer()!!
+        val m = server.recipeManager
+        val r = m.propertySets.firstKeyOrNull(self)
+        val b = ModRecipe.recipeCanUse(r, self, stack)
         if (b != null) cir.returnValue = b
     }
 }

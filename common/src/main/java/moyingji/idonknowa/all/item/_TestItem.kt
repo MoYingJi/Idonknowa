@@ -10,7 +10,7 @@ import net.minecraft.util.*
 
 @Suppress("ClassName")
 class _TestItem(settings: Settings) : Item(
-    settings.refinableSelf(DebugRefine)
+    settings.refinable(DebugRefine)
         .fireproof().rarity(Rarity.EPIC)
         .maxCount(1).glint()
 ) {

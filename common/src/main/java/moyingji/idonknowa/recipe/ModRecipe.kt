@@ -18,13 +18,16 @@ object ModRecipe {
 
 
     fun recipeCanUse(
-        key: RegistryKey<RecipePropertySet>,
+        key: RegistryKey<RecipePropertySet>?,
+        set: RecipePropertySet,
         stack: ItemStack
     ): Boolean? {
         if (key == RecipePropertySet.SMITHING_BASE)
-            if (stack.refineData != null) return true
-        if (Regs.REFINE.values.any { it.getUpgradeValue(stack) > 0 })
-            return true
+            if (stack.refineData != null)
+                return true
+        if (key == RecipePropertySet.SMITHING_ADDITION)
+            if (Regs.REFINE.values.any { it.getUpgradeValue(stack) > 0 })
+                return true
         return null
     }
 }
