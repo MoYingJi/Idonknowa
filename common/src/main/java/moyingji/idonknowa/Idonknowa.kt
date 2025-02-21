@@ -3,6 +3,7 @@ package moyingji.idonknowa
 import com.mojang.logging.LogUtils
 import moyingji.idonknowa.all.*
 import moyingji.idonknowa.core.*
+import moyingji.idonknowa.core.wish.ModGacha
 import moyingji.idonknowa.datagen.LangProvider
 import moyingji.idonknowa.datagen.drop.BlockLootProvider
 import moyingji.idonknowa.datagen.model.ModelProvider
@@ -28,6 +29,8 @@ object Idonknowa {
 
         Tags // init
         ModRecipe // init
+
+        ModGacha // init
 
         Translations // init
 
