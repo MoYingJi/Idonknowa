@@ -9,7 +9,8 @@ import net.minecraft.util.*
 import org.jetbrains.annotations.Contract
 
 open class Refine(
-    val maxRefineLevel: UByte = 5u
+    val maxRefineLevel: UByte = 5u,
+    val doDurabilityMergeUpgrade: Boolean = true
 ) {
     open val id: Identifier by lazy { Regs.REFINE.firstKeyOf(this) }
     open val name: ITransKey = TransLazyKey { id.toTranslationKey("refine") }
@@ -26,8 +27,10 @@ open class Refine(
         if (this != d.refine) return 0u
         return d.level
     }
-    fun isCanBeUpAddition(other: ItemStack): Boolean
-    = getUpgradeValue(other) > 0u
+    open fun getOtherUpgradeDurabilityMerge(other: ItemStack): Int {
+        if (other.isDamageable) return other.durability
+        return 0
+    }
 
     /**
      * 新物品应直接继承原物品 即 [stack] 的数据
@@ -45,10 +48,12 @@ open class Refine(
         require(this == rd.refine)
         val ul = getUpgradeValue(other)
         require(ul > 0u)
-        r.refineData = rd.copy(level = (rd.level + ul).toUByte())
+        val level = rd.level + ul
+        r.refineData = rd.copy(level = if (level <= maxRefineLevel)
+            level.toUByte() else maxRefineLevel)
         // 耐久度叠加
-        if (stack.isDamageable)
-            r.durability = stack.durability + other.durability
+        if (doDurabilityMergeUpgrade && stack.isDamageable)
+            r.durability = stack.durability + getOtherUpgradeDurabilityMerge(other)
         // 返回
         return r
     }
@@ -98,7 +103,7 @@ open class Refine(
         override fun getValue(level: UByte, key: String): String? {
             val lower = (level - 1u).toUByte()
             return if (level < 1u || level > maxRefineLevel) null
-            else ar[lower.toInt()][key] ?: getValue(lower.toUByte(), key)
+            else ar[lower.toInt()][key] ?: getValue(lower, key)
         }
         override fun setValue(level: UByte, key: String, value: String?) {
             if (level < 1u || level > maxRefineLevel) return

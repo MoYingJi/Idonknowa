@@ -1,13 +1,12 @@
 .architectury-transformer
 .gradle
 .kotlin
+.cache
 build
 out
 .directory
 
-run
-.cache
-
 /common/src/generated/resources
+**/run/
 
 /.idea/*

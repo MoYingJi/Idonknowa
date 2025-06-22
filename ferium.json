@@ -1,0 +1,151 @@
+{
+  "profiles": [
+    {
+      "name": "fabric",
+      "output_dir": "./fabric/run/mods",
+      "game_version": "1.21.4",
+      "mod_loader": "Fabric",
+      "mods": [
+        {
+          "name": "AppleSkin",
+          "identifier": {
+            "ModrinthProject": "EsAfCjCV"
+          }
+        },
+        {
+          "name": "BetterF3",
+          "identifier": {
+            "ModrinthProject": "8shC1gFX"
+          }
+        },
+        {
+          "name": "Cloth Config API",
+          "identifier": {
+            "ModrinthProject": "9s6osm5g"
+          }
+        },
+        {
+          "name": "Dynamic Crosshair",
+          "identifier": {
+            "ModrinthProject": "ZcR9weSm"
+          }
+        },
+        {
+          "name": "Entity Culling",
+          "identifier": {
+            "ModrinthProject": "NNAgCjsB"
+          }
+        },
+        {
+          "name": "Fabric API",
+          "identifier": {
+            "ModrinthProject": "P7dR8mSH"
+          }
+        },
+        {
+          "name": "FerriteCore",
+          "identifier": {
+            "ModrinthProject": "uXXizFIs"
+          }
+        },
+        {
+          "name": "Inventory Profiles Next",
+          "identifier": {
+            "ModrinthProject": "O7RBXm3n"
+          }
+        },
+        {
+          "name": "Iris Shaders",
+          "identifier": {
+            "ModrinthProject": "YL57xq9U"
+          }
+        },
+        {
+          "name": "Jade 🔍",
+          "identifier": {
+            "ModrinthProject": "nvQzSEkH"
+          }
+        },
+        {
+          "name": "libIPN",
+          "identifier": {
+            "ModrinthProject": "onSQdWhM"
+          }
+        },
+        {
+          "name": "Mod Menu",
+          "identifier": {
+            "ModrinthProject": "mOgUt4GM"
+          }
+        },
+        {
+          "name": "Reborn Core",
+          "identifier": {
+            "CurseForgeProject": 237903
+          }
+        },
+        {
+          "name": "Reese's Sodium Options",
+          "identifier": {
+            "ModrinthProject": "Bh37bMuy"
+          }
+        },
+        {
+          "name": "Roughly Enough Items (REI)",
+          "identifier": {
+            "ModrinthProject": "nfn13YXA"
+          }
+        },
+        {
+          "name": "Sodium",
+          "identifier": {
+            "ModrinthProject": "AANobbMI"
+          }
+        },
+        {
+          "name": "Sodium Dynamic Lights",
+          "identifier": {
+            "ModrinthProject": "PxQSWIcD"
+          }
+        },
+        {
+          "name": "Sodium Extra",
+          "identifier": {
+            "ModrinthProject": "PtjYWJkn"
+          }
+        },
+        {
+          "name": "spark",
+          "identifier": {
+            "ModrinthProject": "l6YH9Als"
+          }
+        },
+        {
+          "name": "Tech Reborn",
+          "identifier": {
+            "CurseForgeProject": 233564
+          }
+        },
+        {
+          "name": "YetAnotherConfigLib (YACL)",
+          "identifier": {
+            "ModrinthProject": "1eAoo2KR"
+          }
+        },
+        {
+          "name": "Zoomify",
+          "identifier": {
+            "ModrinthProject": "w7ThoJFB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "neoforge",
+      "output_dir": "./neoforge/run/mods",
+      "game_version": "1.21.4",
+      "mod_loader": "NeoForge",
+      "mods": []
+    }
+  ]
+}

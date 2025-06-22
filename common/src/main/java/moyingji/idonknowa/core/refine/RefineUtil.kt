@@ -3,6 +3,8 @@ package moyingji.idonknowa.core.refine
 import moyingji.idonknowa.autoreg.ItemSettings
 import moyingji.idonknowa.core.refine.Refine.DataValues
 import moyingji.idonknowa.nbt.*
+import moyingji.idonknowa.util.listen
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 
 class RefineValuesBuildScope(val data: DataValues) {
@@ -33,5 +35,10 @@ infix fun <R: Refine> R.build(
 
 var ItemStack.refineData: RefineData? by ModDataComps.REFINE.prop()
 
-fun ItemSettings.refinable(refine: Refine): ItemSettings
-= component(ModDataComps.REFINE.value(), RefineData(refine.id))
+
+private val refinableItems: MutableList<Item> = arrayListOf()
+fun refinableItems(): List<Item> = refinableItems
+
+fun ItemSettings.refinable(refine: Refine): ItemSettings = this
+    .component(ModDataComps.REFINE.value(), RefineData(refine.id))
+    .listen { it -> refinableItems.add(it) }

@@ -5,14 +5,19 @@ import moyingji.idonknowa.core.refine.*
 import moyingji.idonknowa.datagen.lang.zh
 import moyingji.idonknowa.lang.tran
 import moyingji.idonknowa.util.*
-import net.minecraft.item.Item
+import net.minecraft.component.DataComponentTypes
+import net.minecraft.component.type.BannerPatternsComponent
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.*
 import net.minecraft.util.*
+import net.minecraft.world.World
 
 @Suppress("ClassName")
 class _TestItem(settings: Settings) : Item(
     settings.refinable(DebugRefine)
         .fireproof().rarity(Rarity.EPIC)
         .maxCount(1).glint()
+        .component(DataComponentTypes.BANNER_PATTERNS, BannerPatternsComponent.DEFAULT)
 ) {
     init { tran {
         zh to "「调试」之仙女棒"
@@ -48,5 +53,17 @@ class _TestItem(settings: Settings) : Item(
                 }
             }
         }
+    }
+
+    override fun use(
+        world: World?,
+        user: PlayerEntity?,
+        hand: Hand?
+    ): ActionResult? {
+        return super.use(world, user, hand)
+    }
+
+    override fun useOnBlock(context: ItemUsageContext?): ActionResult? {
+        return super.useOnBlock(context)
     }
 }

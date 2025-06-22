@@ -1,6 +1,7 @@
 package moyingji.idonknowa.recipe
 
 import moyingji.idonknowa.all.ModItems
+import moyingji.idonknowa.core.refine.refinableItems
 import moyingji.idonknowa.core.refine.refineData
 import moyingji.lib.util.toOptional
 import net.minecraft.item.ItemStack
@@ -16,7 +17,9 @@ object RefineUpSmithingRecipe : SmithingRecipe {
     ): Boolean {
         template.get().test(input.template) || return false
         val rd = input.base.refineData ?: return false
-        rd.refine.isCanBeUpAddition(input.addition) || return false
+        rd.refine.maxRefineLevel < rd.level || return false
+        val up = rd.refine.getUpgradeValue(input.addition)
+        up > 0u || return false
         return true
     }
 
@@ -28,11 +31,12 @@ object RefineUpSmithingRecipe : SmithingRecipe {
 
     val template: Optional<Ingredient> by lazy { Ingredient
         .ofItem(ModItems.REFINE_TEMP.value()).toOptional() }
-    val empty: Optional<Ingredient> = Optional.empty()
+    val refinable: Optional<Ingredient> by lazy { Ingredient
+        .ofItems(*refinableItems().toTypedArray()).toOptional() }
 
     override fun template(): Optional<Ingredient> = template
-    override fun base(): Optional<Ingredient> = empty
-    override fun addition(): Optional<Ingredient> = empty
+    override fun base(): Optional<Ingredient> = refinable
+    override fun addition(): Optional<Ingredient> = refinable
 
     override fun getSerializer()
     : RecipeSerializer<out SmithingRecipe>

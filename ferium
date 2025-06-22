@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit
+
+export FERIUM_CONFIG_FILE="./ferium.json"
+
+[ -f "$FERIUM_CONFIG_FILE" ] && ferium --config-file "$FERIUM_CONFIG_FILE" "$@"
