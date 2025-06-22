@@ -121,6 +121,8 @@ subprojects {
     }
 
     tasks.processResources {
+        val project = this@subprojects.project
+
         val files = listOf("fabric.mod.json", "META-INF/neoforge.mods.toml")
         // 捕获由文件不存在引起的 ClosedFileSystemException
         for (f in files) runCatching { filesMatching(f) {
@@ -162,9 +164,10 @@ subprojects {
         apply(plugin = rootProject.libs.plugins.shadow.get().pluginId)
 
         tasks.withType<ShadowJar> {
+            val project = this@afterEvaluate.project
             configurations = listOf(project.configurations.named("shadowBundle").get())
             archiveClassifier = "dev-shadow"
-            // mergeServiceFiles()
+            mergeServiceFiles()
         }
         tasks.withType<RemapJarTask> {
             inputFile.set(tasks.named<ShadowJar>("shadowJar").get().archiveFile)

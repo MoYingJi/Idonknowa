@@ -1,11 +1,11 @@
 [versions]
 # plugins version
 architectury-plugin = "3.4-SNAPSHOT" # maven.architectury.dev/architectury-plugin/architectury-plugin.gradle.plugin
-architectury-loom = "1.9-SNAPSHOT" # maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin
-shadow = "9.0.0-beta6" # gradleup.com/shadow/getting-started
+architectury-loom = "1.10-SNAPSHOT" # maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin
+shadow = "9.0.0-beta17" # gradleup.com/shadow/getting-started
 # kotlin language
-kotlin = "2.1.10" # kotlinlang.org/docs/releases.html#release-details
-kotlin-ksp = "2.1.10-1.0.29" # github.com/google/ksp/releases
+kotlin = "2.1.21" # kotlinlang.org/docs/releases.html#release-details
+kotlin-ksp = "2.1.21-2.0.2" # github.com/google/ksp/releases
 
 [libraries]
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
